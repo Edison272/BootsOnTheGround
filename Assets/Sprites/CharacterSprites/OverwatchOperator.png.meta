@@ -118,7 +118,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 56
+        width: 28
         height: 58
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -133,10 +133,31 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: OverwatchOperator_1
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 0
+        width: 28
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4cf5b3accefbd145b4e9a9290b7595c
+      internalID: -1486329161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: ebae796ff5af803428cb6c5b58d756c1
     internalID: 0
     vertices: []
     indices: 
@@ -145,6 +166,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       OverwatchOperator_0: 642637958378867971
+      OverwatchOperator_1: -1486329161
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

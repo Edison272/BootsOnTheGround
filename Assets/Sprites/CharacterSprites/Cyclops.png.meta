@@ -118,7 +118,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 54
+        width: 27
         height: 58
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -133,10 +133,31 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Cyclops_1
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 0
+        width: 27
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 294659e9eb3b83440b884c4268bf2a17
+      internalID: -428672158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 95fbe2b02185a8c4abd264ecf952672d
     internalID: 0
     vertices: []
     indices: 
@@ -145,6 +166,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       Cyclops_0: 4809396141046213086
+      Cyclops_1: -428672158
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
