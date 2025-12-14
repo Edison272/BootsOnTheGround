@@ -81,7 +81,7 @@ public class Operator : MonoBehaviour
         anim.SetBool("FaceFront", !(aim_pos.y > entity_rb.position.y));
 
         // maintain sorting order
-        if(Mathf.Sign(aim_pos.y) == Mathf.Sign(aim_pos.x)) {
+        if(Mathf.Sign(aim_dir.y) == Mathf.Sign(aim_dir.x)) {
             // set back first
             front.SetSiblingIndex(0);
             vfx_body.transform.SetSiblingIndex(1);

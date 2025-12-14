@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class PlayerController : MonoBehaviour
     [Header("Character Control")]
     [SerializeField] private Camera cam;
     [SerializeField] Vector2 input_dir;
-    [SerializeField] Vector2 look_pos;
+    [SerializeField] Vector3 look_pos;
     [SerializeField] Operator active_character;
 
     
@@ -69,6 +70,14 @@ public class PlayerController : MonoBehaviour
     {
         if (main_continuous) {MainAction();}
         if (alt_continuous) {AltAction();}
+
+        // camera position
+        Vector3 char_pos = active_character.transform.position;
+        Vector3 cam_pos = (char_pos + look_pos) * 0.2f;
+        cam_pos.x = Mathf.Clamp(cam_pos.x, -2+char_pos.x, 2+char_pos.x);
+        cam_pos.y = Mathf.Clamp(cam_pos.y, -2+char_pos.y, 2+char_pos.y);
+        cam_pos.z = -10;
+        cam.transform.position = cam_pos;
     }
 
     #region Controls
@@ -81,18 +90,16 @@ public class PlayerController : MonoBehaviour
         else 
         {
             active_character.StopMove();
-        }
+        }        
     }
     public void StopMove(InputAction.CallbackContext context)
     {
         active_character.StopMove();
     }
     public void Look(InputAction.CallbackContext context) {
-        Vector3 pos = context.ReadValue<Vector2>();
-        Debug.DrawLine(pos, active_character.transform.position, Color.red);
-        pos.z = -cam.transform.localPosition.z;
-        look_pos = cam.ScreenToWorldPoint(pos);
-        Debug.DrawLine(look_pos, active_character.transform.position);
+        look_pos = context.ReadValue<Vector2>();
+        look_pos.z = -cam.transform.localPosition.z;
+        look_pos = cam.ScreenToWorldPoint(look_pos);
         active_character.Look(look_pos);
     }
     public void MainStart(InputAction.CallbackContext context) {
