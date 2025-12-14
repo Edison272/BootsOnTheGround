@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] Vector2 input_dir;
     [SerializeField] Vector2 look_pos;
+    [SerializeField] Operator active_character;
+
+    
 
     void Awake()
     {
@@ -64,22 +67,33 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (main_continuous)
-        {
-            MainAction();
-        }
-        if (alt_continuous)
-        {
-            AltAction();
-        }
+        if (main_continuous) {MainAction();}
+        if (alt_continuous) {AltAction();}
     }
 
     #region Controls
-    public void Move(InputAction.CallbackContext context) {input_dir = context.ReadValue<Vector2>();}
+    public void Move(InputAction.CallbackContext context) {
+        input_dir = context.ReadValue<Vector2>();
+        if (input_dir.sqrMagnitude > 0.0001f) 
+        {
+            active_character.SetMove(input_dir);
+        }
+        else 
+        {
+            active_character.StopMove();
+        }
+    }
+    public void StopMove(InputAction.CallbackContext context)
+    {
+        active_character.StopMove();
+    }
     public void Look(InputAction.CallbackContext context) {
         Vector3 pos = context.ReadValue<Vector2>();
-        pos.z = -10;
+        Debug.DrawLine(pos, active_character.transform.position, Color.red);
+        pos.z = -cam.transform.localPosition.z;
         look_pos = cam.ScreenToWorldPoint(pos);
+        Debug.DrawLine(look_pos, active_character.transform.position);
+        active_character.Look(look_pos);
     }
     public void MainStart(InputAction.CallbackContext context) {
         Debug.Log("Main");

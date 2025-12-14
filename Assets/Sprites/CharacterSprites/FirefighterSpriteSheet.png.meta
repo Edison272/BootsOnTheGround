@@ -1,19 +1,13 @@
 fileFormatVersion: 2
-guid: c43478577f2965846a357db9d86cf7d2
+guid: 555efa8fc27588d46b7f306108004936
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8247630722614121492
-    second: VanguardOperativeWalk_0
+      213: 1756291415134021759
+    second: FirefighterSpriteSheet_0
   - first:
-      213: -1021017035487745535
-    second: VanguardOperativeWalk_1
-  - first:
-      213: -6718309307219508779
-    second: VanguardOperativeWalk_2
-  - first:
-      213: 1344361599403983414
-    second: VanguardOperativeWalk_3
+      213: 2242328612352974026
+    second: FirefighterSpriteSheet_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -81,7 +75,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -122,13 +116,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: VanguardOperativeWalk_0
+      name: FirefighterSpriteSheet_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 62
-        width: 32
-        height: 62
+        y: 195
+        width: 34
+        height: 65
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -136,20 +130,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cebacfb3e878a8d80800000000000000
-      internalID: -8247630722614121492
+      spriteID: f78a121acb99f5810800000000000000
+      internalID: 1756291415134021759
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: VanguardOperativeWalk_1
+      name: FirefighterSpriteSheet_1
       rect:
         serializedVersion: 2
-        x: 32
-        y: 62
-        width: 32
-        height: 62
+        x: 34
+        y: 195
+        width: 34
+        height: 65
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -157,62 +151,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 10a61227a6e94d1f0800000000000000
-      internalID: -1021017035487745535
+      spriteID: acc5ef81ef95e1f10800000000000000
+      internalID: 2242328612352974026
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: VanguardOperativeWalk_2
+      name: FirefighterSpriteSheet_2
       rect:
         serializedVersion: 2
-        x: 64
-        y: 62
-        width: 32
-        height: 62
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 5d10bfbb745c3c2a0800000000000000
-      internalID: -6718309307219508779
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: VanguardOperativeWalk_3
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 62
-        width: 32
-        height: 62
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 632862e70c128a210800000000000000
-      internalID: 1344361599403983414
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: VanguardOperativeWalk_4
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 62
-        width: 32
-        height: 62
+        x: 68
+        y: 195
+        width: 34
+        height: 65
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -220,20 +172,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 03481afe7bb858f418a6c52b59a1bf40
-      internalID: -2072235577
+      spriteID: 35f93b106e14e9a469e6f9c36f30a9fc
+      internalID: -1570912775
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: VanguardOperativeWalk_5
+      name: FirefighterSpriteSheet_3
       rect:
         serializedVersion: 2
-        x: 160
-        y: 62
-        width: 32
-        height: 62
+        x: 102
+        y: 195
+        width: 34
+        height: 65
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -241,20 +193,209 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb58fa0f6edfda144bb09dbeba25f367
-      internalID: -960498993
+      spriteID: a9f3340681bfcff43bc761f2604e2b86
+      internalID: -1971411781
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: VanguardOperativeWalk_6
+      name: FirefighterSpriteSheet_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 130
+        width: 34
+        height: 65
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6586bccab4e07a2418d8233a2cf81a61
+      internalID: -1549855470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FirefighterSpriteSheet_5
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 130
+        width: 34
+        height: 65
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d61a03d78ebac9a45a1939701bfe3c6d
+      internalID: 427797529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FirefighterSpriteSheet_6
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 130
+        width: 34
+        height: 65
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e48296435c45c4846a1ebd1827766fd9
+      internalID: 1348811535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FirefighterSpriteSheet_7
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 130
+        width: 34
+        height: 65
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 709cdb5e0cdd6fb49ab9faa4400e242d
+      internalID: 426897146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FirefighterSpriteSheet_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 65
+        width: 34
+        height: 65
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28c79907254f971438908c8693890437
+      internalID: -641223914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FirefighterSpriteSheet_9
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 65
+        width: 34
+        height: 65
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9e9d810079bd5c44b935d7d98215ab0
+      internalID: 1891243339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FirefighterSpriteSheet_10
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 65
+        width: 34
+        height: 65
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 979e83664848e084eb6a401c6fe64ec4
+      internalID: -1233637887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FirefighterSpriteSheet_11
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 65
+        width: 34
+        height: 65
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5df8cad61b696f64d8457e8f400816a8
+      internalID: 1460274573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FirefighterSpriteSheet_12
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 65
+        width: 34
+        height: 65
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 765a51ff67e1a6144b23a2dc7bb0f86e
+      internalID: 1682818702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FirefighterSpriteSheet_13
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 62
+        width: 34
+        height: 65
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -262,20 +403,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 54d0995bc222e7948b4927c5287cf39c
-      internalID: 56663487
+      spriteID: 57e193d6b5d4aae43918ee554def0e79
+      internalID: -102873431
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: VanguardOperativeWalk_7
+      name: FirefighterSpriteSheet_14
       rect:
         serializedVersion: 2
-        x: 32
+        x: 34
         y: 0
-        width: 32
-        height: 62
+        width: 34
+        height: 65
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -283,20 +424,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aa809620bbb74bd429e86ba0522a2050
-      internalID: -422610738
+      spriteID: c45c579a70b4e984898d57784072740c
+      internalID: 1232407007
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: VanguardOperativeWalk_8
+      name: FirefighterSpriteSheet_15
       rect:
         serializedVersion: 2
-        x: 64
+        x: 68
         y: 0
-        width: 32
-        height: 62
+        width: 34
+        height: 65
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -304,20 +445,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3f2c5972df4b31d45b7d33920a13d351
-      internalID: -76287093
+      spriteID: 050ebd895c8311e4e9f049ad689b52d7
+      internalID: 409200517
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: VanguardOperativeWalk_9
+      name: FirefighterSpriteSheet_16
       rect:
         serializedVersion: 2
-        x: 96
+        x: 102
         y: 0
-        width: 32
-        height: 62
+        width: 34
+        height: 65
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -325,20 +466,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 693ec38c38309094c83e7a3dcf3db885
-      internalID: -1756866675
+      spriteID: 60a3585ac8915894fb6281f9dda270bd
+      internalID: 1043215996
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: VanguardOperativeWalk_10
+      name: FirefighterSpriteSheet_17
       rect:
         serializedVersion: 2
-        x: 128
+        x: 136
         y: 0
-        width: 32
-        height: 62
+        width: 34
+        height: 65
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -346,29 +487,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f1757a13de70e7f439ca4cd5ad81821f
-      internalID: 533039078
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: VanguardOperativeWalk_11
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 0
-        width: 32
-        height: 62
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: da9e19def10b53e48aea98360d4fbcc8
-      internalID: -160870661
+      spriteID: 07dae75f79ff7bf4f8213d328c5c5637
+      internalID: 1032193196
       vertices: []
       indices: 
       edges: []
@@ -376,7 +496,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 9cefbcb1c271c9d47916b84e50442d0b
+    spriteID: 963b6cb9e2038614baeca8ba366c8c53
     internalID: 0
     vertices: []
     indices: 
@@ -384,18 +504,24 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      VanguardOperativeWalk_0: -8247630722614121492
-      VanguardOperativeWalk_1: -1021017035487745535
-      VanguardOperativeWalk_10: 533039078
-      VanguardOperativeWalk_11: -160870661
-      VanguardOperativeWalk_2: -6718309307219508779
-      VanguardOperativeWalk_3: 1344361599403983414
-      VanguardOperativeWalk_4: -2072235577
-      VanguardOperativeWalk_5: -960498993
-      VanguardOperativeWalk_6: 56663487
-      VanguardOperativeWalk_7: -422610738
-      VanguardOperativeWalk_8: -76287093
-      VanguardOperativeWalk_9: -1756866675
+      FirefighterSpriteSheet_0: 1756291415134021759
+      FirefighterSpriteSheet_1: 2242328612352974026
+      FirefighterSpriteSheet_10: -1233637887
+      FirefighterSpriteSheet_11: 1460274573
+      FirefighterSpriteSheet_12: 1682818702
+      FirefighterSpriteSheet_13: -102873431
+      FirefighterSpriteSheet_14: 1232407007
+      FirefighterSpriteSheet_15: 409200517
+      FirefighterSpriteSheet_16: 1043215996
+      FirefighterSpriteSheet_17: 1032193196
+      FirefighterSpriteSheet_2: -1570912775
+      FirefighterSpriteSheet_3: -1971411781
+      FirefighterSpriteSheet_4: -1549855470
+      FirefighterSpriteSheet_5: 427797529
+      FirefighterSpriteSheet_6: 1348811535
+      FirefighterSpriteSheet_7: 426897146
+      FirefighterSpriteSheet_8: -641223914
+      FirefighterSpriteSheet_9: 1891243339
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
