@@ -22,8 +22,10 @@ public class PlayerController : MonoBehaviour
     
     [Header("Character Control")]
     [SerializeField] private Camera cam;
+    public float cam_bound = 1f;
     [SerializeField] Vector2 input_dir;
-    [SerializeField] Vector3 look_pos;
+    [SerializeField] private Vector3 look_pos;
+    [SerializeField] private Vector3 raw_look_pos;
     [SerializeField] Operator active_character;
 
     
@@ -72,12 +74,15 @@ public class PlayerController : MonoBehaviour
         if (alt_continuous) {AltAction();}
 
         // camera position
-        Vector3 char_pos = active_character.transform.position;
-        Vector3 cam_pos = (char_pos + look_pos) * 0.2f;
-        cam_pos.x = Mathf.Clamp(cam_pos.x, -2+char_pos.x, 2+char_pos.x);
-        cam_pos.y = Mathf.Clamp(cam_pos.y, -2+char_pos.y, 2+char_pos.y);
+        Vector3 char_pos = active_character.entity_rb.position;
+
+        look_pos = cam.ScreenToWorldPoint(raw_look_pos);
+        Vector3 cam_pos = (look_pos - char_pos) * 0.1f;
         cam_pos.z = -10;
-        cam.transform.position = cam_pos;
+
+        
+        cam.transform.position = cam_pos + char_pos;
+        Debug.DrawLine(cam_pos, char_pos);
     }
 
     #region Controls
@@ -97,10 +102,9 @@ public class PlayerController : MonoBehaviour
         active_character.StopMove();
     }
     public void Look(InputAction.CallbackContext context) {
-        look_pos = context.ReadValue<Vector2>();
-        look_pos.z = -cam.transform.localPosition.z;
-        look_pos = cam.ScreenToWorldPoint(look_pos);
-        active_character.Look(look_pos);
+        raw_look_pos = context.ReadValue<Vector2>();
+        raw_look_pos.z = -cam.transform.localPosition.z;
+        active_character.Look(cam.ScreenToWorldPoint(raw_look_pos));
     }
     public void MainStart(InputAction.CallbackContext context) {
         Debug.Log("Main");
