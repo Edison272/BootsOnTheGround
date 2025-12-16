@@ -113,7 +113,7 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                     ""name"": ""Main Action"",
                     ""type"": ""Button"",
                     ""id"": ""91208744-cc5b-47f4-a0a3-355c5fecf61b"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -122,16 +122,34 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                     ""name"": ""Alt Action"",
                     ""type"": ""Button"",
                     ""id"": ""4192e230-28f5-4a93-be91-bbe6080a14f0"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Reset"",
+                    ""name"": ""Reset Item"",
                     ""type"": ""Button"",
                     ""id"": ""30678b2a-b76b-46d4-abb8-a0688f0036de"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Switch Item"",
+                    ""type"": ""Button"",
+                    ""id"": ""e069eecb-7517-4bd6-90da-264567d0defc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Toggle Command Mode"",
+                    ""type"": ""Button"",
+                    ""id"": ""4a2c2a60-b6e3-48d1-9ec9-f57bf2df53cb"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -239,11 +257,33 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""2745a78b-284c-40b9-a3a0-43139cb3e203"",
+                    ""path"": ""<Joystick>/stick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""8c8e490b-c610-4785-884f-f04217b23ca4"",
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse;Touch"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""01bf4390-0296-4726-b2d0-55a8e8ee16a5"",
+                    ""path"": ""<Joystick>/stick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -277,7 +317,29 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Reset"",
+                    ""action"": ""Reset Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f558ef83-bb83-43c5-b09a-62a0a779467e"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Switch Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a4a51f2b-d3cc-49a2-bb11-adad363464c4"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Toggle Command Mode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -869,7 +931,9 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         m_GroundActions_Look = m_GroundActions.FindAction("Look", throwIfNotFound: true);
         m_GroundActions_MainAction = m_GroundActions.FindAction("Main Action", throwIfNotFound: true);
         m_GroundActions_AltAction = m_GroundActions.FindAction("Alt Action", throwIfNotFound: true);
-        m_GroundActions_Reset = m_GroundActions.FindAction("Reset", throwIfNotFound: true);
+        m_GroundActions_ResetItem = m_GroundActions.FindAction("Reset Item", throwIfNotFound: true);
+        m_GroundActions_SwitchItem = m_GroundActions.FindAction("Switch Item", throwIfNotFound: true);
+        m_GroundActions_ToggleCommandMode = m_GroundActions.FindAction("Toggle Command Mode", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -967,7 +1031,9 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_GroundActions_Look;
     private readonly InputAction m_GroundActions_MainAction;
     private readonly InputAction m_GroundActions_AltAction;
-    private readonly InputAction m_GroundActions_Reset;
+    private readonly InputAction m_GroundActions_ResetItem;
+    private readonly InputAction m_GroundActions_SwitchItem;
+    private readonly InputAction m_GroundActions_ToggleCommandMode;
     /// <summary>
     /// Provides access to input actions defined in input action map "GroundActions".
     /// </summary>
@@ -996,9 +1062,17 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @AltAction => m_Wrapper.m_GroundActions_AltAction;
         /// <summary>
-        /// Provides access to the underlying input action "GroundActions/Reset".
+        /// Provides access to the underlying input action "GroundActions/ResetItem".
         /// </summary>
-        public InputAction @Reset => m_Wrapper.m_GroundActions_Reset;
+        public InputAction @ResetItem => m_Wrapper.m_GroundActions_ResetItem;
+        /// <summary>
+        /// Provides access to the underlying input action "GroundActions/SwitchItem".
+        /// </summary>
+        public InputAction @SwitchItem => m_Wrapper.m_GroundActions_SwitchItem;
+        /// <summary>
+        /// Provides access to the underlying input action "GroundActions/ToggleCommandMode".
+        /// </summary>
+        public InputAction @ToggleCommandMode => m_Wrapper.m_GroundActions_ToggleCommandMode;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1037,9 +1111,15 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
             @AltAction.started += instance.OnAltAction;
             @AltAction.performed += instance.OnAltAction;
             @AltAction.canceled += instance.OnAltAction;
-            @Reset.started += instance.OnReset;
-            @Reset.performed += instance.OnReset;
-            @Reset.canceled += instance.OnReset;
+            @ResetItem.started += instance.OnResetItem;
+            @ResetItem.performed += instance.OnResetItem;
+            @ResetItem.canceled += instance.OnResetItem;
+            @SwitchItem.started += instance.OnSwitchItem;
+            @SwitchItem.performed += instance.OnSwitchItem;
+            @SwitchItem.canceled += instance.OnSwitchItem;
+            @ToggleCommandMode.started += instance.OnToggleCommandMode;
+            @ToggleCommandMode.performed += instance.OnToggleCommandMode;
+            @ToggleCommandMode.canceled += instance.OnToggleCommandMode;
         }
 
         /// <summary>
@@ -1063,9 +1143,15 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
             @AltAction.started -= instance.OnAltAction;
             @AltAction.performed -= instance.OnAltAction;
             @AltAction.canceled -= instance.OnAltAction;
-            @Reset.started -= instance.OnReset;
-            @Reset.performed -= instance.OnReset;
-            @Reset.canceled -= instance.OnReset;
+            @ResetItem.started -= instance.OnResetItem;
+            @ResetItem.performed -= instance.OnResetItem;
+            @ResetItem.canceled -= instance.OnResetItem;
+            @SwitchItem.started -= instance.OnSwitchItem;
+            @SwitchItem.performed -= instance.OnSwitchItem;
+            @SwitchItem.canceled -= instance.OnSwitchItem;
+            @ToggleCommandMode.started -= instance.OnToggleCommandMode;
+            @ToggleCommandMode.performed -= instance.OnToggleCommandMode;
+            @ToggleCommandMode.canceled -= instance.OnToggleCommandMode;
         }
 
         /// <summary>
@@ -1395,12 +1481,26 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnAltAction(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Reset" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Reset Item" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnReset(InputAction.CallbackContext context);
+        void OnResetItem(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Switch Item" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSwitchItem(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Toggle Command Mode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleCommandMode(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

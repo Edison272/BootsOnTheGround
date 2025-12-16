@@ -6,16 +6,21 @@ using UnityEngine;
 public class Operator : MonoBehaviour
 {
     //vfx
+    [field: Header("Body Parts")]
+    public GameObject main_body;//basically the hitbox
+    public GameObject vfx_body; //the vfx body
+    public Transform front;
+    public Transform back;
+    public Transform main_hand; //always set to main hand object
+    public Transform alt_hand; //always set to off hand object
+
     [field: Header("VFX")]
-    [field: SerializeField] public GameObject main_body {get; set;} //basically the hitbox
-    [field: SerializeField] public GameObject vfx_body {get; set;} //the vfx body
-    [field: SerializeField] public Animator anim {get; set;}
-    [field: SerializeField] public Transform front {get; set;}
-    [field: SerializeField] public Transform back {get; set;}
-    [field: SerializeField] public Transform main_hand {get; set;} //always set to main hand object
-    [field: SerializeField] public Transform alt_hand {get; set;} //always set to off hand object
+    public Animator anim;
+    public Vector2 sprite_center;
+
 
     //aim & handling
+    [field: Header("Aiming")]
     public Vector2 look_pos = Vector2.zero; // where op is looking
     public Vector2 aim_pos = Vector2.zero; //where bro is aiming
     private Vector2 aim_dir = new Vector2(1, 0);
@@ -24,18 +29,29 @@ public class Operator : MonoBehaviour
 
     [field: Header("IMovement")]
     public float move_speed = 1; //how fast an operator can move
-    
-    public Vector2 velocity {get; set;}
+    Vector2 velocity;
     Vector2 move_pos;
     Vector2 move_dir;
     public Rigidbody2D entity_rb;
+
+    [field: Header("Inventory")]
+    public Item[] inventory;
+    public Vector2Int[] item_indexes;  // Access items from the items list with indexes. Vector X for Main Item, Vector Y for Alt Item
+    int curr_item_index = 0;                  // access items indexes list
+    public Item main_item;
+    public Item alt_item;
     
 
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = false;
+
+    }
+
+    // make sure the operator's data is set up
+    public void GetReady()
+    {
+        curr_item_index = 0;
     }
 
     // Update is called once per frame
@@ -72,11 +88,17 @@ public class Operator : MonoBehaviour
         main_hand.transform.rotation = Quaternion.Slerp(main_hand.transform.rotation, Quaternion.Euler(0, 0, aim_angle), handle_speed * Time.deltaTime);
         alt_hand.transform.rotation = Quaternion.Slerp(alt_hand.transform.rotation, Quaternion.Euler(0, 0, aim_angle), handle_speed * Time.deltaTime);
 
+        
+
         // aim_pos is the direction the operator turns its weapon to over time
         float look_dist = (entity_rb.position + look_pos).magnitude;
         aim_pos.x = entity_rb.position.x + (-look_dist*Mathf.Cos((main_hand.transform.rotation.eulerAngles.z)*Mathf.Deg2Rad));
         aim_pos.y = entity_rb.position.y + (-look_dist*Mathf.Sin((main_hand.transform.rotation.eulerAngles.z)*Mathf.Deg2Rad));
         aim_dir = (aim_pos - entity_rb.position).normalized;
+
+        // aim the items
+        main_item.Aim(aim_pos, aim_angle);
+        alt_item.Aim(aim_pos, aim_angle);
 
         // make sprite face right direction
         anim.SetBool("FaceFront", !(aim_pos.y > entity_rb.position.y));
@@ -112,6 +134,56 @@ public class Operator : MonoBehaviour
     {
         move_dir = Vector2.zero;
         anim.SetBool("Moving", false);
+    }
+    #endregion
+
+    #region  Inventory Management
+    
+    public bool HasAltAction() // returns true if the operator is currently wielding two items or an multi-state items
+    {
+        return item_indexes[curr_item_index].y != -1;  // return true for one action, and false for two actions
+    }
+    public void SetupActive(int index)  // setup the currently active weapons (the ones the operator is currently holding)
+    {
+        main_item = inventory[item_indexes[index].x];
+        alt_item = inventory[item_indexes[index].y];
+    }
+    public void SwitchItem(int spec_index = -1) // cycle between item_indexes slots, or choose a select slot with spec_index
+    {
+        if (spec_index == curr_item_index)
+        {
+            return;
+        }
+        
+        curr_item_index = spec_index == 0? curr_item_index + 1 : Mathf.Clamp(spec_index, 0, item_indexes.Length);
+        
+        // probably add something to disable the previous 
+
+        SetupActive(curr_item_index); // set up the new shi
+    }
+
+    #endregion
+    #region Item Interaction
+    public void UseMainItem()
+    {
+        main_item.Use();
+    }
+    public void StopMainItem()
+    {
+        main_item.Stop();
+    }
+    public void UseAltItem()
+    {
+        alt_item.Use();
+    }
+    public void StopAltItem()
+    {
+        alt_item.Stop();
+    }
+    public void ResetItems()
+    {
+        main_item.Reset();
+        alt_item?.Reset(); // reset if there's an alt item
     }
     #endregion
 }

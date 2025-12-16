@@ -27,7 +27,7 @@
                     "name": "Main Action",
                     "type": "Button",
                     "id": "91208744-cc5b-47f4-a0a3-355c5fecf61b",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -36,16 +36,34 @@
                     "name": "Alt Action",
                     "type": "Button",
                     "id": "4192e230-28f5-4a93-be91-bbe6080a14f0",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "Hold",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Reset",
+                    "name": "Reset Item",
                     "type": "Button",
                     "id": "30678b2a-b76b-46d4-abb8-a0688f0036de",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Switch Item",
+                    "type": "Button",
+                    "id": "e069eecb-7517-4bd6-90da-264567d0defc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Toggle Command Mode",
+                    "type": "Button",
+                    "id": "4a2c2a60-b6e3-48d1-9ec9-f57bf2df53cb",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -153,11 +171,33 @@
                 },
                 {
                     "name": "",
+                    "id": "2745a78b-284c-40b9-a3a0-43139cb3e203",
+                    "path": "<Joystick>/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8c8e490b-c610-4785-884f-f04217b23ca4",
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse;Touch",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "01bf4390-0296-4726-b2d0-55a8e8ee16a5",
+                    "path": "<Joystick>/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -191,7 +231,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Reset",
+                    "action": "Reset Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f558ef83-bb83-43c5-b09a-62a0a779467e",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Switch Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a4a51f2b-d3cc-49a2-bb11-adad363464c4",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Toggle Command Mode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.PlayerLoop;
 
 public class PlayerController : MonoBehaviour
@@ -17,8 +18,6 @@ public class PlayerController : MonoBehaviour
     InputAction alt_action;
     bool alt_continuous; // checked on update to see if the alt action should be called
     public bool alt_hold_input = false;  // if true, mouse will alt action function will constantly be called
-    InputAction reset_action;
-
     
     [Header("Character Control")]
     [SerializeField] private Camera cam;
@@ -37,34 +36,46 @@ public class PlayerController : MonoBehaviour
         
         // map input actions to the controls
         movement = controls.GroundActions.Move;
-        movement.Enable();
         looking = controls.GroundActions.Look;
-        looking.Enable();
         main_action = controls.GroundActions.MainAction;
-        main_action.Enable();
         alt_action = controls.GroundActions.AltAction;
-        alt_action.Enable();
 
         // subscribe to the relevant events
         movement.performed += Move;
         looking.performed += Look;
 
-        // special subscription based on whetehr or not item is full auto
-        main_action.started += MainStart;
-        main_action.canceled += MainRelease;
-        alt_action.started += AltStart;
-        alt_action.canceled += AltRelease;
+        // subscribe action types
+        active_character.GetReady(); // set up all necessary data ready for the operator
+        SetMainAction(true);
+        SetAltAction(active_character.HasAltAction());
         
-        // reset the weapon (reload, recharge, reset stance, etc.)
-        controls.GroundActions.Reset.performed += ResetAction;
-        controls.GroundActions.Reset.Enable();
+        // reset the item (reload, recharge, reset stance, cool animation etc.)
+        controls.GroundActions.ResetItem.performed += ResetItem;
+
+        // switch the item
+        controls.GroundActions.SwitchItem.performed += SwitchItem;
+
+        // Toggle Command Mode
+        controls.GroundActions.ToggleCommandMode.performed += CmdMode;
         
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
+        EnableControl();
+    }
+
+    public void EnableControl()
+    {
+        controls.Enable();
+    }
+
+    public void DisableControl()
+    {
+        controls.Disable();
     }
 
     // Update is called once per frame
@@ -77,7 +88,7 @@ public class PlayerController : MonoBehaviour
         Vector3 char_pos = active_character.entity_rb.position;
 
         look_pos = cam.ScreenToWorldPoint(raw_look_pos);
-        Vector3 cam_pos = (look_pos - char_pos) * 0.1f;
+        Vector3 cam_pos = (look_pos - char_pos) * 0.15f;
         cam_pos.z = -10;
 
         
@@ -85,8 +96,8 @@ public class PlayerController : MonoBehaviour
         Debug.DrawLine(cam_pos, char_pos);
     }
 
-    #region Controls
-    public void Move(InputAction.CallbackContext context) {
+    #region Input Functions
+    void Move(InputAction.CallbackContext context) {
         input_dir = context.ReadValue<Vector2>();
         if (input_dir.sqrMagnitude > 0.0001f) 
         {
@@ -97,40 +108,64 @@ public class PlayerController : MonoBehaviour
             active_character.StopMove();
         }        
     }
-    public void StopMove(InputAction.CallbackContext context)
-    {
-        active_character.StopMove();
-    }
-    public void Look(InputAction.CallbackContext context) {
+    void StopMove(InputAction.CallbackContext context) {active_character.StopMove();}
+    void Look(InputAction.CallbackContext context) {
         raw_look_pos = context.ReadValue<Vector2>();
         raw_look_pos.z = -cam.transform.localPosition.z;
         active_character.Look(cam.ScreenToWorldPoint(raw_look_pos));
     }
-    public void MainStart(InputAction.CallbackContext context) {
-        Debug.Log("Main");
+    void MainStart(InputAction.CallbackContext context) {
+        active_character.UseMainItem();
         main_continuous = main_hold_input;
     }
-    public void MainRelease(InputAction.CallbackContext context) {
-        Debug.Log("End Main");
+    void MainStop(InputAction.CallbackContext context) {
+        active_character.StopMainItem();
         main_continuous = false;
     }
-    public void MainAction()
-    {
-        Debug.Log("Main");
-    }
-    public void AltStart(InputAction.CallbackContext context) {
-        Debug.Log("Alt");
+    void MainAction() {active_character.UseMainItem();}
+    void AltStart(InputAction.CallbackContext context) {
+        active_character.UseAltItem();
         alt_continuous = alt_hold_input;
          
     }
-    public void AltRelease(InputAction.CallbackContext context) {
-        Debug.Log("End Alt");
+    void AltStop(InputAction.CallbackContext context) {
+        active_character.StopAltItem();
         alt_continuous = false;
     }
-    public void AltAction()
+    void AltAction() {active_character.UseAltItem();}
+    void ResetItem(InputAction.CallbackContext context) {active_character.ResetItems();}
+    void SwitchItem(InputAction.CallbackContext context) {active_character.SwitchItem();}
+    void CmdMode(InputAction.CallbackContext context) {}
+    #endregion
+
+    #region Action Enabling
+    void SetMainAction(bool enable) // set main action. set parameter false to turn off main actions
     {
-        Debug.Log("Alt");
+        if (enable)
+        {
+            main_action.started += MainStart;
+            main_action.canceled += MainStop;
+        }
+        else
+        {
+            main_action.started -= MainStart;
+            main_action.canceled -= MainStop;
+        }
+    } 
+    void SetAltAction(bool enable) // set alt action. set parameter false to turn off main actions
+    {
+        if (enable)
+        {
+            alt_action.started += AltStart;
+            alt_action.canceled += AltStop;
+        }
+        else
+        {
+            alt_action.started -= AltStart;
+            alt_action.canceled -= AltStop;
+        }
     }
-    public void ResetAction(InputAction.CallbackContext context) {Debug.Log("Resetting");}
+
+
     #endregion
 }
