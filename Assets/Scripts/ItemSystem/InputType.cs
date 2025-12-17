@@ -4,12 +4,7 @@ using UnityEngine;
 
 [System.Serializable]
 public abstract class InputType
-{
-    public bool full_auto; // if not, this input is tap to shoot (semi auto)  
-    float use_cd;  // time before this input can be used again
-    float curr_cd; // current time
-
-    Item item;
+{    Item item;
     ItemEffect[] effects;
     public InputType() {}
     public abstract void Use();
@@ -19,10 +14,19 @@ public abstract class InputType
 [System.Serializable]
 public class NormalInput : InputType // standard input. Use() = Output
 {
-    public NormalInput(float use_cd) {}
+    float use_cd;  // time before this input can be used again
+    float curr_cd; // current time
+    public NormalInput(float use_cooldown)
+    {
+        use_cd = use_cooldown;
+    }
     public override void Use()
     {
-        
+        if (curr_cd > Time.time)
+        {
+            // do the effect or whatnot
+            curr_cd = Time.time + use_cd;
+        }
     }
     public override void Stop()
     {

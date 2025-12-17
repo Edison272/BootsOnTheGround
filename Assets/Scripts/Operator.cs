@@ -28,8 +28,6 @@ public class Operator : MonoBehaviour
     public Vector2 aim_pos = Vector2.zero; //where bro is aiming
     private Vector2 aim_dir = new Vector2(1, 0);
     public float aim_angle = 0;
-    public float handle_speed = 20;
-
     [field: Header("IMovement")]
     public float move_speed = 1; //how fast an operator can move
     Vector2 velocity;
@@ -59,7 +57,13 @@ public class Operator : MonoBehaviour
     // make sure the operator's data is set up
     public void GetReady()
     {
-        curr_item_index = 0;
+        // set initial active items
+        foreach(Item item in inventory)
+        {
+            item.Setup();
+            item.UnequipItem();
+        }
+        EquipActive(0);
     }
 
     // Update is called once per frame
@@ -92,54 +96,11 @@ public class Operator : MonoBehaviour
     }
     public void Aim()
     {
-        // update weapon rotation
-        main_hand.transform.rotation = Quaternion.Slerp(main_hand.transform.rotation, Quaternion.Euler(0, 0, aim_angle), handle_speed * Time.deltaTime);
-        alt_hand.transform.rotation = Quaternion.Slerp(alt_hand.transform.rotation, Quaternion.Euler(0, 0, aim_angle), handle_speed * Time.deltaTime);
-
+        aim_pos = look_pos; // temporary
         
-
-        // aim_pos is the direction the operator turns its weapon to over time
-        float look_dist = (entity_rb.position + look_pos).magnitude;
-        aim_pos.x = entity_rb.position.x + (-look_dist*Mathf.Cos((main_hand.transform.rotation.eulerAngles.z)*Mathf.Deg2Rad));
-        aim_pos.y = entity_rb.position.y + (-look_dist*Mathf.Sin((main_hand.transform.rotation.eulerAngles.z)*Mathf.Deg2Rad));
-        aim_dir = (aim_pos - entity_rb.position).normalized;
-
         // aim the items
         main_item.Aim(aim_pos, aim_angle);
-        alt_item.Aim(aim_pos, aim_angle);
-
-
-        // BR
-        /* main hand in front, left side
-         then front
-         then body_vfx
-         then back
-         then alt hand in the back, right side
-        */ 
-
-        // TR
-        /* main hand in front, right side
-         then back
-         then body_vfx
-         then front
-         then alt hand in the back, left side
-        */ 
-
-        // BL
-        /* alt hand in front, right side
-         then front
-         then body_vfx
-         then back
-         then main hand in the back, left side
-        */ 
-
-        // TL
-        /* alt hand in front, left side
-         then back
-         then body_vfx
-         then front
-         then main hand in the back, right side
-        */ 
+        alt_item?.Aim(aim_pos, aim_angle);
         
         // check if direction state has changed
         if (direction_state.Item1 != aim_pos.x > entity_rb.position.x) // direction_state.Item1 = true -> facing right
@@ -173,41 +134,6 @@ public class Operator : MonoBehaviour
 
             direction_state.Item2 = aim_pos.y > entity_rb.position.y; // update direction state
         }
-
-        // front.SetSiblingIndex(4);
-        // main_hand.SetSiblingIndex(3);
-        // vfx_body.transform.SetSiblingIndex(2);
-        // alt_hand.SetSiblingIndex(1);
-        // back.SetSiblingIndex(0);
-
-        // // y-axis changes
-        // if (aim_pos.y < entity_rb.position.y)
-        // {
-        //     // face right
-        //     anim.SetBool("FaceFront", true);
-        //     int temp_index = front.GetSiblingIndex();
-        //     front.SetSiblingIndex(back.GetSiblingIndex());
-        //     back.SetSiblingIndex(temp_index);
-        // } else
-        // {
-        //     // face left
-        //     anim.SetBool("FaceFront", false);
-        // }
-
-
-
-        // maintain sorting order
-        // if(Mathf.Sign(aim_dir.y) == Mathf.Sign(aim_dir.x)) {
-        //     // set back first
-        //     front.SetSiblingIndex(0);
-        //     vfx_body.transform.SetSiblingIndex(1);
-        //     back.SetSiblingIndex(2);
-        // } else {
-        //     // set front first
-        //     front.SetSiblingIndex(2);
-        //     vfx_body.transform.SetSiblingIndex(1);
-        //     back.SetSiblingIndex(0);
-        // }
     }
     #endregion
 
@@ -236,25 +162,47 @@ public class Operator : MonoBehaviour
     {
         return item_indexes[curr_item_index].y != -1;  // return true for one action, and false for two actions
     }
-    public void SetupActive(int index)  // setup the currently active weapons (the ones the operator is currently holding)
+    public void EquipActive(int index)  // equip the currently selected weapons (the ones the operator is currently holding)
     {
         main_item = inventory[item_indexes[index].x];
-        alt_item = inventory[item_indexes[index].y];
+        main_item.EquipItem();
+        if (item_indexes[index].y != -1)
+        {
+            alt_item = inventory[item_indexes[index].y];
+            alt_item.EquipItem();
+        }
+    }
+    public void UnequipActive() // unequip the currently selected weapons
+    {
+        main_item.UnequipItem();
+        alt_item?.UnequipItem();
     }
     public void SwitchItem(int spec_index = -1) // cycle between item_indexes slots, or choose a select slot with spec_index
     {
-        if (spec_index == curr_item_index)
+        if (spec_index == curr_item_index) {return;} // dont do anything if switching to active items
+        
+        if (spec_index == -1) // typical incrementation
         {
-            return;
+            curr_item_index += 1;
+            if (curr_item_index > item_indexes.Length - 1)
+            {
+                curr_item_index = 0;
+            }
+        }
+        else // specific index
+        {
+            curr_item_index = Mathf.Clamp(spec_index, 0, item_indexes.Length);
         }
         
-        curr_item_index = spec_index == 0? curr_item_index + 1 : Mathf.Clamp(spec_index, 0, item_indexes.Length);
-        
-        // probably add something to disable the previous 
-
-        SetupActive(curr_item_index); // set up the new shi
+        // probably add something to disable the previous items latee
+        UnequipActive();
+        EquipActive(curr_item_index); // set up the new shi
     }
     
+    public void SetAkimboHands(bool is_akimbo) // set the position of 
+    {
+        
+    }
 
     #endregion
     #region Item Interaction

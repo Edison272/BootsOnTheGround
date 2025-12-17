@@ -30,14 +30,25 @@ public class Item : MonoBehaviour
 
     [field: Header("Data")]
     public Operator user;
+
+    [field: Header("Functionality")]
+    public bool is_full_auto = true;
+    public bool is_equipped = false; // can only use an item if it is equipped
+    public float use_speed;
     
-    // Setup immutable item data in start
+
     void Start()
+    {
+        Setup();
+    }
+
+    // Setup immutable item data in start
+    public void Setup()
     {
         // setup input type
         switch (input_enum) {
             case InputEnum.Normal:
-                input_type = new NormalInput(3);
+                input_type = new NormalInput(use_speed);
                 break;
             case InputEnum.Charge:
                 input_type = new ChargeInput();
@@ -64,8 +75,15 @@ public class Item : MonoBehaviour
 
 
     // setup the weapon for the user whenever it's picked up or equipped
-    void Setup()
+    public void EquipItem()
     {
+        gameObject.SetActive(true); // temporary
+    }
+
+
+    public void UnequipItem()
+    {
+        gameObject.SetActive(false); // temporary
     }
 
     // Update the target position of this item and adjust VFX accordingly
@@ -80,17 +98,17 @@ public class Item : MonoBehaviour
 
     public void Use()
     {
-        Debug.Log("Doot");
+        Debug.Log(gameObject.name);
     }
 
     public void Stop()
     {
-        Debug.Log("Stop the Doot");
+        Debug.Log("Stop the " + gameObject.name);
     }
 
     public void Reset()
     {
-        Debug.Log("ReDoot");
+        Debug.Log("Reset the " + gameObject.name);
     }
 
     #region Aiming FX Types
@@ -108,7 +126,7 @@ public class Item : MonoBehaviour
     #region Getting Data
     public bool IsHoldInput()
     {
-        return input_type.full_auto;
+        return is_full_auto;
     }
     #endregion
 }
