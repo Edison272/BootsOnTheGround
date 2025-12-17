@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 
 public class Operator : MonoBehaviour
@@ -17,7 +18,9 @@ public class Operator : MonoBehaviour
     [field: Header("VFX")]
     public Animator anim;
     public Vector2 sprite_center;
-
+    // character has 4 VFX states based on aim direciton, stored as two booleans, X and Y
+    // T, F = Right Bottom | T, T = Right Top | F, T = Left Top | F, F = Left Bottom
+    (bool, bool) direction_state = (true, false);
 
     //aim & handling
     [field: Header("Aiming")]
@@ -45,7 +48,12 @@ public class Operator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        // set basic sibling order of entity VFX
+        main_hand.SetSiblingIndex(4);
+        front.SetSiblingIndex(3);
+        vfx_body.transform.SetSiblingIndex(2);
+        back.SetSiblingIndex(1);
+        alt_hand.SetSiblingIndex(0);
     }
 
     // make sure the operator's data is set up
@@ -100,21 +108,106 @@ public class Operator : MonoBehaviour
         main_item.Aim(aim_pos, aim_angle);
         alt_item.Aim(aim_pos, aim_angle);
 
-        // make sprite face right direction
-        anim.SetBool("FaceFront", !(aim_pos.y > entity_rb.position.y));
+
+        // BR
+        /* main hand in front, left side
+         then front
+         then body_vfx
+         then back
+         then alt hand in the back, right side
+        */ 
+
+        // TR
+        /* main hand in front, right side
+         then back
+         then body_vfx
+         then front
+         then alt hand in the back, left side
+        */ 
+
+        // BL
+        /* alt hand in front, right side
+         then front
+         then body_vfx
+         then back
+         then main hand in the back, left side
+        */ 
+
+        // TL
+        /* alt hand in front, left side
+         then back
+         then body_vfx
+         then front
+         then main hand in the back, right side
+        */ 
+        
+        // check if direction state has changed
+        if (direction_state.Item1 != aim_pos.x > entity_rb.position.x) // direction_state.Item1 = true -> facing right
+        {
+            // switch hand index
+            int mh_sib_index = main_hand.GetSiblingIndex();
+            main_hand.SetSiblingIndex(alt_hand.GetSiblingIndex());
+            alt_hand.SetSiblingIndex(mh_sib_index);
+
+            // switch hand positions
+            Vector3 mh_pos = main_hand.transform.localPosition;
+            main_hand.transform.localPosition = alt_hand.transform.localPosition;
+            alt_hand.localPosition = mh_pos;
+
+            direction_state.Item1 = aim_pos.x > entity_rb.position.x; // update direction state
+        }
+
+        if (direction_state.Item2 != aim_pos.y > entity_rb.position.y) // direction_state.Item2 = true -> facing up
+        {
+            anim.SetBool("FaceFront", !(aim_pos.y > entity_rb.position.y)); // face front
+            
+            // switch front & back index
+            int front_sib_index = front.GetSiblingIndex();
+            front.SetSiblingIndex(back.GetSiblingIndex());
+            back.SetSiblingIndex(front_sib_index);
+
+            // switch hand positions
+            Vector3 mh_pos = main_hand.transform.localPosition;
+            main_hand.transform.localPosition = alt_hand.transform.localPosition;
+            alt_hand.localPosition = mh_pos;
+
+            direction_state.Item2 = aim_pos.y > entity_rb.position.y; // update direction state
+        }
+
+        // front.SetSiblingIndex(4);
+        // main_hand.SetSiblingIndex(3);
+        // vfx_body.transform.SetSiblingIndex(2);
+        // alt_hand.SetSiblingIndex(1);
+        // back.SetSiblingIndex(0);
+
+        // // y-axis changes
+        // if (aim_pos.y < entity_rb.position.y)
+        // {
+        //     // face right
+        //     anim.SetBool("FaceFront", true);
+        //     int temp_index = front.GetSiblingIndex();
+        //     front.SetSiblingIndex(back.GetSiblingIndex());
+        //     back.SetSiblingIndex(temp_index);
+        // } else
+        // {
+        //     // face left
+        //     anim.SetBool("FaceFront", false);
+        // }
+
+
 
         // maintain sorting order
-        if(Mathf.Sign(aim_dir.y) == Mathf.Sign(aim_dir.x)) {
-            // set back first
-            front.SetSiblingIndex(0);
-            vfx_body.transform.SetSiblingIndex(1);
-            back.SetSiblingIndex(2);
-        } else {
-            // set front first
-            front.SetSiblingIndex(2);
-            vfx_body.transform.SetSiblingIndex(1);
-            back.SetSiblingIndex(0);
-        }
+        // if(Mathf.Sign(aim_dir.y) == Mathf.Sign(aim_dir.x)) {
+        //     // set back first
+        //     front.SetSiblingIndex(0);
+        //     vfx_body.transform.SetSiblingIndex(1);
+        //     back.SetSiblingIndex(2);
+        // } else {
+        //     // set front first
+        //     front.SetSiblingIndex(2);
+        //     vfx_body.transform.SetSiblingIndex(1);
+        //     back.SetSiblingIndex(0);
+        // }
     }
     #endregion
 
@@ -161,6 +254,7 @@ public class Operator : MonoBehaviour
 
         SetupActive(curr_item_index); // set up the new shi
     }
+    
 
     #endregion
     #region Item Interaction

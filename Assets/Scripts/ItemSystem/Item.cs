@@ -7,13 +7,14 @@ public class Item : MonoBehaviour
 {
     public GameObject ItemTransform;
 
-    [field: Header("Input")]
+    
     // Classify Input Type
     enum InputEnum {Normal, Charge, Increment}
+    [field: Header("Input")]
     [SerializeField] InputEnum input_enum;
-
     // Input Instance
-    public InputType input_type;
+    [SerializeReference] 
+    InputType input_type;
 
     [field: Header("Body")]
     public GameObject item_object;
@@ -26,6 +27,9 @@ public class Item : MonoBehaviour
     bool dynamic_aim = true;        // allow dynamic aim for the object to be able to turn to face the target
     float handle_speed = 20f;       // how quickly the weapon can be turned to face the target;
     public Action AimVFX;
+
+    [field: Header("Data")]
+    public Operator user;
     
     // Setup immutable item data in start
     void Start()
@@ -89,7 +93,6 @@ public class Item : MonoBehaviour
         Debug.Log("ReDoot");
     }
 
-
     #region Aiming FX Types
     void StaticAim()
     {
@@ -100,5 +103,12 @@ public class Item : MonoBehaviour
         item_object.transform.rotation = Quaternion.Slerp(item_object.transform.rotation, Quaternion.Euler(0, 0, aim_angle), handle_speed * Time.deltaTime);
     }
 
+    #endregion
+
+    #region Getting Data
+    public bool IsHoldInput()
+    {
+        return input_type.full_auto;
+    }
     #endregion
 }

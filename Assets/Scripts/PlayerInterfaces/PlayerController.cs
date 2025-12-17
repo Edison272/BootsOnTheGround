@@ -134,7 +134,12 @@ public class PlayerController : MonoBehaviour
     }
     void AltAction() {active_character.UseAltItem();}
     void ResetItem(InputAction.CallbackContext context) {active_character.ResetItems();}
-    void SwitchItem(InputAction.CallbackContext context) {active_character.SwitchItem();}
+    void SwitchItem(InputAction.CallbackContext context) {
+        active_character.SwitchItem();
+        // adjust inputs based on current weapons
+        main_hold_input = active_character.main_item.IsHoldInput();
+        alt_hold_input = active_character.alt_item.IsHoldInput();
+    }
     void CmdMode(InputAction.CallbackContext context) {}
     #endregion
 
