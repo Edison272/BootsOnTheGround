@@ -19,7 +19,9 @@ public class Item : MonoBehaviour
 
     [field: Header("Aiming")]
     public Vector2 aim_pos;
-    float aim_angle;
+    public Vector2 aim_dir;
+    static readonly Quaternion ROTATION_OFFSET = Quaternion.Euler(0, 0, 90f); // RotateTowards() is stupid so we need to offset it
+    public float rot_scale = 1f; // 0 for no rotation, 1 for instantaneous rotation
     public Vector2 target_pos;
     bool freeze_aiming = false;     // stop this thing from aiming and updating target position
     [SerializeField] bool dynamic_aim = true;        // allow dynamic aim for the object to be able to turn to face the target
@@ -84,10 +86,10 @@ public class Item : MonoBehaviour
     }
 
     // Update the target position of this item and adjust VFX accordingly
-    public void Aim(Vector2 new_aim_pos, float new_aim_angle)
+    public void Aim(Vector2 new_aim_pos, Vector2 new_aim_dir)
     {
         aim_pos = new_aim_pos;
-        aim_angle = new_aim_angle;
+        aim_dir = new_aim_dir;
 
         AimVFX();
         
@@ -115,10 +117,13 @@ public class Item : MonoBehaviour
     }
     void DynamicAim()
     {
-        item_object.transform.rotation = Quaternion.Slerp(item_object.transform.rotation, Quaternion.Euler(0, 0, aim_angle), 1);
-        if(Mathf.Sign(item_object.transform.localScale.y) != Mathf.Sign(user.vfx_body.transform.localScale.x)) {
+        // set the item's rotation towards the target direction
+        Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aim_dir) * ROTATION_OFFSET;
+        float aim_speed = rot_scale;
+        item_object.transform.rotation = Quaternion.Lerp(item_object.transform.rotation, aim_rot, aim_speed);
+        // make sure item scale is correct
+        if((item_object.transform.localScale.y >= 0) != (aim_dir.x >= 0)) {
             Vector3 new_vec = item_object.transform.localScale;
-            new_vec.x *= -1;
             new_vec.y *= -1;
             item_object.transform.localScale = new_vec;
         }

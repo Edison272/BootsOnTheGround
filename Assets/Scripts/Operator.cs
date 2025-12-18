@@ -22,16 +22,15 @@ public class Operator : MonoBehaviour
     // character has 4 VFX states based on aim direciton, stored as two booleans, X and Y
     // T, F = Right Bottom | T, T = Right Top | F, T = Left Top | F, F = Left Bottom
     (bool, bool) direction_state = (true, true);
-    [SerializeField] (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.975f), new Vector2 (0.5f, 0.975f));  // (main pos, alt pos)
-    [SerializeField] Vector2 single_hand_pos = new Vector2 (0, 0.975f);  // (main pos, alt pos)
+    [SerializeField] (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.975f), new Vector2 (0.5f, 0.975f));  // (main pos (left), alt pos (right))
+    [SerializeField] readonly Vector2 single_hand_pos = new Vector2 (0, 0.975f);  // (main pos, alt pos)
 
     //aim & handling
     [field: Header("Aiming")]
-    public Vector2 look_pos = Vector2.zero; // where op is looking
-    public Vector2 aim_pos = Vector2.zero; //where bro is aiming
-    private Vector2 aim_dir = new Vector2(1, 0);
+    Vector2 aim_dir = Vector2.zero; // vector from operator to where they are looking
+    public Vector2 aim_pos = Vector2.zero; // the "true" position the oper
     private Action AimStyle; // single-item or akimbo aiming?
-    public float aim_angle = 0; // angle (deg) the of the aim_pos
+   public  float aim_angle = 0; // angle (deg) the character is looking in
     [field: Header("IMovement")]
     public float move_speed = 1; //how fast an operator can move
     Vector2 velocity;
@@ -45,28 +44,18 @@ public class Operator : MonoBehaviour
     int curr_item_index = 0;           // access items indexes list
     public Item main_item;
     public Item alt_item;
-    
 
-    // Start is called before the first frame update
-    void Start()
+    // make sure the operator's data is set up
+    public void GetReady()
     {
-        // set basic sibling order of entity VFX
+        // set basic sibling order of entity VFX (operator faces BOTTOM RIGHT by default)
         anim.SetBool("FaceFront", true);
         main_hand.SetSiblingIndex(4);
         front.SetSiblingIndex(3);
         vfx_body.transform.SetSiblingIndex(2);
         back.SetSiblingIndex(1);
         alt_hand.SetSiblingIndex(0);
-
-        Look(new Vector2(1, -1));  // initialize default look position
-
-        // set default aim function
-        AimStyle = AkimboAim;
-    }
-
-    // make sure the operator's data is set up
-    public void GetReady()
-    {
+        
         // set initial active items
         foreach(Item item in inventory)
         {
@@ -74,7 +63,12 @@ public class Operator : MonoBehaviour
             item.UnequipItem();
             item.user = this;
         }
+        // setup first item and make it ready to aim and allat
         EquipActive(0);
+        SetAimStyle(alt_item);
+        // initialize default look position
+        aim_dir = new Vector2(1, -1);
+        Look(entity_rb.position + aim_dir);  
     }
 
     // Update is called once per frame
@@ -88,32 +82,31 @@ public class Operator : MonoBehaviour
     #region Looking & Aiming
     public void Look(Vector2 look_pos) {
         // look_dir is the direction the operator is set to look at
-        this.look_pos = look_pos;
         Vector2 look_dir = (look_pos - entity_rb.position).normalized;
-        if (look_dir.x > 0) 
-            {vfx_body.transform.localScale = new Vector3 (1, 1, 1);} 
-        else 
-            {vfx_body.transform.localScale = new Vector3 (-1, 1, 1);}
-        
-        aim_angle = Mathf.Atan2(look_dir.y, look_dir.x) * Mathf.Rad2Deg;
+
+        if ((look_dir.x >= 0) != (aim_dir.x >= 0))
+        {
+            Vector3 look_scale = new Vector3 ((int)Mathf.Sign(look_dir.x), 1, 1);
+            front.localScale = look_scale;
+            body_sprite.localScale = look_scale;
+            back.localScale = look_scale;
+            akimbo_hand_pos.Item1.x *= -1;
+            akimbo_hand_pos.Item2.x *= -1;
+        }
 
 
-
-        // if(main_item != null) {
-        //     main_item.look(aim_pos);
-        //     if(main_hand.localScale.y != vfx_body.transform.localScale.x) {
-        //         main_hand.localScale = new Vector3(1f, vfx_body.transform.localScale.x, 1f);
-        //     }
+        // aim hands and body to correct direction
+        aim_dir = look_pos - entity_rb.position;
+        AimStyle();
     }
     public void Aim()
     {
-        aim_pos = look_pos; // temporary
+        //aim_dir = Quaternion.Slerp(aim_dir, Quaternion.Euler(0, 0, aim_angle), 1);
+        aim_pos = aim_dir + entity_rb.position;
         
         // aim the items
-        main_item.Aim(aim_pos, aim_angle);
-        alt_item?.Aim(aim_pos, aim_angle);
-
-        AimStyle();
+        main_item.Aim(aim_pos, aim_dir);
+        alt_item?.Aim(aim_pos, aim_dir);
     }
 
     void SetAimStyle(bool is_akimbo) // set the position of main & alt hands for akimbo or non-akimbo weaponry whenever weapon switch
@@ -121,16 +114,16 @@ public class Operator : MonoBehaviour
         if (is_akimbo)
         {
             // set hand index
-            main_hand.SetSiblingIndex(direction_state.Item1? 3 : 1);
-            alt_hand.SetSiblingIndex(direction_state.Item1? 1 : 3);
+            main_hand.SetSiblingIndex(direction_state.Item1? 4 : 0);
+            alt_hand.SetSiblingIndex(direction_state.Item1? 0 : 4);
             // adjust hand positions to either side of body
             main_hand.transform.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
             alt_hand.transform.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
             AimStyle = AkimboAim;
         } else {
             // set hand index
-            main_hand.SetSiblingIndex(direction_state.Item2? 3 : 1);
-            alt_hand.SetSiblingIndex(direction_state.Item2? 1 : 3);
+            main_hand.SetSiblingIndex(direction_state.Item2? 4 : 0);
+            alt_hand.SetSiblingIndex(direction_state.Item2? 0 : 4);
             // adjust hand positions to center mass
             main_hand.transform.localPosition = single_hand_pos;
             alt_hand.transform.localPosition = single_hand_pos;
@@ -141,29 +134,29 @@ public class Operator : MonoBehaviour
     void AkimboAim() // aim two weapons from two sides of body
     {
         // check if direction state has changed
-        if (direction_state.Item1 != aim_pos.x > entity_rb.position.x) // direction_state.Item1 = true -> facing right
+        if (direction_state.Item1 != aim_dir.x > 0) // direction_state.Item1 = true -> facing right
         {
-            direction_state.Item1 = aim_pos.x > entity_rb.position.x; // update direction state
+            direction_state.Item1 = aim_dir.x > 0; // update direction state
             
             // switch hand indexes
             main_hand.SetSiblingIndex(alt_hand.GetSiblingIndex());
-            alt_hand.SetSiblingIndex(main_hand.GetSiblingIndex() == 3 ? 1 : 3);
+            alt_hand.SetSiblingIndex(main_hand.GetSiblingIndex() == 4 ? 0 : 4);
 
             // switch hand positions
-            main_hand.transform.localPosition = alt_hand.transform.localPosition;
+            main_hand.transform.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
             alt_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
         }
 
-        if (direction_state.Item2 != aim_pos.y < entity_rb.position.y) // direction_state.Item2 = true -> facing down (front)
+        if (direction_state.Item2 != aim_dir.y < 0) // direction_state.Item2 = true -> facing down (front)
         {
-            direction_state.Item2 = aim_pos.y < entity_rb.position.y; // update direction state
+            direction_state.Item2 = aim_dir.y < 0; // update direction state
             
             // switch front & back index
             front.SetSiblingIndex(back.GetSiblingIndex());
-            back.SetSiblingIndex(front.GetSiblingIndex() == 4 ? 0 : 4);
+            back.SetSiblingIndex(front.GetSiblingIndex() == 3 ? 1 : 3);
 
             // switch hand positions
-            main_hand.transform.localPosition = alt_hand.transform.localPosition;
+            main_hand.transform.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
             alt_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
 
             anim.SetBool("FaceFront", direction_state.Item2); // face front
@@ -172,16 +165,15 @@ public class Operator : MonoBehaviour
 
     void SingleAim() // aim one weapon from center of mass
     {   
-        if(direction_state.Item2 != aim_pos.y < entity_rb.position.y) {
-            direction_state.Item2 = aim_pos.y < entity_rb.position.y; // update direction state
+        if(direction_state.Item2 != aim_dir.y < 0) {
+            direction_state.Item2 = aim_dir.y < 0; // update direction state
 
-            // switch front & back index
-            front.SetSiblingIndex(back.GetSiblingIndex());
-            back.SetSiblingIndex(front.GetSiblingIndex() == 4 ? 0 : 4);
-
-            // switch hand index
+            // switch hand  indexes
             main_hand.SetSiblingIndex(alt_hand.GetSiblingIndex());
-            alt_hand.SetSiblingIndex(direction_state.Item1? 1 : 3);
+            alt_hand.SetSiblingIndex(main_hand.GetSiblingIndex() == 4 ? 0 : 4);   
+            // switch front/back indexes
+            front.SetSiblingIndex(back.GetSiblingIndex());
+            back.SetSiblingIndex(front.GetSiblingIndex() == 3 ? 1 : 3);
 
             anim.SetBool("FaceFront", direction_state.Item2); // face front
         }
