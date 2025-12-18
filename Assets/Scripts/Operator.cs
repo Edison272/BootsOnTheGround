@@ -27,16 +27,15 @@ public class Operator : MonoBehaviour
 
     //aim & handling
     [field: Header("Aiming")]
-    Vector2 aim_dir = Vector2.zero; // vector from operator to where they are looking
-    public Vector2 aim_pos = Vector2.zero; // the "true" position the oper
+    Vector2 aim_dir = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
     private Action AimStyle; // single-item or akimbo aiming?
-   public  float aim_angle = 0; // angle (deg) the character is looking in
+    public  float aim_angle = 0; // angle (deg) the character is looking in
     [field: Header("IMovement")]
     public float move_speed = 1; //how fast an operator can move
     Vector2 velocity;
     Vector2 move_pos;
     Vector2 move_dir;
-    public Rigidbody2D entity_rb;
+    [SerializeField] Rigidbody2D entity_rb;
 
     [field: Header("Inventory")]
     public Item[] inventory;
@@ -100,13 +99,10 @@ public class Operator : MonoBehaviour
         AimStyle();
     }
     public void Aim()
-    {
-        //aim_dir = Quaternion.Slerp(aim_dir, Quaternion.Euler(0, 0, aim_angle), 1);
-        aim_pos = aim_dir + entity_rb.position;
-        
+    {        
         // aim the items
-        main_item.Aim(aim_pos, aim_dir);
-        alt_item?.Aim(aim_pos, aim_dir);
+        main_item.Aim(aim_dir);
+        alt_item?.Aim(aim_dir);
     }
 
     void SetAimStyle(bool is_akimbo) // set the position of main & alt hands for akimbo or non-akimbo weaponry whenever weapon switch
@@ -197,6 +193,11 @@ public class Operator : MonoBehaviour
     {
         move_dir = Vector2.zero;
         anim.SetBool("Moving", false);
+    }
+
+    public Vector2 GetPosition()
+    {
+        return entity_rb.position;
     }
     #endregion
 

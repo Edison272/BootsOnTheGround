@@ -18,11 +18,11 @@ public class Item : MonoBehaviour
     
 
     [field: Header("Aiming")]
-    public Vector2 aim_pos;
-    public Vector2 aim_dir;
     static readonly Quaternion ROTATION_OFFSET = Quaternion.Euler(0, 0, 90f); // RotateTowards() is stupid so we need to offset it
     public float rot_scale = 1f; // 0 for no rotation, 1 for instantaneous rotation
-    public Vector2 target_pos;
+    Quaternion curr_rot; // save the current quaternion rotation
+    public Vector2 aim_pos; // where the item is supposed to be aimed towards;
+    public Vector2 target_pos; // where the item is actually aimed towards (based on rot_scale)
     bool freeze_aiming = false;     // stop this thing from aiming and updating target position
     [SerializeField] bool dynamic_aim = true;        // allow dynamic aim for the object to be able to turn to face the target
     float handle_speed = 20f;       // how quickly the weapon can be turned to face the target;
@@ -86,43 +86,49 @@ public class Item : MonoBehaviour
     }
 
     // Update the target position of this item and adjust VFX accordingly
-    public void Aim(Vector2 new_aim_pos, Vector2 new_aim_dir)
+    public void Aim(Vector2 aim_dir)
     {
-        aim_pos = new_aim_pos;
-        aim_dir = new_aim_dir;
-
+        aim_pos = aim_dir + user.GetPosition();
         AimVFX();
+        // the ACTUAL aiming aspect (get target position from aim_dir)
+        Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aim_dir) * ROTATION_OFFSET;
+        curr_rot = Quaternion.Lerp(curr_rot, aim_rot, rot_scale);
+        target_pos = user.GetPosition() + (Vector2)(curr_rot * Vector2.right * aim_dir.magnitude);
         
+        Debug.DrawLine(user.GetPosition(), target_pos, Color.gray);
     }
 
     public void Use()
     {
-        Debug.Log(gameObject.name);
+        Debug.DrawLine(user.GetPosition(), target_pos, Color.green, 0.2f);
     }
 
     public void Stop()
     {
-        Debug.Log("Stop the " + gameObject.name);
+        Debug.DrawLine(user.GetPosition(), target_pos, Color.red, 0.4f);
     }
 
     public void Reset()
     {
         Debug.Log("Reset the " + gameObject.name);
+        Debug.DrawLine(user.GetPosition(), target_pos, Color.yellow, 0.5f);
     }
 
     #region Aiming FX Types
     void StaticAim()
     {
-
+        if((item_object.transform.localScale.y >= 0) != (target_pos.x >= 0)) {
+            Vector3 new_vec = item_object.transform.localScale;
+            new_vec.x *= -1;
+            item_object.transform.localScale = new_vec;
+        }
     }
     void DynamicAim()
     {
         // set the item's rotation towards the target direction
-        Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aim_dir) * ROTATION_OFFSET;
-        float aim_speed = rot_scale;
-        item_object.transform.rotation = Quaternion.Lerp(item_object.transform.rotation, aim_rot, aim_speed);
+        item_object.transform.rotation = curr_rot;
         // make sure item scale is correct
-        if((item_object.transform.localScale.y >= 0) != (aim_dir.x >= 0)) {
+        if((item_object.transform.localScale.y >= 0) != (target_pos.x >= 0)) {
             Vector3 new_vec = item_object.transform.localScale;
             new_vec.y *= -1;
             item_object.transform.localScale = new_vec;

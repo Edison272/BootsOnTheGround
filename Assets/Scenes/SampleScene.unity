@@ -588,8 +588,8 @@ MonoBehaviour:
   input_type:
     rid: -2
   item_object: {fileID: 463804334}
+  rot_scale: 0.1
   aim_pos: {x: 0, y: 0}
-  aim_dir: {x: 0, y: 0}
   target_pos: {x: 0, y: 0}
   dynamic_aim: 1
   user: {fileID: 0}
@@ -1241,8 +1241,8 @@ MonoBehaviour:
   input_type:
     rid: -2
   item_object: {fileID: 1395463428}
+  rot_scale: 1
   aim_pos: {x: 0, y: 0}
-  aim_dir: {x: 0, y: 0}
   target_pos: {x: 0, y: 0}
   dynamic_aim: 1
   user: {fileID: 0}
@@ -1372,8 +1372,8 @@ MonoBehaviour:
   input_type:
     rid: -2
   item_object: {fileID: 1442513638}
+  rot_scale: 1
   aim_pos: {x: 0, y: 0}
-  aim_dir: {x: 0, y: 0}
   target_pos: {x: 0, y: 0}
   dynamic_aim: 1
   user: {fileID: 0}
@@ -6420,8 +6420,6 @@ MonoBehaviour:
   alt_hand: {fileID: 2000314348}
   anim: {fileID: 1671586866}
   sprite_center: {x: 0, y: 0}
-  single_hand_pos: {x: 0.2, y: 0.975}
-  aim_pos: {x: 0, y: 0}
   aim_angle: 0
   move_speed: 5
   entity_rb: {fileID: 1671586862}
