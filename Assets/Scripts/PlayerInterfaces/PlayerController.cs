@@ -27,8 +27,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector3 raw_look_pos;
     [SerializeField] Operator active_character;
 
-    
-
     void Awake()
     {
         // get map

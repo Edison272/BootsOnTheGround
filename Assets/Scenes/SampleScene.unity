@@ -583,17 +583,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a47c88410c2ae44ca7f468bc04fdc93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemTransform: {fileID: 463804334}
   input_enum: 0
   input_type:
     rid: -2
   item_object: {fileID: 463804334}
   aim_pos: {x: 0, y: 0}
   target_pos: {x: 0, y: 0}
-  user: {fileID: 1671586864}
+  dynamic_aim: 0
+  user: {fileID: 0}
   is_full_auto: 0
   is_equipped: 0
-  use_speed: 0
+  use_speed: 0.2
   references:
     version: 2
     RefIds:
@@ -1235,17 +1235,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a47c88410c2ae44ca7f468bc04fdc93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemTransform: {fileID: 1395463428}
   input_enum: 0
   input_type:
     rid: -2
   item_object: {fileID: 1395463428}
   aim_pos: {x: 0, y: 0}
   target_pos: {x: 0, y: 0}
+  dynamic_aim: 1
   user: {fileID: 0}
   is_full_auto: 0
   is_equipped: 0
-  use_speed: 0
+  use_speed: 0.2
   references:
     version: 2
     RefIds:
@@ -1365,17 +1365,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a47c88410c2ae44ca7f468bc04fdc93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemTransform: {fileID: 1442513638}
   input_enum: 0
   input_type:
     rid: -2
   item_object: {fileID: 1442513638}
   aim_pos: {x: 0, y: 0}
   target_pos: {x: 0, y: 0}
+  dynamic_aim: 1
   user: {fileID: 0}
   is_full_auto: 1
   is_equipped: 0
-  use_speed: 0
+  use_speed: 0.2
   references:
     version: 2
     RefIds:
@@ -6328,6 +6328,7 @@ MonoBehaviour:
   alt_hand: {fileID: 2000314348}
   anim: {fileID: 1671586866}
   sprite_center: {x: 0, y: 0}
+  single_hand_pos: {x: 0.2, y: 0.975}
   look_pos: {x: 0, y: 0}
   aim_pos: {x: 0, y: 0}
   aim_angle: 0
@@ -6340,8 +6341,8 @@ MonoBehaviour:
   item_indexes:
   - {x: 0, y: 1}
   - {x: 2, y: -1}
-  main_item: {fileID: 1395463430}
-  alt_item: {fileID: 1442513641}
+  main_item: {fileID: 0}
+  alt_item: {fileID: 0}
 --- !u!212 &1671586865
 SpriteRenderer:
   m_ObjectHideFlags: 0

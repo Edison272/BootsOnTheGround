@@ -4,10 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Item : MonoBehaviour
-{
-    public GameObject ItemTransform;
-
-    
+{   
     // Classify Input Type
     enum InputEnum {Normal, Charge, Increment}
     [field: Header("Input")]
@@ -18,13 +15,14 @@ public class Item : MonoBehaviour
 
     [field: Header("Body")]
     public GameObject item_object;
+    
 
     [field: Header("Aiming")]
     public Vector2 aim_pos;
     float aim_angle;
     public Vector2 target_pos;
     bool freeze_aiming = false;     // stop this thing from aiming and updating target position
-    bool dynamic_aim = true;        // allow dynamic aim for the object to be able to turn to face the target
+    [SerializeField] bool dynamic_aim = true;        // allow dynamic aim for the object to be able to turn to face the target
     float handle_speed = 20f;       // how quickly the weapon can be turned to face the target;
     public Action AimVFX;
 
@@ -44,7 +42,7 @@ public class Item : MonoBehaviour
 
     // Setup immutable item data in start
     public void Setup()
-    {
+    {    
         // setup input type
         switch (input_enum) {
             case InputEnum.Normal:
@@ -72,7 +70,6 @@ public class Item : MonoBehaviour
     {
         
     }
-
 
     // setup the weapon for the user whenever it's picked up or equipped
     public void EquipItem()
@@ -114,11 +111,18 @@ public class Item : MonoBehaviour
     #region Aiming FX Types
     void StaticAim()
     {
-        
+
     }
     void DynamicAim()
     {
-        item_object.transform.rotation = Quaternion.Slerp(item_object.transform.rotation, Quaternion.Euler(0, 0, aim_angle), handle_speed * Time.deltaTime);
+        item_object.transform.rotation = Quaternion.Slerp(item_object.transform.rotation, Quaternion.Euler(0, 0, aim_angle), 1);
+        if(Mathf.Sign(item_object.transform.localScale.y) != Mathf.Sign(user.vfx_body.transform.localScale.x)) {
+            Vector3 new_vec = item_object.transform.localScale;
+            new_vec.x *= -1;
+            new_vec.y *= -1;
+            item_object.transform.localScale = new_vec;
+        }
+
     }
 
     #endregion
