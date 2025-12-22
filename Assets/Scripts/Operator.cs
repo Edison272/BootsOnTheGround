@@ -59,8 +59,8 @@ public class Operator : MonoBehaviour
         foreach(Item item in inventory)
         {
             item.Setup();
+            item.NewUser(this);
             item.UnequipItem();
-            item.user = this;
         }
         // setup first item and make it ready to aim and allat
         EquipActive(0);
@@ -113,16 +113,16 @@ public class Operator : MonoBehaviour
             main_hand.SetSiblingIndex(direction_state.Item1? 4 : 0);
             alt_hand.SetSiblingIndex(direction_state.Item1? 0 : 4);
             // adjust hand positions to either side of body
-            main_hand.transform.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
-            alt_hand.transform.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
+            main_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
+            alt_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
             AimStyle = AkimboAim;
         } else {
             // set hand index
             main_hand.SetSiblingIndex(direction_state.Item2? 4 : 0);
             alt_hand.SetSiblingIndex(direction_state.Item2? 0 : 4);
             // adjust hand positions to center mass
-            main_hand.transform.localPosition = single_hand_pos;
-            alt_hand.transform.localPosition = single_hand_pos;
+            main_hand.localPosition = single_hand_pos;
+            alt_hand.localPosition = single_hand_pos;
             AimStyle = SingleAim;
         }
     }
@@ -139,7 +139,7 @@ public class Operator : MonoBehaviour
             alt_hand.SetSiblingIndex(main_hand.GetSiblingIndex() == 4 ? 0 : 4);
 
             // switch hand positions
-            main_hand.transform.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
+            main_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
             alt_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
         }
 
@@ -152,7 +152,7 @@ public class Operator : MonoBehaviour
             back.SetSiblingIndex(front.GetSiblingIndex() == 3 ? 1 : 3);
 
             // switch hand positions
-            main_hand.transform.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
+            main_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
             alt_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
 
             anim.SetBool("FaceFront", direction_state.Item2); // face front

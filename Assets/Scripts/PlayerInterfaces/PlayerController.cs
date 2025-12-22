@@ -91,7 +91,6 @@ public class PlayerController : MonoBehaviour
 
         
         cam.transform.position = cam_pos + char_pos;
-        Debug.DrawLine(cam_pos, char_pos);
     }
 
     #region Input Functions
