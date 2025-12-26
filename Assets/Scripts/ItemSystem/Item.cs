@@ -5,18 +5,14 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {   
-    [SerializeField] ItemSO scriptable_object; // SO contains important base data
-    // Classify Input Type
-    [field: Header("Input")]
-    [SerializeField] InputEnum input_enum;
+    [SerializeField] ItemSO base_data; // SO contains important base data
     // Input Instance
-    [SerializeReference] 
     InputType input_type;
 
     [field: Header("VFX Body")]
     public GameObject item_object;
     public GameObject rotator_object; // rotate the object when aiming
-    [SerializeField] Animator animator;
+    public Animator animator;
     
 
     [field: Header("Aiming")]
@@ -26,38 +22,27 @@ public class Item : MonoBehaviour
     public Vector2 aim_pos; // where the item is supposed to be aimed towards;
     public Vector2 target_pos; // where the item is actually aimed towards (based on rot_scale)
     bool freeze_aiming = false;     // stop this thing from aiming and updating target position
-    [SerializeField] bool dynamic_aim = true;        // allow dynamic aim for the object to be able to turn to face the target
     public Action AimVFX;
 
     [field: Header("Data")]
-    public Operator user;
+    public Character user;
 
     [field: Header("Functionality")]
     public FuncModule functionality;
-    public bool is_full_auto = true;
     public bool is_equipped = false; // can only use an item if it is equipped
-    public float use_speed;
-    public float reset_speed = 1f; // how much time this weapon takes to reset
     public float reset_timer; // block this weapon's if disabled time > 0
 
-    // Setup immutable item data in start
-    public void Setup()
-    {            
-        // setup input type
-        switch (input_enum) {
-            case InputEnum.Normal:
-                input_type = new NormalInput(use_speed, Effect);
-                break;
-            case InputEnum.Charge:
-                input_type = new ChargeInput(2f, 3, Effect);
-                break;
-            case InputEnum.Increment:
-                input_type = new IncrementInput(use_speed, 2f, 3, Effect);
-                break;
-        }
+    [field: Header("Modifiers")]
+    public float use_spd_scale = 1f;
+    public float reset_spd_scale = 1f;
 
+    // Setup immutable item data when this object is made
+    public void Setup(ItemSO base_data, InputType input_type)
+    {            
+        this.base_data = base_data;
+        this.input_type = input_type;
         // set aim type
-        if (dynamic_aim) {
+        if (base_data.dynamic_aim) {
             AimVFX = DynamicAim;
         } 
         else {
@@ -66,7 +51,7 @@ public class Item : MonoBehaviour
     }
 
     // adjust item everytime theres a new user
-    public void NewUser(Operator new_user)
+    public void NewUser(Character new_user)
     {
         user = new_user;
         // if no rotator object, rotator object is the user's hand (items in use are always a child transform of something else)
@@ -100,11 +85,18 @@ public class Item : MonoBehaviour
     public void UnequipItem()
     {
         animator.SetBool("IsEquipped", false);
+        target_pos = Vector2.zero;
     }
 
-    public void SetEquipped(int is_equipped)
+    public void SetEquipped(int int_is_equipped)
     {
-        this.is_equipped = is_equipped > 0 ? true : false;
+        is_equipped = int_is_equipped > 0 ? true : false;
+
+        // if this was unequipped, let the user know
+        if (!is_equipped)
+        {
+            user.SetSwitchItem();
+        }
     }
 
     // Update the target position of this item and adjust VFX accordingly
@@ -122,28 +114,33 @@ public class Item : MonoBehaviour
 
     public void Use()
     {
-        input_type.Use();
-        animator.SetTrigger("Use");
-        Debug.DrawLine(user.GetPosition(), target_pos, Color.green);
+        if (!animator.GetBool("Resetting"))
+        {
+            input_type.Use();
+        }
+        
+        
+        //Debug.DrawLine(user.GetPosition(), target_pos, Color.yellow);
     }
 
     public void Stop()
     {
         input_type.Stop();
-        Debug.DrawLine(user.GetPosition(), target_pos, Color.red, 0.4f);
+        //Debug.DrawLine(user.GetPosition(), target_pos, Color.red, 0.4f);
     }
 
     public void Reset()
     {
         Debug.Log("Reset the " + gameObject.name);
-        Debug.DrawLine(user.GetPosition(), target_pos, Color.yellow, 0.5f);
+        Debug.DrawLine(user.GetPosition(), target_pos, Color.magenta, 0.5f);
         animator.SetBool("Resetting", true);
-        reset_timer = reset_speed;
+        reset_timer = base_data.item_stats["reset_speed"] * reset_spd_scale;
     }
 
     public void Effect(int effect_index)
     {
-        
+        animator.SetTrigger("Use");
+        Debug.DrawLine(user.GetPosition(), target_pos, Color.green, 0.1f);
     }
 
     #region Aiming FX Types
@@ -187,7 +184,7 @@ public class Item : MonoBehaviour
     #region Getting Functionality Data
     public bool IsHoldInput()
     {
-        return is_full_auto;
+        return base_data.is_full_auto;
     }
     #endregion
 }

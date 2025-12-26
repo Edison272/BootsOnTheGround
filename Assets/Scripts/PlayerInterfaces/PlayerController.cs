@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Vector2 input_dir;
     [SerializeField] private Vector3 look_pos;
     [SerializeField] private Vector3 raw_look_pos;
-    [SerializeField] Operator active_character;
+    [SerializeField] Character active_character;
 
     void Awake()
     {
@@ -37,25 +37,6 @@ public class PlayerController : MonoBehaviour
         looking = controls.GroundActions.Look;
         main_action = controls.GroundActions.MainAction;
         alt_action = controls.GroundActions.AltAction;
-
-        // subscribe to the relevant events
-        movement.performed += Move;
-        looking.performed += Look;
-
-        // subscribe action types
-        active_character.GetReady(); // set up all necessary data ready for the operator
-        SetMainAction(true);
-        SetAltAction(active_character.HasAltAction());
-        
-        // reset the item (reload, recharge, reset stance, cool animation etc.)
-        controls.GroundActions.ResetItem.performed += ResetItem;
-
-        // switch the item
-        controls.GroundActions.SwitchItem.performed += SwitchItem;
-
-        // Toggle Command Mode
-        controls.GroundActions.ToggleCommandMode.performed += CmdMode;
-        
     }
 
     // Start is called before the first frame update
@@ -64,6 +45,24 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = false;
         EnableControl();
+    }
+
+    public void SetPlayerCharacter(Character new_character)
+    {
+        active_character = new_character;
+
+        // subscribe to the relevant events after active_character has been set
+        movement.performed += Move;
+        looking.performed += Look;
+        // subscribe action types
+        SetMainAction(true);
+        SetAltAction(active_character.HasAltAction());
+        // reset the item (reload, recharge, reset stance, cool animation etc.)
+        controls.GroundActions.ResetItem.performed += ResetItem;
+        // switch the item
+        controls.GroundActions.SwitchItem.performed += SwitchItem;
+        // Toggle Command Mode
+        controls.GroundActions.ToggleCommandMode.performed += CmdMode;
     }
 
     public void EnableControl()
@@ -79,18 +78,21 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (main_continuous) {MainAction();}
-        if (alt_continuous) {AltAction();}
+        if (active_character)
+        {
+            if (main_continuous) {MainAction();}
+            if (alt_continuous) {AltAction();}
 
-        // camera position
-        Vector3 char_pos = active_character.GetPosition();
+            // camera position
+            Vector3 char_pos = active_character.GetPosition();
 
-        look_pos = cam.ScreenToWorldPoint(raw_look_pos);
-        Vector3 cam_pos = (look_pos - char_pos) * 0.15f;
-        cam_pos.z = -10;
+            look_pos = cam.ScreenToWorldPoint(raw_look_pos);
+            Vector3 cam_pos = (look_pos - char_pos) * 0.15f;
+            cam_pos.z = -10;
 
-        
-        cam.transform.position = cam_pos + char_pos;
+            
+            cam.transform.position = cam_pos + char_pos;
+        }
     }
 
     #region Input Functions

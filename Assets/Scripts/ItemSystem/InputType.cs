@@ -8,10 +8,10 @@ using UnityEngine;
 public enum InputEnum {Normal, Charge, Increment}
 public abstract class InputType
 {    
-    protected Action<int> InputEffect;
-    public InputType(Action<int> InputEffect)
+    protected Item item;
+    public InputType(Item item)
     {
-        this.InputEffect = InputEffect; // connect item effect function
+        this.item = item;
     }
     public abstract void Use();
     public abstract void Stop();
@@ -22,17 +22,17 @@ public abstract class InputType
 [System.Serializable]
 public class NormalInput : InputType // standard input. Use() = Output
 {
-    float use_cd;  // time between uses
+    float use_cd = 0.1f;  // time between uses
     float next_use = 0; // the  point in time this can be used
-    public NormalInput(float use_cd, Action<int> InputEffect) : base(InputEffect)
+    public NormalInput(float use_cd, Item item) : base(item)
     {
         this.use_cd = use_cd;
     }
     public override void Use()
     {
-        if (next_use > Time.time)
+        if (next_use <= Time.time)
         {
-            InputEffect(0);
+            item.Effect(0);
             next_use = Time.time + use_cd;
         }
     }
@@ -55,15 +55,18 @@ public class NormalInput : InputType // standard input. Use() = Output
 public class ChargeInput : InputType // Use() to charge up overtime, output changes based on charge. Stop() = Output
 {
     float curr_charge; // current charge
+    float threshold; // minimum required charge
     float max_charge; // maximum charge
     int charge_states; // how many levels of charge in between
-    public ChargeInput(float max_charge, int charge_states, Action<int> InputEffect) : base(InputEffect)
+    public ChargeInput(float threshold, float max_charge, int charge_states, Item item) : base(item)
     {
+        this.threshold = threshold;
         this.max_charge = max_charge;
         this.charge_states = charge_states;
     }
     public override void Use()
     {
+        item.animator.SetBool("Charging", true);
         curr_charge += Time.deltaTime;
         if (curr_charge > max_charge) {
             curr_charge = max_charge;
@@ -71,7 +74,7 @@ public class ChargeInput : InputType // Use() to charge up overtime, output chan
     }
     public override void Stop()
     {
-        // (int) charge_levels * (max_charge)
+        item.Effect((int)(charge_states * ((curr_charge - threshold) / max_charge)));
         curr_charge = 0;
     }
 
@@ -93,16 +96,18 @@ public class IncrementInput : InputType // Output changes depending on extended 
     float curr_inc; // current incrementation level
     float max_inc; // maximum incrememntation level
     int inc_states; // how many levels of incrementation
-    public IncrementInput(float use_cd, float max_inc, float inc_states, Action<int> InputEffect) : base(InputEffect)
+    public IncrementInput(float use_cd, float max_inc, float inc_states, Item item) : base(item)
     {
         
     }
     public override void Use()
     {
+        item.animator.SetBool("Charging", true);
         if (next_use > Time.time)
         {
             // do the effect or whatnot based on curr_inc/max_inc and some other stuff
             next_use = Time.time + use_cd;
+            item.Effect((int)(inc_states * (curr_inc / max_inc)));
         }
         // increment
         curr_inc += Time.deltaTime;

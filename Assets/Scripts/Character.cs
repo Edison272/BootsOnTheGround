@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 
-public class Operator : MonoBehaviour
+public class Character : MonoBehaviour
 {
-    //vfx
+    [SerializeField] CharacterSO base_data;
+
     [field: Header("Body Parts")]
     public GameObject main_body;//basically the hitbox
     public GameObject vfx_body; //the vfx body
@@ -33,7 +34,6 @@ public class Operator : MonoBehaviour
     [field: Header("IMovement")]
     public float move_speed = 1; //how fast an operator can move
     Vector2 velocity;
-    Vector2 move_pos;
     Vector2 move_dir;
     [SerializeField] Rigidbody2D entity_rb;
 
@@ -43,6 +43,28 @@ public class Operator : MonoBehaviour
     int curr_item_index = 0;           // access items indexes list
     public Item main_item;
     public Item alt_item;
+
+    // get base data from a scriptable object and assign them here. Called once at when this object is created
+    public void AssignBaseData(CharacterSO base_data)
+    {
+        this.base_data = base_data;
+        
+        // setup inventory
+        inventory = new Item[base_data.inventory.Length];
+        item_indexes = new Vector2Int[base_data.item_indexes.Length];
+        for (int i = 0; i < base_data.item_indexes.Length; i++)
+        {
+            int main_item = base_data.item_indexes[i].x;
+            int alt_item = base_data.item_indexes[i].y;
+            item_indexes[i] = base_data.item_indexes[i];
+            inventory[main_item] = base_data.inventory[main_item].GenerateItem(main_hand);
+            if (alt_item > -1)
+            {
+                inventory[alt_item] = base_data.inventory[alt_item].GenerateItem(alt_hand);
+            }
+        }
+        GetReady(); // set up all necessary data ready for the operator
+    }
 
     // make sure the operator's data is set up
     public void GetReady()
@@ -58,7 +80,6 @@ public class Operator : MonoBehaviour
         // set initial active items
         foreach(Item item in inventory)
         {
-            item.Setup();
             item.NewUser(this);
             item.UnequipItem();
         }
@@ -67,7 +88,7 @@ public class Operator : MonoBehaviour
         SetAimStyle(alt_item);
         // initialize default look position
         aim_dir = new Vector2(1, -1);
-        Look(entity_rb.position + aim_dir);  
+        Look(entity_rb.position + aim_dir);
     }
 
     // Update is called once per frame
@@ -207,22 +228,22 @@ public class Operator : MonoBehaviour
     {
         return item_indexes[curr_item_index].y != -1;  // return true for one action, and false for two actions
     }
-    public void EquipActive(int index)  // equip the currently selected weapons (the ones the operator is currently holding)
+    void EquipActive(int index)  // equip the currently selected weapons (the ones the operator is currently holding)
     {
         main_item = inventory[item_indexes[index].x];
-        main_item.EquipItem();
-        if (item_indexes[index].y != -1)
+        if (item_indexes[index].y == -1)
+        {
+            alt_item = null;
+        } 
+        else
         {
             alt_item = inventory[item_indexes[index].y];
-            alt_item.EquipItem();
         }
     }
-    public void UnequipActive() // unequip the currently selected weapons
+    void UnequipActive() // unequip animation for the currently selected weapons
     {
         main_item.UnequipItem();
-        main_item = null;
         alt_item?.UnequipItem();
-        alt_item = null;
     }
     public void SwitchItem(int spec_index = -1) // cycle between item_indexes slots, or choose a select slot with spec_index
     {
@@ -242,8 +263,14 @@ public class Operator : MonoBehaviour
         }
         
         // probably add something to disable the previous items latee
-        UnequipActive();
+        UnequipActive(); //unequipped item will call the "SetSwitchItem" to set the new active item
         EquipActive(curr_item_index); // set up the new shi
+    }
+
+    public void SetSwitchItem() // only setup the new item VFX after the old one has been put away completely
+    {
+        main_item.EquipItem();
+        alt_item?.EquipItem();
         SetAimStyle(alt_item); // adjust how the item(s) look in the player's hands
     }
 
