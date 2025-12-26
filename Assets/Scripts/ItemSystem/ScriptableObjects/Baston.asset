@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item_prefab: {fileID: 3117911291600889211, guid: ae6f1b93bf4987d4ab1c010cdc748815,
     type: 3}
-  input_enum: 1
+  input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
   serialized_item_stats:
     stat_array:
     - key: reset_speed
       value: 0.1
-    - key: max_charge
-      value: 1
+    - key: use_speed
+      value: 0.1
