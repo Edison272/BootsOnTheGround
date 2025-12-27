@@ -17,9 +17,16 @@ MonoBehaviour:
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
-  serialized_item_stats:
+  func_enum: 0
+  serialized_input_stats:
     stat_array:
     - key: reset_speed
+      value: 1
+    - key: use_speed
       value: 0.1
+  serialized_functionality_stats:
+    stat_array:
+    - key: max_ammo
+      value: 45
     - key: use_speed
       value: 0.1

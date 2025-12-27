@@ -43,6 +43,8 @@ public class Character : MonoBehaviour
     int curr_item_index = 0;           // access items indexes list
     public Item main_item;
     public Item alt_item;
+    float switch_cd = 0.5f; // time the char must wait before they can switch to the next weapon
+    float curr_switch_cd = 0;
 
     // get base data from a scriptable object and assign them here. Called once at when this object is created
     public void AssignBaseData(CharacterSO base_data)
@@ -85,6 +87,7 @@ public class Character : MonoBehaviour
         }
         // setup first item and make it ready to aim and allat
         EquipActive(0);
+        SetSwitchItem();
         SetAimStyle(alt_item);
         // initialize default look position
         aim_dir = new Vector2(1, -1);
@@ -98,6 +101,17 @@ public class Character : MonoBehaviour
         Aim();
         // movement
         Move();
+
+        // set switch item
+        if (curr_switch_cd > 0)
+        {
+            curr_switch_cd -= Time.deltaTime;
+            if (curr_switch_cd <= 0)
+            {
+                SetSwitchItem();
+            }
+        }
+
     }
     #region Looking & Aiming
     public void Look(Vector2 look_pos) {
@@ -265,6 +279,7 @@ public class Character : MonoBehaviour
         // probably add something to disable the previous items latee
         UnequipActive(); //unequipped item will call the "SetSwitchItem" to set the new active item
         EquipActive(curr_item_index); // set up the new shi
+        curr_switch_cd = switch_cd;
     }
 
     public void SetSwitchItem() // only setup the new item VFX after the old one has been put away completely

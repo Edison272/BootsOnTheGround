@@ -28,7 +28,7 @@ public class Item : MonoBehaviour
     public Character user;
 
     [field: Header("Functionality")]
-    public FuncModule functionality;
+    public FuncModule func_module;
     public bool is_equipped = false; // can only use an item if it is equipped
     public float reset_timer; // block this weapon's if disabled time > 0
 
@@ -37,10 +37,11 @@ public class Item : MonoBehaviour
     public float reset_spd_scale = 1f;
 
     // Setup immutable item data when this object is made
-    public void Setup(ItemSO base_data, InputType input_type)
+    public void Setup(ItemSO base_data, InputType input_type, FuncModule func_module)
     {            
         this.base_data = base_data;
         this.input_type = input_type;
+        this.func_module = func_module;
         // set aim type
         if (base_data.dynamic_aim) {
             AimVFX = DynamicAim;
@@ -71,9 +72,11 @@ public class Item : MonoBehaviour
             {
                 //functionality.
                 animator.SetBool("Resetting", false);
+                func_module.Reset();
 
             }
         }
+        func_module.UpdateModule(target_pos);
     }
 
     // setup the weapon for the user whenever it's picked up or equipped
@@ -85,18 +88,12 @@ public class Item : MonoBehaviour
     public void UnequipItem()
     {
         animator.SetBool("IsEquipped", false);
-        target_pos = Vector2.zero;
     }
 
     public void SetEquipped(int int_is_equipped)
     {
         is_equipped = int_is_equipped > 0 ? true : false;
-
-        // if this was unequipped, let the user know
-        if (!is_equipped)
-        {
-            user.SetSwitchItem();
-        }
+        target_pos = Vector2.zero;
     }
 
     // Update the target position of this item and adjust VFX accordingly
@@ -114,7 +111,7 @@ public class Item : MonoBehaviour
 
     public void Use()
     {
-        if (!animator.GetBool("Resetting"))
+        if (!animator.GetBool("Resetting") && func_module.CanFunction())
         {
             input_type.Use();
         }
@@ -140,6 +137,7 @@ public class Item : MonoBehaviour
     public void Effect(int effect_index)
     {
         animator.SetTrigger("Use");
+        func_module.UseFunction();
         Debug.DrawLine(user.GetPosition(), target_pos, Color.green, 0.1f);
     }
 

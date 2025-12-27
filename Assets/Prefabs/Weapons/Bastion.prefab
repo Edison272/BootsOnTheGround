@@ -46,27 +46,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a47c88410c2ae44ca7f468bc04fdc93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input_enum: 0
-  input_type:
-    rid: -2
+  base_data: {fileID: 0}
   item_object: {fileID: 3117911291600889211}
   rotator_object: {fileID: 0}
   animator: {fileID: 8606916593666797745}
   rot_scale: 0.5
   aim_pos: {x: 0, y: 0}
   target_pos: {x: 0, y: 0}
-  dynamic_aim: 1
   user: {fileID: 0}
-  is_full_auto: 1
   is_equipped: 0
-  use_speed: 0.2
-  reset_speed: 1
   reset_timer: 0
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+  use_spd_scale: 1
+  reset_spd_scale: 1
 --- !u!95 &8606916593666797745
 Animator:
   serializedVersion: 7
@@ -111,7 +102,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

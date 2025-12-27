@@ -150,11 +150,14 @@ public class PlayerController : MonoBehaviour
             main_action.started += MainStart;
             main_action.canceled += MainStop;
             main_hold_input = active_character.main_item.IsHoldInput();
+            main_continuous = main_action.IsPressed() && main_hold_input;
         }
         else
         {
             main_action.started -= MainStart;
             main_action.canceled -= MainStop;
+            main_continuous = false; // stop any ongoing attacks
+            
         }
     } 
     void SetAltAction(bool enable) // set alt action. set parameter false to turn off main actions
@@ -164,11 +167,13 @@ public class PlayerController : MonoBehaviour
             alt_action.started += AltStart;
             alt_action.canceled += AltStop;
             alt_hold_input = active_character.alt_item.IsHoldInput(); // only set alt_hold_input if an alt_action exists
+            alt_continuous = alt_action.IsPressed() && alt_hold_input;
         }
         else
         {
             alt_action.started -= AltStart;
-            alt_action.canceled -= AltStop;
+            alt_action.canceled -= AltStop;   
+            alt_continuous = false; // stop any ongoing attacks
         }
     }
 
