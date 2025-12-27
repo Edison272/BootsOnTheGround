@@ -236,6 +236,13 @@ public class Character : MonoBehaviour
     }
     #endregion
 
+    #region Damage/Health System
+    public void TakeDamage(int damage)
+    {
+        Debug.Log(base_data.name + " has taken " + damage + " damage");
+    }
+    #endregion
+
     #region  Inventory Management
     
     public bool HasAltAction() // returns true if the operator is currently wielding two items or an multi-state items

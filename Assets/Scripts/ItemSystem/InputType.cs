@@ -32,7 +32,7 @@ public class NormalInput : InputType // standard input. Use() = Output
     {
         if (next_use <= Time.time)
         {
-            item.Effect(0);
+            item.Action(0);
             next_use = Time.time + use_cd;
         }
     }
@@ -74,7 +74,7 @@ public class ChargeInput : InputType // Use() to charge up overtime, output chan
     }
     public override void Stop()
     {
-        item.Effect((int)(charge_states * ((curr_charge - threshold) / max_charge)));
+        item.Action((int)(charge_states * ((curr_charge - threshold) / max_charge)));
         curr_charge = 0;
     }
 
@@ -107,7 +107,7 @@ public class IncrementInput : InputType // Output changes depending on extended 
         {
             // do the effect or whatnot based on curr_inc/max_inc and some other stuff
             next_use = Time.time + use_cd;
-            item.Effect((int)(inc_states * (curr_inc / max_inc)));
+            item.Action((int)(inc_states * (curr_inc / max_inc)));
         }
         // increment
         curr_inc += Time.deltaTime;

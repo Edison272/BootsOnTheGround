@@ -115,29 +115,24 @@ public class Item : MonoBehaviour
         {
             input_type.Use();
         }
-        
-        
-        //Debug.DrawLine(user.GetPosition(), target_pos, Color.yellow);
     }
 
     public void Stop()
     {
         input_type.Stop();
-        //Debug.DrawLine(user.GetPosition(), target_pos, Color.red, 0.4f);
     }
 
     public void Reset()
     {
         Debug.Log("Reset the " + gameObject.name);
-        Debug.DrawLine(user.GetPosition(), target_pos, Color.magenta, 0.5f);
         animator.SetBool("Resetting", true);
         reset_timer = base_data.item_stats["reset_speed"] * reset_spd_scale;
     }
 
-    public void Effect(int effect_index)
+    public void Action(int effect_index)
     {
         animator.SetTrigger("Use");
-        func_module.UseFunction();
+        func_module.UseFunction(effect_index);
         Debug.DrawLine(user.GetPosition(), target_pos, Color.green, 0.1f);
     }
 

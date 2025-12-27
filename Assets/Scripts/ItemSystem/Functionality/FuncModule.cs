@@ -11,8 +11,10 @@ public abstract class FuncModule
     {
         this.item = item;
     }
+
+    public ItemAction[] item_actions;
     public abstract void UpdateModule(Vector2 target_pos);
-    public abstract void UseFunction();
+    public abstract void UseFunction(int action_index);
     public abstract bool CanFunction();
     public abstract void Reset();
     
@@ -39,7 +41,7 @@ Melee Platforms
         throw new System.NotImplementedException();
     }
 
-    public override void UseFunction()
+    public override void UseFunction(int action_index)
     {
         throw new System.NotImplementedException();
     }
@@ -79,7 +81,7 @@ Shield Platforms
         throw new System.NotImplementedException();
     }
 
-    public override void UseFunction()
+    public override void UseFunction(int action_index)
     {
         throw new System.NotImplementedException();
     }
@@ -110,7 +112,7 @@ Conduit Platforms
         throw new System.NotImplementedException();
     }
 
-    public override void UseFunction()
+    public override void UseFunction(int action_index)
     {
         throw new System.NotImplementedException();
     }
