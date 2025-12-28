@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+[System.Serializable]
 public struct AttackData
 {
     // Attack on impact
-    int attack_dmg;
-    float knockback_amt;
+    [SerializeField] int attack_dmg;
+    [SerializeField] float knockback_amt;
     
     // status effect application
-    float effect_time;
-    float slow_amt;
+    [SerializeField] float effect_time;
+    [SerializeField] float slow_amt;
 
 }

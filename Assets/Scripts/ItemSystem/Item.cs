@@ -11,7 +11,8 @@ public class Item : MonoBehaviour
 
     [field: Header("VFX Body")]
     public GameObject item_object;
-    public GameObject rotator_object; // rotate the object when aiming
+    public Transform rotator_object; // rotate the object when aiming
+    public Transform item_tip; // the "front" of an item which attack type vfx will align to
     public Animator animator;
     
 
@@ -20,6 +21,7 @@ public class Item : MonoBehaviour
     public float rot_scale = 1f; // 0 for no rotation, 1 for instantaneous rotation
     Quaternion curr_rot; // save the current quaternion rotation
     public Vector2 aim_pos; // where the item is supposed to be aimed towards;
+    public Vector2 source_pos;
     public Vector2 target_pos; // where the item is actually aimed towards (based on rot_scale)
     bool freeze_aiming = false;     // stop this thing from aiming and updating target position
     public Action AimVFX;
@@ -29,6 +31,7 @@ public class Item : MonoBehaviour
 
     [field: Header("Functionality")]
     public FuncModule func_module;
+    public AttackType[] attacks;
     public bool is_equipped = false; // can only use an item if it is equipped
     public float reset_timer; // block this weapon's if disabled time > 0
 
@@ -37,11 +40,13 @@ public class Item : MonoBehaviour
     public float reset_spd_scale = 1f;
 
     // Setup immutable item data when this object is made
-    public void Setup(ItemSO base_data, InputType input_type, FuncModule func_module)
+    public void Setup(ItemSO base_data, InputType input_type, FuncModule func_module, AttackType[] atk_types)
     {            
         this.base_data = base_data;
         this.input_type = input_type;
         this.func_module = func_module;
+        attacks = atk_types;
+        func_module.attacks = atk_types;
         // set aim type
         if (base_data.dynamic_aim) {
             AimVFX = DynamicAim;
@@ -49,6 +54,7 @@ public class Item : MonoBehaviour
         else {
             AimVFX = StaticAim;
         }
+        rot_scale = base_data.rot_scale;
     }
 
     // adjust item everytime theres a new user
@@ -58,7 +64,7 @@ public class Item : MonoBehaviour
         // if no rotator object, rotator object is the user's hand (items in use are always a child transform of something else)
         if (!rotator_object)
         {
-            rotator_object = transform.parent.gameObject;
+            rotator_object = transform.parent;
         }
     }
 
@@ -93,10 +99,9 @@ public class Item : MonoBehaviour
     public void SetEquipped(int int_is_equipped)
     {
         is_equipped = int_is_equipped > 0 ? true : false;
-        target_pos = Vector2.zero;
     }
 
-    // Update the target position of this item and adjust VFX accordingly
+    // Update the target position of this item and adjust VFX accordingly. Only perform when used by a character
     public void Aim(Vector2 aim_dir)
     {
         aim_pos = aim_dir + user.GetPosition();
@@ -104,6 +109,7 @@ public class Item : MonoBehaviour
         // the ACTUAL aiming aspect (get target position from aim_dir)
         Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aim_dir) * ROTATION_OFFSET;
         curr_rot = Quaternion.Lerp(curr_rot, aim_rot, rot_scale);
+        source_pos = user.GetPosition() + (Vector2)(curr_rot * Vector2.right * (user.hitbox_radius+0.1f));
         target_pos = user.GetPosition() + (Vector2)(curr_rot * Vector2.right * aim_dir.magnitude);
         
         Debug.DrawLine(user.GetPosition(), target_pos, Color.gray);
@@ -111,7 +117,7 @@ public class Item : MonoBehaviour
 
     public void Use()
     {
-        if (!animator.GetBool("Resetting") && func_module.CanFunction())
+        if (is_equipped && func_module.CanFunction())
         {
             input_type.Use();
         }
@@ -124,7 +130,7 @@ public class Item : MonoBehaviour
 
     public void Reset()
     {
-        Debug.Log("Reset the " + gameObject.name);
+        is_equipped = false; // after item finishes resetting, animator uses the SetEquipped() to set is_equipped back to true
         animator.SetBool("Resetting", true);
         reset_timer = base_data.item_stats["reset_speed"] * reset_spd_scale;
     }
@@ -133,7 +139,6 @@ public class Item : MonoBehaviour
     {
         animator.SetTrigger("Use");
         func_module.UseFunction(effect_index);
-        Debug.DrawLine(user.GetPosition(), target_pos, Color.green, 0.1f);
     }
 
     #region Aiming FX Types

@@ -9,7 +9,6 @@ public class Gun : FuncModule
     int ammo; // how much ammo the gun uses before reloading
     int max_ammo; // how much the weapon starts/reloads with
     float recoil; // how much the aimed position is offset with each shot
-    ItemAction[] action_array; // what attacks this thing can do
     Vector2 target_pos;
     Vector2 recoil_dir;
     public Gun(Item item, float max_ammo) : base(item)
@@ -35,6 +34,7 @@ public class Gun : FuncModule
 
     public override void UseFunction(int action_index)
     {
+        attacks[action_index].Attack(item.source_pos, item.target_pos, item.item_tip.position);
         ammo -= 1;
     }
 }

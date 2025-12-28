@@ -12,7 +12,7 @@ public abstract class FuncModule
         this.item = item;
     }
 
-    public ItemAction[] item_actions;
+    public AttackType[] attacks;
     public abstract void UpdateModule(Vector2 target_pos);
     public abstract void UseFunction(int action_index);
     public abstract bool CanFunction();

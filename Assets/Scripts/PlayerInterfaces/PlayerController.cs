@@ -82,15 +82,18 @@ public class PlayerController : MonoBehaviour
         {
             if (main_continuous) {MainAction();}
             if (alt_continuous) {AltAction();}
+        }
+    }
 
-            // camera position
+    void FixedUpdate()
+    {
+        if (active_character)
+        {
             Vector3 char_pos = active_character.GetPosition();
 
             look_pos = cam.ScreenToWorldPoint(raw_look_pos);
             Vector3 cam_pos = (look_pos - char_pos) * 0.15f;
             cam_pos.z = -10;
-
-            
             cam.transform.position = cam_pos + char_pos;
         }
     }

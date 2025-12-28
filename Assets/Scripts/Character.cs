@@ -19,7 +19,8 @@ public class Character : MonoBehaviour
 
     [field: Header("VFX")]
     public Animator anim;
-    public Vector2 sprite_center; // center of mass of this srpite
+    private Vector2 sprite_center; // center of mass of this srpite
+    public float hitbox_radius {get; private set;}
     // character has 4 VFX states based on aim direciton, stored as two booleans, X and Y
     // T, F = Right Bottom | T, T = Right Top | F, T = Left Top | F, F = Left Bottom
     (bool, bool) direction_state = (true, true);
@@ -50,6 +51,9 @@ public class Character : MonoBehaviour
     public void AssignBaseData(CharacterSO base_data)
     {
         this.base_data = base_data;
+
+        // setup VFX
+        hitbox_radius = GetComponent<CircleCollider2D>().radius;
         
         // setup inventory
         inventory = new Item[base_data.inventory.Length];
@@ -99,8 +103,6 @@ public class Character : MonoBehaviour
     {
 
         Aim();
-        // movement
-        Move();
 
         // set switch item
         if (curr_switch_cd > 0)
@@ -113,6 +115,13 @@ public class Character : MonoBehaviour
         }
 
     }
+
+    void FixedUpdate()
+    {
+        // movement
+        Move();
+    }
+
     #region Looking & Aiming
     public void Look(Vector2 look_pos) {
         // look_dir is the direction the operator is set to look at
@@ -216,12 +225,19 @@ public class Character : MonoBehaviour
     public void SetMove(Vector2 move_dir) // called when the 
     {
         this.move_dir = move_dir;
+        
         anim.SetBool("Moving", true);
     }
 
     public void Move() 
     {
-        entity_rb.MovePosition(entity_rb.position + velocity + move_dir*Time.deltaTime*Mathf.Max(0, move_speed));
+        entity_rb.velocity = move_dir*move_speed;
+        //entity_rb.MovePosition(entity_rb.position + velocity + move_dir*Time.deltaTime*Mathf.Max(0, move_speed));
+    }
+
+    public void ApplyImpulse(Vector2 direction, float scalar)
+    {
+        
     }
 
     public void StopMove()
