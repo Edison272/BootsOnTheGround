@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public struct AttackData
+public class AttackData
 {
     // Attack on impact
-    [SerializeField] int attack_dmg;
+    public int damage;
     [SerializeField] float knockback_amt;
     
     // status effect application

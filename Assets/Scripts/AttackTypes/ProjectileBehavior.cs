@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Callbacks;
 using UnityEngine;
 
 public class ProjectileBehavior : MonoBehaviour
@@ -24,7 +23,10 @@ public class ProjectileBehavior : MonoBehaviour
     public Rigidbody2D proj_rb;
     float travel_time;
 
-
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        collision.gameObject.GetComponent<IHealth>()?.TakeDamage(atk_data.damage);
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -56,6 +58,7 @@ public class ProjectileBehavior : MonoBehaviour
         Quaternion targ_rot = Quaternion.LookRotation(Vector3.forward, target_pos - source_pos) * ROTATION_OFFSET;
         main_body.transform.rotation = targ_rot;
         vfx_body.transform.position = vfx_og_pos;  // return vfx_body to original position after offset from rotation
+        vfx_body.localPosition = new Vector3(0, vfx_body.localPosition.y, 0);
 
         // move this thing
         proj_rb.velocity = (target_pos - source_pos).normalized * speed;

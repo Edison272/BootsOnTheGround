@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 
-public class Character : MonoBehaviour
+public class Character : MonoBehaviour, IHealth, IMovement
 {
     [SerializeField] CharacterSO base_data;
 
@@ -32,11 +32,18 @@ public class Character : MonoBehaviour
     Vector2 aim_dir = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
     private Action AimStyle; // single-item or akimbo aiming?
     public  float aim_angle = 0; // angle (deg) the character is looking in
-    [field: Header("IMovement")]
-    public float move_speed = 1; //how fast an operator can move
-    Vector2 velocity;
-    Vector2 move_dir;
-    [SerializeField] Rigidbody2D entity_rb;
+    
+    [field: Header("Movement")]
+    public float curr_speed {get; private set;} = 1; //how fast an operator can move
+    public float base_speed => base_data.speed;
+    public Vector2 move_dir {get; private set;} = Vector2.zero;
+    public Vector2 force_dir {get; private set;} = Vector2.zero;
+    public Rigidbody2D entity_rb {get; private set;}
+    public float force_move_time {get; private set;}
+
+    [field: Header("Damage")]
+    public int curr_health {get; private set;}
+    public int max_health => base_data.health;
 
     [field: Header("Inventory")]
     public Item[] inventory;
@@ -52,8 +59,15 @@ public class Character : MonoBehaviour
     {
         this.base_data = base_data;
 
+        // setup movement
+        entity_rb = this.GetComponent<Rigidbody2D>();
+        curr_speed = base_speed;
+
         // setup VFX
         hitbox_radius = GetComponent<CircleCollider2D>().radius;
+
+        // setup health
+        curr_health = max_health;
         
         // setup inventory
         inventory = new Item[base_data.inventory.Length];
@@ -222,22 +236,26 @@ public class Character : MonoBehaviour
     #endregion
 
     #region Movement
-    public void SetMove(Vector2 move_dir) // called when the 
+    public void SetMove(Vector2 set_move_dir) // called when the 
     {
-        this.move_dir = move_dir;
+        move_dir = set_move_dir;
         
         anim.SetBool("Moving", true);
     }
 
     public void Move() 
     {
-        entity_rb.velocity = move_dir*move_speed;
+        entity_rb.velocity = move_dir*curr_speed;
         //entity_rb.MovePosition(entity_rb.position + velocity + move_dir*Time.deltaTime*Mathf.Max(0, move_speed));
     }
-
-    public void ApplyImpulse(Vector2 direction, float scalar)
+    void IMovement.ForceMove(Vector2 direction, float scalar)
     {
-        
+
+    }
+
+    void IMovement.ChangeSpeed(float scale_base)
+    {
+
     }
 
     public void StopMove()
@@ -253,9 +271,14 @@ public class Character : MonoBehaviour
     #endregion
 
     #region Damage/Health System
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage_amt)
     {
-        Debug.Log(base_data.name + " has taken " + damage + " damage");
+        Debug.Log(base_data.name + " has taken " + damage_amt + " damage");
+    }
+
+    public void TakeHeal(int heal_amt)
+    {
+        Debug.Log(base_data.name + " has healed " + heal_amt + " health");
     }
     #endregion
 

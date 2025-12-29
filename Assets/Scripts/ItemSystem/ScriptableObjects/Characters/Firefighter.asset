@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Firefighter
   m_EditorClassIdentifier: 
   name: Entity
-  base_health: 0
-  base_speed: 5
-  base_range: 0
+  health: 100
+  speed: 5
+  range: 0
   char_prefab: {fileID: 2589057906099434769, guid: 852337d3087a78c459ce5ccd025a9628,
     type: 3}
   detection_mask:

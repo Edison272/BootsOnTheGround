@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 71babc63b8ed2384497fbe20611cf888
+guid: e121c772a81e9b144b8be8441755c963
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 642637958378867971
-    second: OverwatchOperator_0
+      213: 2747690628134850419
+    second: Hexagon Flat Top
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,12 +51,12 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: -1
+  spriteTessellationDetail: 0
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -68,14 +68,14 @@ TextureImporter:
   ignorePngGamma: 0
   applyGammaDecoding: 0
   swizzle: 50462976
-  cookieLightType: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
-    resizeAlgorithm: 1
+    resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -85,6 +85,32 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -113,51 +139,58 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: OverwatchOperator_0
+      name: Hexagon Flat Top
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 28
-        height: 58
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 30dca5c71db1be800800000000000000
-      internalID: 642637958378867971
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: OverwatchOperator_1
-      rect:
-        serializedVersion: 2
-        x: 28
-        y: 0
-        width: 28
-        height: 58
+        y: 15
+        width: 256
+        height: 226
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
+      outline:
+      - - {x: -65, y: 113}
+        - {x: -128, y: 4}
+        - {x: -128, y: -4}
+        - {x: -65, y: -113}
+        - {x: 65, y: -113}
+        - {x: 128, y: -4}
+        - {x: 128, y: 4}
+        - {x: 65, y: 113}
+      physicsShape:
+      - - {x: -64, y: 111}
+        - {x: -128, y: 0}
+        - {x: -64, y: -111}
+        - {x: 64, y: -111}
+        - {x: 128, y: 0}
+        - {x: 64, y: 111}
       tessellationDetail: 0
       bones: []
-      spriteID: f4cf5b3accefbd145b4e9a9290b7595c
-      internalID: -1486329161
+      spriteID: 37fc5a28112c12620800000000000000
+      internalID: -712631045867808456
       vertices: []
       indices: 
       edges: []
       weights: []
-    outline: []
-    physicsShape: []
+    outline:
+    - - {x: -65, y: 113}
+      - {x: -128, y: 4}
+      - {x: -128, y: -4}
+      - {x: -65, y: -113}
+      - {x: 65, y: -113}
+      - {x: 128, y: -4}
+      - {x: 128, y: 4}
+      - {x: 65, y: 113}
+    physicsShape:
+    - - {x: -64, y: 111}
+      - {x: -128, y: 0}
+      - {x: -64, y: -111}
+      - {x: 64, y: -111}
+      - {x: 128, y: 0}
+      - {x: 64, y: 111}
     bones: []
-    spriteID: ebae796ff5af803428cb6c5b58d756c1
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -165,8 +198,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      OverwatchOperator_0: 642637958378867971
-      OverwatchOperator_1: -1486329161
+      Hexagon Flat Top: -712631045867808456
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

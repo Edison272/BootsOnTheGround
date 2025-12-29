@@ -36,7 +36,7 @@ MonoBehaviour:
       type: 3}
     attack_enum: 0
     attack_data:
-      attack_dmg: 12
+      damage: 5
       knockback_amt: 0
       effect_time: 0
       slow_amt: 0

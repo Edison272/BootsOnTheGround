@@ -8,9 +8,9 @@ public class CharacterSO : ScriptableObject
     public string name = "Entity";
 
     //stats
-    public int base_health;
-    public int base_speed;
-    public int base_range;
+    public int health;
+    public int speed;
+    public int range;
 
     public GameObject char_prefab;
 
