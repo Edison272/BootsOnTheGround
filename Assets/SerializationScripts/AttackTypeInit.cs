@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class AttackTypeInit : ISerializationCallbackReceiver // used to initialize ONE attack and its data
+public class AttackTypeInit // used to initialize ONE attack and its data
 {
     public GameObject prefab;
     public AttackEnum attack_enum = AttackEnum.Projectile;
-    private AttackEnum curr_atk = AttackEnum.MeleeAttack;
+    [SerializeField] private AttackEnum curr_atk = AttackEnum.MeleeAttack;
 
     public AttackData attack_data;
     public StatDictionary attack_stats;
@@ -40,8 +40,9 @@ public class AttackTypeInit : ISerializationCallbackReceiver // used to initiali
         }
         return atk_type;
     }
-    public void OnBeforeSerialize()
+    public void OnValidate() // called by ItemSO
     {
+        Debug.Log("Attack Init Validation");
         if (curr_atk != attack_enum)
         {
             switch (attack_enum)
@@ -72,10 +73,5 @@ public class AttackTypeInit : ISerializationCallbackReceiver // used to initiali
             }
             curr_atk = attack_enum;
         }
-    }
-
-    public void OnAfterDeserialize()
-    {
-        return;
     }
 }

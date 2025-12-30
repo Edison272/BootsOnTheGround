@@ -34,7 +34,7 @@ public class Gun : FuncModule
 
     public override void UseFunction(int action_index)
     {
-        attacks[action_index].Attack(item.source_pos, item.target_pos, item.item_tip.position);
+        attacks[action_index].Attack(item.source_pos, target_pos, item.item_tip.position, new Vector2(0, item.y_offset), item.user);
         ammo -= 1;
     }
 }

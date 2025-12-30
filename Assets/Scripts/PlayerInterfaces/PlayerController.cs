@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.PlayerLoop;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,11 +22,20 @@ public class PlayerController : MonoBehaviour
     
     [Header("Character Control")]
     [SerializeField] private Camera cam;
-    public float cam_bound = 1f;
+    
     [SerializeField] Vector2 input_dir;
     [SerializeField] private Vector3 look_pos;
     [SerializeField] private Vector3 raw_look_pos;
     [SerializeField] Character active_character;
+
+    [Header("Camera Stuff")]
+    [SerializeField] float cam_bound = 1f; // how far camera can travel from the player
+    [SerializeField] readonly int base_ppu = 32; // base pixels per unit (used for zoom)
+
+    // multiply scalar by base values to get current zoom
+    [SerializeField] private int curr_ppu; // set current zoom
+
+    float zoom_scalar = 1; // used to help with interpolation
 
     void Awake()
     {
@@ -63,6 +73,10 @@ public class PlayerController : MonoBehaviour
         controls.GroundActions.SwitchItem.performed += SwitchItem;
         // Toggle Command Mode
         controls.GroundActions.ToggleCommandMode.performed += CmdMode;
+
+        // set camera zoom
+        curr_ppu = base_ppu + base_ppu * active_character.GetRangeScalar();
+        cam.GetComponent<PixelPerfectCamera>().assetsPPU = curr_ppu;
     }
 
     public void EnableControl()
@@ -83,6 +97,12 @@ public class PlayerController : MonoBehaviour
             if (main_continuous) {MainAction();}
             if (alt_continuous) {AltAction();}
         }
+
+        // if (zoom_scalar < 0.5f)
+        // {
+        //     zoom_scalar = Mathf.Min(0.5f, zoom_scalar + Time.deltaTime);
+        //     curr_zoom = base_zoom + bonus_zoom * zoom_scalar;
+        // }
     }
 
     void FixedUpdate()
@@ -95,6 +115,8 @@ public class PlayerController : MonoBehaviour
             Vector3 cam_pos = (look_pos - char_pos) * 0.15f;
             cam_pos.z = -10;
             cam.transform.position = cam_pos + char_pos;
+
+            
         }
     }
 
@@ -141,6 +163,8 @@ public class PlayerController : MonoBehaviour
         // set new input functionality
         SetMainAction(true);
         SetAltAction(active_character.HasAltAction());
+        curr_ppu = base_ppu + base_ppu * active_character.GetRangeScalar();
+        cam.GetComponent<PixelPerfectCamera>().assetsPPU = curr_ppu;
     }
     void CmdMode(InputAction.CallbackContext context) {}
     #endregion

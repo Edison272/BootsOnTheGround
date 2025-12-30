@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Item", menuName = "ScriptableObjects/Items", order = 1)]
-public class ItemSO : ScriptableObject, ISerializationCallbackReceiver
+public class ItemSO : ScriptableObject
 {   
     [SerializeField] GameObject item_prefab;
 
@@ -15,8 +15,10 @@ public class ItemSO : ScriptableObject, ISerializationCallbackReceiver
     public bool is_full_auto = true;
 
     [field: Header("Aiming")]
-    public bool dynamic_aim = true;        // allow dynamic aim for the object to be able to turn to face the target
+    public bool dynamic_aim = true; // allow dynamic aim for the object to be able to turn to face the target
+    private static float step = 0.5f;
     [Range(0.0f, 1.0f)] public float rot_scale = 1f;    // 0 to 1
+    [Range(0, 3)] public int bonus_range_scalar; // how far the user can see with this item
 
     [field: Header("Functionality")]
     [SerializeField] FuncEnum func_enum = FuncEnum.Gun;
@@ -24,11 +26,12 @@ public class ItemSO : ScriptableObject, ISerializationCallbackReceiver
     public AttackType[] item_attack_types = new AttackType[0];
 
     [field: Header("Serialization")]
+    [SerializeField] private InputEnum curr_input = InputEnum.Increment; // detect when the input type has changed to update it
+    [SerializeField] private FuncEnum curr_func = FuncEnum.Shield; // detect when the function type has changed to update it
     [SerializeField] StatDictionary serialized_input_stats;
     [SerializeField] StatDictionary serialized_functionality_stats;
     [SerializeField] AttackTypeInit[] serialized_attacks;
-    private InputEnum curr_input = InputEnum.Increment; // detect when the input type has changed to update it
-    private FuncEnum curr_func = FuncEnum.Shield; // detect when the function type has changed to update it
+
 
     #region Creating the Item
     public Item GenerateItem(Vector3 pos, Quaternion rotation) // summon an item on the ground
@@ -86,8 +89,10 @@ public class ItemSO : ScriptableObject, ISerializationCallbackReceiver
     }
 
     #region Scriptable Object Serialization
-    public void OnBeforeSerialize()
+    public void OnValidate()
     {
+        Debug.Log("ItemSO Validation");
+        // input type
         if (curr_input != input_enum)
         {
             switch (input_enum)
@@ -118,6 +123,8 @@ public class ItemSO : ScriptableObject, ISerializationCallbackReceiver
             }
             curr_input = input_enum;
         }
+
+        // functionality types
         if (curr_func != func_enum)
         {
             switch (func_enum)
@@ -126,15 +133,14 @@ public class ItemSO : ScriptableObject, ISerializationCallbackReceiver
                     serialized_functionality_stats = new StatDictionary
                     {
                         {"max_ammo", 30f},
-                        {"use_speed", 0.1f}
+                        {"recoil_scalar", 0.1f}
                     };
                     break;
                 case FuncEnum.Melee:
                     serialized_functionality_stats = new StatDictionary
                     {
-                        {"reset_speed", 0.1f},
-                        {"threshold", 1f},
-                        {"max_charge", 1f}
+                        {"combo_length", 0.1f},
+                        {"dash_scalar", 1f},
                     };
                     break;
                 case FuncEnum.Shield:
@@ -148,14 +154,13 @@ public class ItemSO : ScriptableObject, ISerializationCallbackReceiver
             }
             curr_func = func_enum;
         }
-    }
-    public void OnAfterDeserialize()
-    {
-        //set up the item attack types
+
+        // attack types
         item_attack_types = new AttackType[serialized_attacks.Length];
         int i = 0;
         foreach(AttackTypeInit atk_type_init in serialized_attacks)
         {
+            atk_type_init.OnValidate();
             if (atk_type_init.IsDictSetUp())
             {
                 item_attack_types[i] = atk_type_init.CreateAttackType();

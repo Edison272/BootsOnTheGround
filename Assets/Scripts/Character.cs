@@ -24,8 +24,8 @@ public class Character : MonoBehaviour, IHealth, IMovement
     // character has 4 VFX states based on aim direciton, stored as two booleans, X and Y
     // T, F = Right Bottom | T, T = Right Top | F, T = Left Top | F, F = Left Bottom
     (bool, bool) direction_state = (true, true);
-    [SerializeField] (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.975f), new Vector2 (0.5f, 0.975f));  // (main pos (left), alt pos (right))
-    [SerializeField] readonly Vector2 single_hand_pos = new Vector2 (0, 0.975f);  // (main pos, alt pos)
+    (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.6f), new Vector2 (0.5f, 0.6f));  // (main pos (left), alt pos (right))
+    Vector2 single_hand_pos = new Vector2 (0, 0.6f);  // (main pos, alt pos)
 
     //aim & handling
     [field: Header("Aiming")]
@@ -51,8 +51,13 @@ public class Character : MonoBehaviour, IHealth, IMovement
     int curr_item_index = 0;           // access items indexes list
     public Item main_item;
     public Item alt_item;
+    (int, int) current_indexes;
     float switch_cd = 0.5f; // time the char must wait before they can switch to the next weapon
     float curr_switch_cd = 0;
+
+    [field: Header("Detection")]
+    public int curr_range {get; private set;}
+    public int base_range => base_data.range;
 
     // get base data from a scriptable object and assign them here. Called once at when this object is created
     public void AssignBaseData(CharacterSO base_data)
@@ -65,6 +70,8 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
         // setup VFX
         hitbox_radius = GetComponent<CircleCollider2D>().radius;
+        akimbo_hand_pos = ((Vector2) main_hand.localPosition, (Vector2) alt_hand.localPosition);
+        single_hand_pos = new Vector2(0, main_hand.localPosition.y);
 
         // setup health
         curr_health = max_health;
@@ -112,6 +119,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         Look(entity_rb.position + aim_dir);
     }
 
+    #region Updates
     // Update is called once per frame
     void Update()
     {
@@ -135,6 +143,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         // movement
         Move();
     }
+    #endregion
 
     #region Looking & Aiming
     public void Look(Vector2 look_pos) {
@@ -321,9 +330,8 @@ public class Character : MonoBehaviour, IHealth, IMovement
         {
             curr_item_index = Mathf.Clamp(spec_index, 0, item_indexes.Length);
         }
-        
-        // probably add something to disable the previous items latee
         UnequipActive(); //unequipped item will call the "SetSwitchItem" to set the new active item
+        current_indexes = (item_indexes[curr_item_index].x, item_indexes[curr_item_index].y);
         EquipActive(curr_item_index); // set up the new shi
         curr_switch_cd = switch_cd;
     }
@@ -359,4 +367,8 @@ public class Character : MonoBehaviour, IHealth, IMovement
         alt_item?.Reset(); // reset if there's an alt item
     }
     #endregion
+    public int GetRangeScalar()
+    {
+        return inventory[current_indexes.Item1].GetRange();
+    }
 }

@@ -14,6 +14,7 @@ public class Item : MonoBehaviour
     public Transform rotator_object; // rotate the object when aiming
     public Transform item_tip; // the "front" of an item which attack type vfx will align to
     public Animator animator;
+    public float y_offset {get; private set;} // vfx y offset from the target position
     
 
     [field: Header("Aiming")]
@@ -33,7 +34,7 @@ public class Item : MonoBehaviour
     public FuncModule func_module;
     public AttackType[] attacks;
     public bool is_equipped = false; // can only use an item if it is equipped
-    public float reset_timer; // block this weapon's if disabled time > 0
+    public float reset_timer {get; private set;} // block this weapon's if disabled time > 0
 
     [field: Header("Modifiers")]
     public float use_spd_scale = 1f;
@@ -66,6 +67,8 @@ public class Item : MonoBehaviour
         {
             rotator_object = transform.parent;
         }
+
+        y_offset = this.transform.position.y - user.transform.position.y;
     }
 
     // Update is called once per frame
@@ -179,10 +182,15 @@ public class Item : MonoBehaviour
 
     #endregion
 
-    #region Getting Functionality Data
+    #region Getting Data
     public bool IsHoldInput()
     {
         return base_data.is_full_auto;
     }
     #endregion
+
+    public int GetRange()
+    {
+        return base_data.bonus_range_scalar;
+    }
 }

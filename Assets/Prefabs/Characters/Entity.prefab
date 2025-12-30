@@ -167,7 +167,7 @@ GameObject:
   - component: {fileID: 234494506826388213}
   m_Layer: 0
   m_Name: Entity
-  m_TagString: Untagged
+  m_TagString: Allies
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -327,8 +327,6 @@ MonoBehaviour:
   alt_hand: {fileID: 967626683832254148}
   anim: {fileID: 234494506826388213}
   aim_angle: 0
-  move_speed: 5
-  entity_rb: {fileID: 2002327823337540958}
   inventory:
   - {fileID: 0}
   - {fileID: 0}
