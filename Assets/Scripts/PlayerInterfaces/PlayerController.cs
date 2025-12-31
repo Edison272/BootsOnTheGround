@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -30,12 +31,12 @@ public class PlayerController : MonoBehaviour
 
     [Header("Camera Stuff")]
     [SerializeField] float cam_bound = 1f; // how far camera can travel from the player
-    [SerializeField] readonly int base_ppu = 32; // base pixels per unit (used for zoom)
-
-    // multiply scalar by base values to get current zoom
-    [SerializeField] private int curr_ppu; // set current zoom
-
-    float zoom_scalar = 1; // used to help with interpolation
+    [SerializeField] static readonly int[] zoom_ppu_levels = {96, 64, 48, 32}; //32 is super far, 96 is base range
+    [SerializeField] float camera_zoom_time = 0.5f;
+    int ppu_diff; // set current zoom
+    float curr_ppu; // set current zoom
+    int target_ppu; // set current zoom
+    float curr_zoom_time;
 
     void Awake()
     {
@@ -47,6 +48,11 @@ public class PlayerController : MonoBehaviour
         looking = controls.GroundActions.Look;
         main_action = controls.GroundActions.MainAction;
         alt_action = controls.GroundActions.AltAction;
+
+        target_ppu = zoom_ppu_levels[0];
+        curr_ppu = (int)target_ppu;
+        ppu_diff = 0;
+        cam.GetComponent<PixelPerfectCamera>().assetsPPU = (int)target_ppu;
     }
 
     // Start is called before the first frame update
@@ -74,9 +80,15 @@ public class PlayerController : MonoBehaviour
         // Toggle Command Mode
         controls.GroundActions.ToggleCommandMode.performed += CmdMode;
 
-        // set camera zoom
-        curr_ppu = base_ppu + base_ppu * active_character.GetRangeScalar();
-        cam.GetComponent<PixelPerfectCamera>().assetsPPU = curr_ppu;
+        SetCameraZoom(active_character.GetRangeScalar());
+    }
+
+    public void SetCameraZoom(int zoom_scalar)
+    {
+        curr_ppu = cam.GetComponent<PixelPerfectCamera>().assetsPPU;
+        curr_zoom_time = 0;
+        target_ppu = zoom_ppu_levels[zoom_scalar];
+        ppu_diff = target_ppu - cam.GetComponent<PixelPerfectCamera>().assetsPPU;
     }
 
     public void EnableControl()
@@ -97,15 +109,20 @@ public class PlayerController : MonoBehaviour
             if (main_continuous) {MainAction();}
             if (alt_continuous) {AltAction();}
         }
+        if (curr_zoom_time < camera_zoom_time)
+        {
+            curr_zoom_time += Time.deltaTime;
+            if (curr_zoom_time >= camera_zoom_time)
+            {
+                curr_zoom_time = camera_zoom_time;
+                cam.GetComponent<PixelPerfectCamera>().assetsPPU = target_ppu; 
+            }
+        }
 
-        // if (zoom_scalar < 0.5f)
-        // {
-        //     zoom_scalar = Mathf.Min(0.5f, zoom_scalar + Time.deltaTime);
-        //     curr_zoom = base_zoom + bonus_zoom * zoom_scalar;
-        // }
+
     }
 
-    void FixedUpdate()
+    void LateUpdate()
     {
         if (active_character)
         {
@@ -115,8 +132,10 @@ public class PlayerController : MonoBehaviour
             Vector3 cam_pos = (look_pos - char_pos) * 0.15f;
             cam_pos.z = -10;
             cam.transform.position = cam_pos + char_pos;
-
-            
+        }
+        if (curr_zoom_time > 0)
+        {
+            cam.GetComponent<PixelPerfectCamera>().assetsPPU = (int)(curr_ppu + ppu_diff * curr_zoom_time/camera_zoom_time); 
         }
     }
 
@@ -163,8 +182,7 @@ public class PlayerController : MonoBehaviour
         // set new input functionality
         SetMainAction(true);
         SetAltAction(active_character.HasAltAction());
-        curr_ppu = base_ppu + base_ppu * active_character.GetRangeScalar();
-        cam.GetComponent<PixelPerfectCamera>().assetsPPU = curr_ppu;
+        SetCameraZoom(active_character.GetRangeScalar());
     }
     void CmdMode(InputAction.CallbackContext context) {}
     #endregion

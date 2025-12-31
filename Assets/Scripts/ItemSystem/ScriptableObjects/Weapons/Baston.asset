@@ -49,7 +49,7 @@ MonoBehaviour:
       - key: projectile_speed
         value: 10
       - key: projectile_count
-        value: 6
+        value: 7
       - key: projectile_spread
         value: 180
       - key: even_spread
