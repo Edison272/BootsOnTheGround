@@ -24,7 +24,7 @@ public class Projectile : AttackType
     bool even_spread;
 
 
-    public Projectile(GameObject instance, AttackData atk_data, float prj_spd, float prj_count, float prj_sprd, float even_sprd) : base(instance)
+    public Projectile(GameObject instance, AttackData atk_data, float prj_spd, float prj_count, float prj_sprd, float even_sprd, float homing_strength) : base(instance)
     {
         this.atk_data = atk_data;
         projectile_speed = prj_spd;
@@ -62,19 +62,54 @@ public class Projectile : AttackType
             // new projectile! 
             projectile_data.StartProjectile(this, source_pos, target_pos, output_pos, vfx_target_offset, sender);
         }
-
     }
 
 }
 public class Linecast : AttackType
 {
-    public Linecast(GameObject instance) : base(instance)
+    public AttackData atk_data;
+    public float line_duration;
+    int line_count;
+    float line_spread;
+    bool even_spread;
+    public Linecast(GameObject instance, AttackData atk_data, float lin_dur, float lin_count, float lin_sprd, float even_sprd) : base(instance)
     {
+        this.atk_data = atk_data;
+        line_duration = lin_dur;
+        line_count = (int)lin_count;
+        line_spread = lin_sprd;
+        even_spread = even_sprd > 0 ? true : false;
     }
 
     public override void Attack(Vector2 source_pos, Vector2 target_pos, Vector2 output_pos, Vector2 vfx_target_offset, Character sender)
     {
-        throw new System.NotImplementedException();
+        // declare info that doesn't need to be in a loop
+        float target_dist = (target_pos - source_pos).magnitude;
+        Vector2 target_dir = (target_pos - source_pos).normalized;
+        float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
+        for (int i = 0; i < line_count; i++)
+        {
+            GameObject linecast = GameObject.Instantiate(instance, source_pos, Quaternion.identity);
+            LinecastBehavior linecast_data = linecast.GetComponent<LinecastBehavior>();
+
+            // add the inherent inaccuracy value of projectile
+            if (even_spread)
+            {
+                float angle_inc = line_spread / (line_spread - 1);
+                float offset_ang = (-line_spread / 2f) + (angle_inc * i);
+                float final_ang = target_ang + offset_ang;
+
+                Vector2 dir = new Vector2(Mathf.Cos(final_ang * Mathf.Deg2Rad),Mathf.Sin(final_ang * Mathf.Deg2Rad));
+                
+                target_pos = source_pos + dir * target_dist;
+            }
+            else
+            {
+                target_pos += Random.insideUnitCircle * target_dist * line_spread/360;
+            }
+            // new linecast! 
+            linecast_data.StartLinecast(this, source_pos, target_pos, output_pos, vfx_target_offset, sender);
+        }
     }
 }
 

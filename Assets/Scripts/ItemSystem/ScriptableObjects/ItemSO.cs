@@ -25,8 +25,8 @@ public class ItemSO : ScriptableObject
     public AttackType[] item_attack_types = new AttackType[0];
 
     [field: Header("Serialization")]
-    [SerializeField] private InputEnum curr_input = InputEnum.Increment; // detect when the input type has changed to update it
-    [SerializeField] private FuncEnum curr_func = FuncEnum.Shield; // detect when the function type has changed to update it
+    private InputEnum curr_input = InputEnum.Increment; // detect when the input type has changed to update it
+    private FuncEnum curr_func = FuncEnum.Shield; // detect when the function type has changed to update it
     [SerializeField] StatDictionary serialized_input_stats;
     [SerializeField] StatDictionary serialized_functionality_stats;
     [SerializeField] AttackTypeInit[] serialized_attacks;
@@ -90,7 +90,6 @@ public class ItemSO : ScriptableObject
     #region Scriptable Object Serialization
     public void OnValidate()
     {
-        Debug.Log("ItemSO Validation");
         // input type
         if (curr_input != input_enum)
         {

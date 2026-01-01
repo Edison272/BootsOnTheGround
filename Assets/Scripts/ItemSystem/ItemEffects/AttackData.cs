@@ -7,6 +7,7 @@ public class AttackData
 {
     // Attack on impact
     public int damage;
+    public int pierce;
     [SerializeField] float knockback_amt;
     
     // status effect application

@@ -1,0 +1,104 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class LinecastBehavior : MonoBehaviour
+{
+    Vector2 source_pos;
+    Transform target_char;
+    Vector2 target_pos;
+    Vector2 end_pos; // if the linecast stops at whatever it hits (or the last thing it hits if it can pierce)
+    Vector2 vfx_target_offset;
+
+    [field: Header("VFX")]
+    public LineRenderer main_line_render; // show where the actual linecast is going
+    public LineRenderer vfx_line_render; // show where the vfx linecast is going
+    float render_duration;
+    float curr_duration;
+
+    float stick_duration; // stick to a target for a set duration
+
+    [field: Header("Line Data")]
+    AttackData atk_data;
+
+
+    [field: Header("Physics")]
+    RaycastHit2D[] contacts;
+
+
+
+    [field: Header("Ownership")]
+    string faction_tag = "Untagged";
+    Character owner;
+
+    void GenerateLinecast()
+    {
+        // get all targets hit in linecast
+        contacts = Physics2D.LinecastAll(source_pos, target_pos);
+        foreach(RaycastHit2D contact in contacts)
+        {
+            if (contact.transform.gameObject.tag != faction_tag && contact.transform.gameObject.tag != "NoHit")
+            {
+                contact.transform.gameObject.GetComponent<IHealth>()?.TakeDamage(atk_data.damage);
+
+                end_pos = contact.point;
+            }
+        }
+
+        // change linerender vfx accordingly\
+        SetLRPositions(1, end_pos, end_pos + vfx_target_offset);
+
+    }
+
+    void SetLRPositions(int index, Vector2 main_position, Vector2 vfx_position)
+    {
+        main_line_render.SetPosition(index, main_position);
+        vfx_line_render.SetPosition(index, vfx_position);
+    }
+
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        curr_duration -= Time.fixedDeltaTime;
+        if (curr_duration <= 0)
+        {
+            EndLinecast();
+        }
+    }
+
+    public void StartLinecast(Linecast line_data, Vector2 src_pos, Vector2 targ_pos, Vector2 output_pos, Vector2 vfx_targ_offset, Character sender = null) // straight shot variant
+    {
+        // set data
+        atk_data = line_data.atk_data;
+        render_duration = line_data.line_duration;
+        curr_duration = render_duration;
+        source_pos = src_pos;
+        target_pos = targ_pos;
+        end_pos = target_pos;
+        vfx_target_offset = vfx_targ_offset;
+        owner = sender;
+        if (owner)
+        {
+            faction_tag = owner.gameObject.tag;
+        }
+        // set origin position of line render
+        SetLRPositions(0, src_pos, output_pos);
+        // generate the physics linecast
+        GenerateLinecast();
+    }
+
+    public void StartLinecast(Transform target_char) // homing vairant
+    {
+        this.target_char = target_char;
+    }
+
+    private void LinecastEffects()
+    {
+        EndLinecast();
+    }
+
+    private void EndLinecast()
+    {
+        Destroy(this.gameObject);
+    }
+}

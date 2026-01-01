@@ -7,7 +7,7 @@ public class AttackTypeInit // used to initialize ONE attack and its data
 {
     public GameObject prefab;
     public AttackEnum attack_enum = AttackEnum.Projectile;
-    [SerializeField] private AttackEnum curr_atk = AttackEnum.MeleeAttack;
+    private AttackEnum curr_atk = AttackEnum.MeleeAttack;
 
     public AttackData attack_data;
     public StatDictionary attack_stats;
@@ -28,11 +28,18 @@ public class AttackTypeInit // used to initialize ONE attack and its data
                     attack_stat_dict["projectile_speed"],
                     attack_stat_dict["projectile_count"],
                     attack_stat_dict["projectile_spread"],
-                    attack_stat_dict["even_spread"]
+                    attack_stat_dict["even_spread"],
+                    attack_stat_dict["homing_strength"]
                 );
                 break;
             case AttackEnum.Linecast:
-                atk_type = new Linecast(prefab);
+                atk_type = new Linecast(prefab,
+                    attack_data,
+                    attack_stat_dict["linecast_duration"],
+                    attack_stat_dict["linecast_count"],
+                    attack_stat_dict["linecast_spread"],
+                    attack_stat_dict["even_spread"]
+                );
                 break;
             case AttackEnum.MeleeAttack:
                 atk_type = new MeleeAttack(prefab);
@@ -42,7 +49,6 @@ public class AttackTypeInit // used to initialize ONE attack and its data
     }
     public void OnValidate() // called by ItemSO
     {
-        Debug.Log("Attack Init Validation");
         if (curr_atk != attack_enum)
         {
             switch (attack_enum)
@@ -54,6 +60,7 @@ public class AttackTypeInit // used to initialize ONE attack and its data
                         {"projectile_count", 1f},
                         {"projectile_spread", 0f},
                         {"even_spread", 0f},
+                        {"homing_strength", 0f}
                     };
                     break;
                 case AttackEnum.Linecast:
@@ -62,6 +69,7 @@ public class AttackTypeInit // used to initialize ONE attack and its data
                         {"linecast_duration", 0.1f},
                         {"linecast_count", 1f},
                         {"linecast_spread", 0f},
+                        {"even_spread", 0f},
                     };
                     break;
                 case AttackEnum.MeleeAttack:

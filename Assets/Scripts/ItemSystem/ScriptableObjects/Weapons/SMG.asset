@@ -18,16 +18,14 @@ MonoBehaviour:
   is_full_auto: 1
   dynamic_aim: 1
   rot_scale: 1
-  bonus_range_scalar: 0
+  bonus_range_scalar: 1
   func_enum: 0
-  curr_input: 0
-  curr_func: 0
   serialized_input_stats:
     stat_array:
     - key: reset_speed
-      value: 0.5
+      value: 0.1
     - key: use_speed
-      value: 0.05
+      value: 0.1
   serialized_functionality_stats:
     stat_array:
     - key: max_ammo
@@ -35,22 +33,22 @@ MonoBehaviour:
     - key: recoil_scalar
       value: 0.1
   serialized_attacks:
-  - prefab: {fileID: 4077797797690535342, guid: 74d3b6d886a278e47843e7f35df15a53,
+  - prefab: {fileID: 8164560864404493835, guid: 6601101be4d62984c84e8d67a8efe3e9,
       type: 3}
-    attack_enum: 0
-    curr_atk: 0
+    attack_enum: 1
     attack_data:
       damage: 22
+      pierce: 0
       knockback_amt: 3.58
       effect_time: 2.55
       slow_amt: 2.74
     attack_stats:
       stat_array:
-      - key: projectile_speed
-        value: 15
-      - key: projectile_count
+      - key: linecast_duration
+        value: 0.1
+      - key: linecast_count
         value: 1
-      - key: projectile_spread
-        value: 10
+      - key: linecast_spread
+        value: 0
       - key: even_spread
         value: 0
