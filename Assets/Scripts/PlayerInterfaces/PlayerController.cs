@@ -1,12 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
-using UnityEngine.PlayerLoop;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,7 +20,10 @@ public class PlayerController : MonoBehaviour
     public bool alt_hold_input = false;  // if true, mouse will alt action function will constantly be called
     
     [Header("Character Control")]
-    [SerializeField] private Camera cam;
+    // move BOTH cameras to the player positon cuz they're both important. make play cam a child object of main cam tho
+    [SerializeField] private Camera main_cam; // used to get the FULL area around the player and render that for player view
+    [SerializeField] private Camera play_cam; // the area the player sees and interacts with
+    [SerializeField] RawImage player_view; // a canvas raw image the player uses to see the world
     
     [SerializeField] Vector2 input_dir;
     [SerializeField] private Vector3 look_pos;
@@ -31,13 +32,15 @@ public class PlayerController : MonoBehaviour
 
     [Header("Camera Stuff")]
     [SerializeField] float cam_bound = 1f; // how far camera can travel from the player
-    [SerializeField] static readonly int[] zoom_ppu_levels = {96, 64, 48, 32}; //32 is super far, 96 is base range
     [SerializeField] float camera_zoom_time = 0.5f;
-    int ppu_diff; // set current zoom
-    float curr_ppu; // set current zoom
-    int target_ppu; // set current zoom
+    public float base_zoom_level = 1;
+    float zoom_diff; // set current zoom
+    float curr_zoom; // set current zoom
+    float target_zoom; // set current zoom
     float curr_zoom_time;
 
+    [Header("Camera Stuff")]
+    [SerializeField] GameObject Reticle;
     void Awake()
     {
         // get map
@@ -49,10 +52,13 @@ public class PlayerController : MonoBehaviour
         main_action = controls.GroundActions.MainAction;
         alt_action = controls.GroundActions.AltAction;
 
-        target_ppu = zoom_ppu_levels[0];
-        curr_ppu = (int)target_ppu;
-        ppu_diff = 0;
-        cam.GetComponent<PixelPerfectCamera>().assetsPPU = (int)target_ppu;
+        target_zoom = 1;
+        curr_zoom = (int)target_zoom;
+        zoom_diff = 0;
+
+        // set starting zoom
+        base_zoom_level = 1;
+        target_zoom = base_zoom_level;
     }
 
     // Start is called before the first frame update
@@ -85,10 +91,11 @@ public class PlayerController : MonoBehaviour
 
     public void SetCameraZoom(int zoom_scalar)
     {
-        curr_ppu = cam.GetComponent<PixelPerfectCamera>().assetsPPU;
+        curr_zoom = player_view.rectTransform.localScale.x;
         curr_zoom_time = 0;
-        target_ppu = zoom_ppu_levels[zoom_scalar];
-        ppu_diff = target_ppu - cam.GetComponent<PixelPerfectCamera>().assetsPPU;
+        target_zoom = base_zoom_level + (5 - zoom_scalar) * 0.2f;
+        zoom_diff = target_zoom - player_view.rectTransform.localScale.x;
+        Debug.Log(zoom_diff);
     }
 
     public void EnableControl()
@@ -115,11 +122,21 @@ public class PlayerController : MonoBehaviour
             if (curr_zoom_time >= camera_zoom_time)
             {
                 curr_zoom_time = camera_zoom_time;
-                cam.GetComponent<PixelPerfectCamera>().assetsPPU = target_ppu; 
+                player_view.rectTransform.localScale = new Vector3(target_zoom, target_zoom, 0);
             }
         }
+        look_pos = main_cam.ViewportToWorldPoint(raw_look_pos);
+    }
 
-
+    void FixedUpdate()
+    {
+        Reticle.transform.position = (Vector2)look_pos;
+        if (active_character)
+        {
+            Vector3 char_pos = active_character.GetPosition();
+            Debug.DrawLine(char_pos, look_pos);
+        }
+        
     }
 
     void LateUpdate()
@@ -127,15 +144,15 @@ public class PlayerController : MonoBehaviour
         if (active_character)
         {
             Vector3 char_pos = active_character.GetPosition();
-
-            look_pos = cam.ScreenToWorldPoint(raw_look_pos);
+            // update look position if player moves around
             Vector3 cam_pos = (look_pos - char_pos) * 0.15f;
             cam_pos.z = -10;
-            cam.transform.position = cam_pos + char_pos;
+            main_cam.transform.position = cam_pos + char_pos;
         }
         if (curr_zoom_time > 0)
         {
-            cam.GetComponent<PixelPerfectCamera>().assetsPPU = (int)(curr_ppu + ppu_diff * curr_zoom_time/camera_zoom_time); 
+            float scale_Val = curr_zoom + zoom_diff * curr_zoom_time/camera_zoom_time; 
+            player_view.rectTransform.localScale = new Vector3(scale_Val, scale_Val, 0);
         }
     }
 
@@ -153,9 +170,16 @@ public class PlayerController : MonoBehaviour
     }
     void StopMove(InputAction.CallbackContext context) {active_character.StopMove();}
     void Look(InputAction.CallbackContext context) {
-        raw_look_pos = context.ReadValue<Vector2>();
-        raw_look_pos.z = -cam.transform.localPosition.z;
-        active_character.Look(cam.ScreenToWorldPoint(raw_look_pos));
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(player_view.rectTransform, context.ReadValue<Vector2>(), play_cam, out Vector2 local_pos);
+
+        Rect rect = player_view.rectTransform.rect;
+
+        // get viewport coordinates
+        float view_x = (local_pos.x - rect.xMin) / rect.width;
+        float view_y = (local_pos.y - rect.yMin) / rect.height;
+        
+        raw_look_pos = new Vector3(view_x, view_y, 0);
+        active_character.Look(main_cam.ViewportToWorldPoint(raw_look_pos));
     }
     void MainStart(InputAction.CallbackContext context) {
         active_character.UseMainItem();

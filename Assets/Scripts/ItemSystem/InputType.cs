@@ -74,7 +74,7 @@ public class ChargeInput : InputType // Use() to charge up overtime, output chan
     }
     public override void Stop()
     {
-        item.Action((int)(charge_states * ((curr_charge - threshold) / max_charge)));
+        item.Action((int)(charge_states * ((curr_charge - threshold) / (max_charge+0.01f))));
         curr_charge = 0;
     }
 
@@ -92,27 +92,28 @@ public class ChargeInput : InputType // Use() to charge up overtime, output chan
 public class IncrementInput : InputType // Output changes depending on extended duration of use
 {
     float use_cd; // time between uses
-    float next_use; // the next time this can be used
+    float next_use = 0; // the next time this can be used
     float curr_inc; // current incrementation level
     float max_inc; // maximum incrememntation level
     int inc_states; // how many levels of incrementation
-    public IncrementInput(float use_cd, float max_inc, float inc_states, Item item) : base(item)
+    public IncrementInput(float use_cd, float max_inc, int inc_states, Item item) : base(item)
     {
-        
+        this.use_cd = use_cd;
+        this.max_inc = max_inc;
+        this.inc_states = inc_states;
     }
     public override void Use()
     {
         item.animator.SetBool("Charging", true);
-        if (next_use > Time.time)
+        if (next_use <= Time.time)
         {
             // do the effect or whatnot based on curr_inc/max_inc and some other stuff
             next_use = Time.time + use_cd;
             item.Action((int)(inc_states * (curr_inc / max_inc)));
         }
         // increment
-        curr_inc += Time.deltaTime;
-        if (curr_inc > max_inc) {
-            curr_inc = max_inc;
+        if (curr_inc + 0.1f * curr_inc < max_inc) {
+            curr_inc += Time.deltaTime;
         }
     }
     public override void Stop()

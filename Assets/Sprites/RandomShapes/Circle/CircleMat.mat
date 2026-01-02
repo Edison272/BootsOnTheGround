@@ -8,8 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: CircleMat
-  m_Shader: {fileID: -6465566751694194690, guid: e5f295d48f261374c835b7b0f1e2ee3f,
-    type: 3}
+  m_Shader: {fileID: 4800000, guid: 13c02b14c4d048fa9653293d54f6e0e1, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -126,6 +125,7 @@ Material:
     - _EnableExternalAlpha: 0
     - _EnvironmentReflections: 1
     - _FlipbookMode: 0
+    - _GlobalPPU: 8
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossinessSource: 0

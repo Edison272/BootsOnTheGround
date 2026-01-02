@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -17,17 +18,52 @@ public struct StatDictItem
 [System.Serializable]
 public class StatDictionary : IEnumerable<StatDictItem>
 {
-    [SerializeField] List<StatDictItem> stat_array = new List<StatDictItem>();
+    [SerializeField] List<StatDictItem> stat_list = new List<StatDictItem>();
 
     public void Add(string key, float value)
     {
-        stat_array.Add(new StatDictItem(key, value));
+        stat_list.Add(new StatDictItem(key, value));
     }
+    public void Insert(int index, string key, float value = 0)
+    {
+        stat_list.Insert(index, new StatDictItem(key, value));
+    }
+    public string Key(int index)
+    {
+        return index >= stat_list.Count ? stat_list[index].key : "0";
+    }
+    public void RemoveAt(int index)
+    {
+        stat_list.RemoveAt(index);
+    }
+    public void RemoveNonMatching(string[] match)
+    {
+        stat_list.RemoveAll(
+            stat => !match.Contains(stat.key)
+        );
+    }
+    public void Clear()
+    {
+        stat_list.Clear();
+    }
+
+    public bool Contains(string key)
+    {
+        foreach(StatDictItem item in stat_list)
+        {
+            if (item.key == key)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public int Length => stat_list.Count;
 
     public Dictionary<string, float> ToDictionary()
     {
         Dictionary<string, float> new_dict = new Dictionary<string, float>();
-        foreach(StatDictItem stat in stat_array) 
+        foreach(StatDictItem stat in stat_list) 
         {
             new_dict[stat.key] = stat.value;
         }
@@ -36,7 +72,7 @@ public class StatDictionary : IEnumerable<StatDictItem>
     
     public IEnumerator<StatDictItem> GetEnumerator()
     {
-        return stat_array.GetEnumerator();
+        return stat_list.GetEnumerator();
     }
     IEnumerator IEnumerable.GetEnumerator()
     {

@@ -117,12 +117,52 @@ public class Linecast : AttackType
 
 public class MeleeAttack : AttackType
 {
-    public MeleeAttack(GameObject instance) : base(instance)
+    public AttackData atk_data;
+    public float melee_duration;
+    int melee_count;
+    float melee_spread;
+    bool even_spread;
+    public float melee_size;
+
+
+    public MeleeAttack(GameObject instance, AttackData atk_data, float mel_dur, float mel_count, float mel_sprd, float even_sprd, float mel_size) : base(instance)
     {
+        this.atk_data = atk_data;
+        melee_duration = mel_dur;
+        melee_count = (int)mel_count;
+        melee_spread = mel_sprd;
+        even_spread = even_sprd > 0 ? true : false;
+        melee_size = mel_size;
     }
 
-    public override void Attack(Vector2 source_pos, Vector2 target_pos, Vector2 output_pos, Vector2 vfx_target_offset, Character sender)
+    public override void Attack(Vector2 source_pos, Vector2 target_pos, Vector2 output_pos, Vector2 vfx_target_offset, Character sender = null)
     {
-        throw new System.NotImplementedException();
+        // declare info that doesn't need to be in a loop
+        float target_dist = (target_pos - source_pos).magnitude;
+        Vector2 target_dir = (target_pos - source_pos).normalized;
+        float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
+        for (int i = 0; i < melee_count; i++)
+        {
+            GameObject melee_ins = GameObject.Instantiate(instance, source_pos, Quaternion.identity);
+            MeleeBehavior melee_data = melee_ins.GetComponent<MeleeBehavior>();
+
+            // add the inherent inaccuracy value of projectile
+            if (even_spread)
+            {
+                float angle_inc = melee_spread / (melee_count - 1);
+                float offset_ang = (-melee_spread / 2f) + (angle_inc * i);
+                float final_ang = target_ang + offset_ang;
+
+                Vector2 dir = new Vector2(Mathf.Cos(final_ang * Mathf.Deg2Rad),Mathf.Sin(final_ang * Mathf.Deg2Rad));
+                
+                target_pos = source_pos + dir * target_dist;
+            }
+            else
+            {
+                target_pos += Random.insideUnitCircle * target_dist * melee_spread/360;
+            }
+            // new projectile! 
+            melee_data.StartMelee(this, source_pos, target_pos, output_pos, vfx_target_offset, sender);
+        }
     }
 }
