@@ -18,7 +18,7 @@ public struct StatDictItem
 [System.Serializable]
 public class StatDictionary : IEnumerable<StatDictItem>
 {
-    [SerializeField] List<StatDictItem> stat_list = new List<StatDictItem>();
+    [SerializeField] List<StatDictItem> stat_list = new();
 
     public void Add(string key, float value)
     {
@@ -30,11 +30,14 @@ public class StatDictionary : IEnumerable<StatDictItem>
     }
     public string Key(int index)
     {
-        return index >= stat_list.Count ? stat_list[index].key : "0";
+        return index >= stat_list.Count ? "0" : stat_list[index].key;
     }
     public void RemoveAt(int index)
     {
-        stat_list.RemoveAt(index);
+        if (index > 0 && index < stat_list.Count)
+        {
+            stat_list.RemoveAt(index);   
+        }
     }
     public void RemoveNonMatching(string[] match)
     {

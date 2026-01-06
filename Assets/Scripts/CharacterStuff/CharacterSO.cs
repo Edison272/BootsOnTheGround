@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.Mathematics;
 
 [CreateAssetMenu(fileName = "Character", menuName = "ScriptableObjects/Entities/Operator", order = 1)]
 public class CharacterSO : ScriptableObject
@@ -22,9 +23,9 @@ public class CharacterSO : ScriptableObject
     public ItemSO[] inventory;
     public Vector2Int[] item_indexes;
 
-    public Character GenerateOp()
+    public Character GenerateOp(Vector3 pos)
     {
-        GameObject op_object = MonoBehaviour.Instantiate(char_prefab);
+        GameObject op_object = MonoBehaviour.Instantiate(char_prefab, pos, Quaternion.identity);
         Character new_op = op_object.GetComponent<Character>();
         new_op.AssignBaseData(this);
 

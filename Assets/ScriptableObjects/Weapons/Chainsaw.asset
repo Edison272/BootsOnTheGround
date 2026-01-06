@@ -46,45 +46,5 @@ MonoBehaviour:
         value: 0
       - key: melee_size
         value: 0
-  - prefab: {fileID: 2522484320474615995, guid: 44487439069528a4487bb6846ebae17b,
-      type: 3}
-    attack_enum: 2
-    attack_data:
-      damage: 15
-      pierce: 0
-      knockback_amt: 0
-      effect_time: 0
-      slow_amt: 0
-    attack_stats:
-      stat_list:
-      - key: melee_duration
-        value: 0
-      - key: melee_count
-        value: 0
-      - key: melee_spread
-        value: 0
-      - key: even_spread
-        value: 0
-      - key: melee_size
-        value: 0
-  - prefab: {fileID: 2522484320474615995, guid: 44487439069528a4487bb6846ebae17b,
-      type: 3}
-    attack_enum: 2
-    attack_data:
-      damage: 20
-      pierce: 0
-      knockback_amt: 0
-      effect_time: 0
-      slow_amt: 0
-    attack_stats:
-      stat_list:
-      - key: melee_duration
-        value: 0
-      - key: melee_count
-        value: 0
-      - key: melee_spread
-        value: 0
-      - key: even_spread
-        value: 0
-      - key: melee_size
+      - key: movement
         value: 0

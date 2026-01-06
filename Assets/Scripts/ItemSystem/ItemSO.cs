@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Item", menuName = "ScriptableObjects/Items", order = 1)]
+[CreateAssetMenu(fileName = "Items", menuName = "ScriptableObjects/Items", order = 1)]
 public class ItemSO : ScriptableObject
 {   
     [SerializeField] GameObject item_prefab;
@@ -25,8 +25,8 @@ public class ItemSO : ScriptableObject
     public AttackType[] item_attack_types = new AttackType[0];
 
     [field: Header("Serialization")]
-    private InputEnum curr_input = InputEnum.Increment; // detect when the input type has changed to update it
-    private FuncEnum curr_func = FuncEnum.Shield; // detect when the function type has changed to update it
+    [SerializeField] private InputEnum curr_input = InputEnum.Increment; // detect when the input type has changed to update it
+    [SerializeField] private FuncEnum curr_func = FuncEnum.Shield; // detect when the function type has changed to update it
     [SerializeField] StatDictionary serialized_input_stats;
     [SerializeField] StatDictionary serialized_functionality_stats;
     [SerializeField] AttackTypeInit[] serialized_attacks;
@@ -88,66 +88,64 @@ public class ItemSO : ScriptableObject
     }
 
     #region Scriptable Object Serialization
+    private bool ValidateDictionary(StatDictionary check_dict) // return true if the dict is empty or null
+    {
+        return check_dict == null || check_dict.Length == 0;
+    }
     public void OnValidate()
     {
         // input type
-        if (curr_input != input_enum)
+        if (curr_input != input_enum || ValidateDictionary(serialized_input_stats))
         {
+            if (serialized_input_stats == null)
+            {
+                serialized_input_stats = new StatDictionary();
+            }
+            
+            serialized_input_stats.Clear();
             switch (input_enum)
             {
                 case InputEnum.Normal:
-                    serialized_input_stats = new StatDictionary
-                    {
-                        {"reset_speed", 0.1f},
-                        {"use_speed", 0.1f}
-                    };
+                    serialized_input_stats.Add("reset_speed", 0.1f);
+                    serialized_input_stats.Add("use_speed", 0.1f);
                     break;
                 case InputEnum.Charge:
-                    serialized_input_stats = new StatDictionary
-                    {
-                        {"reset_speed", 0.1f},
-                        {"threshold", 1f},
-                        {"max_charge", 1f}
-                    };
+                    serialized_input_stats.Add("reset_speed", 0.1f);
+                    serialized_input_stats.Add("threshold", 1f);
+                    serialized_input_stats.Add("max_charge", 1f);
                     break;
                 case InputEnum.Increment:
-                    serialized_input_stats = new StatDictionary
-                    {
-                        {"reset_speed", 0.1f},
-                        {"use_speed", 0.1f},
-                        {"max_increment", 1f}
-                    };
+                    serialized_input_stats.Add("reset_speed", 0.1f);
+                    serialized_input_stats.Add("use_speed", 0.1f);
+                    serialized_input_stats.Add("max_increment", 1f);
                     break;
             }
             curr_input = input_enum;
         }
 
         // functionality types
-        if (curr_func != func_enum)
+        if (curr_func != func_enum || ValidateDictionary(serialized_functionality_stats))
         {
+            if (serialized_functionality_stats == null)
+            {
+                serialized_functionality_stats = new StatDictionary();
+            }
+
+            serialized_functionality_stats.Clear();
             switch (func_enum)
             {
                 case FuncEnum.Gun:
-                    serialized_functionality_stats = new StatDictionary
-                    {
-                        {"max_ammo", 30f},
-                        {"recoil_scalar", 0.1f}
-                    };
+                    serialized_functionality_stats.Add("max_ammo", 30f);
+                    serialized_functionality_stats.Add("recoil_scalar", 0.1f);
                     break;
                 case FuncEnum.Melee:
-                    serialized_functionality_stats = new StatDictionary
-                    {
-                        {"combo_length", 0.1f},
-                        {"dash_scalar", 1f},
-                    };
+                    serialized_functionality_stats.Add("combo_length", 0.1f);
+                    serialized_functionality_stats.Add("dash_scalar", 1f);
                     break;
                 case FuncEnum.Shield:
-                    serialized_functionality_stats = new StatDictionary
-                    {
-                        {"reset_speed", 0.1f},
-                        {"use_speed", 0.1f},
-                        {"max_increment", 1f}
-                    };
+                    serialized_functionality_stats.Add("reset_speed", 0.1f);
+                    serialized_functionality_stats.Add("use_speed", 0.1f);
+                    serialized_functionality_stats.Add("max_increment", 1f);
                     break;
             }
             curr_func = func_enum;

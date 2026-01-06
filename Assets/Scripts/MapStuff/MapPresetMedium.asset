@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 331033b9448caf844a9a0b81e2c1c401, type: 3}
+  m_Name: MapPresetMedium
+  m_EditorClassIdentifier: 
+  map_chunks: 40
+  max_chunk_branching: 1
+  min_chunk_branching: 1
+  check_points: 3
+  places_of_interest: 7

@@ -20,7 +20,7 @@ public class SquadManager : MonoBehaviour
         squad = new Character[squad_preset.Length];
         for(int i = 0; i < squad_preset.Length; i++)
         {
-            squad[i] = squad_preset[i].GenerateOp();
+            squad[i] = squad_preset[i].GenerateOp(transform.position);
         }
         player.SetPlayerCharacter(squad[0]);
     }

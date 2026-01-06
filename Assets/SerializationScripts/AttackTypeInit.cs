@@ -14,36 +14,6 @@ public class AttackTypeInit // used to initialize ONE attack and its data
     public StatDictionary attack_stats = new StatDictionary();
     public Dictionary<string, float> leftovers = new Dictionary<string, float>();
 
-    // template stats used to build the dictionary ADD/REMOVE stats HERE
-    static readonly string[] projectile_stats =
-    {
-        "projectile_speed",
-        "projectile_count",
-        "projectile_spread",
-        "even_spread",
-        "homing_strength"
-    };
-
-    static readonly string[] linecast_stats =
-    {
-        "linecast_duration",
-        "linecast_count",
-        "linecast_spread",
-        "even_spread"
-    };
-
-    static readonly string[] melee_stats =
-    {
-        "melee_duration",
-        "melee_count",
-        "melee_spread",
-        "even_spread",
-        "melee_size",
-        "movement"
-    };
-
-    static readonly string[][] all_stats = {projectile_stats, linecast_stats, melee_stats};
-
     public bool IsDictSetUp()
     {
         return attack_enum == curr_atk;
@@ -94,7 +64,7 @@ public class AttackTypeInit // used to initialize ONE attack and its data
             curr_atk = attack_enum;
             Debug.Log("new attack type! Adjusting . . .");
         } 
-        else if (attack_stats.Length != all_stats[(int)attack_enum].Length) // adjust values of dictionary if it doesn't have all the same stats as the current attack type
+        else if (attack_stats.Length != StatData.GetAtkType(attack_enum).Length) // adjust values of dictionary if it doesn't have all the same stats as the current attack type
         {
             BuildStats(attack_enum, attack_stats);    
             Debug.Log("new stats detected! Adjusting...");
@@ -106,7 +76,7 @@ public class AttackTypeInit // used to initialize ONE attack and its data
         // remove all stats, save them just incase they're important tho
         foreach(StatDictItem stat in stats)
         {
-            if (all_stats[(int)enum_type].Contains(stat.key))
+            if (StatData.GetAtkType(attack_enum).Contains(stat.key))
             {
                 leftovers[stat.key] = stat.value; // save potentially useful stats for later
             }
@@ -114,9 +84,9 @@ public class AttackTypeInit // used to initialize ONE attack and its data
         stats.Clear();
 
         // Add in relevant stats
-        for(int i = 0; i < all_stats[(int)enum_type].Length; i++)
+        for(int i = 0; i < StatData.GetAtkType(attack_enum).Length; i++)
         {
-            string key = all_stats[(int)enum_type][i];
+            string key = StatData.GetAtkType(attack_enum)[i];
             stats.Add(key, leftovers.ContainsKey(key) ? leftovers[key] : 0); // built new dictionary, and add defaults whenever a leftover cant be found
         }
     }
