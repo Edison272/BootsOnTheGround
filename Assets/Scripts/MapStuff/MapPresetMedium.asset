@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 331033b9448caf844a9a0b81e2c1c401, type: 3}
   m_Name: MapPresetMedium
   m_EditorClassIdentifier: 
-  map_chunks: 40
-  max_chunk_branching: 1
-  min_chunk_branching: 1
+  map_chunks: 500
+  max_chunk_branching: 3
+  min_chunk_branching: 2
   check_points: 3
   places_of_interest: 7
