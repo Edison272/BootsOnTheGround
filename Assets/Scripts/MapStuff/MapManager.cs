@@ -59,6 +59,7 @@ public class MapManager : MonoBehaviour
         HashSet<Vector2Int> in_chunk_queue = new HashSet<Vector2Int>();
         adj_chunks = new Dictionary<Vector2Int, Vector2Int>();
         List<Vector2Int> array_buffer = new List<Vector2Int>(); // use for branching
+        Directions2D.GetListOfArray(array_buffer, Directions2D.DirArray.HORZ_WEIGHT_FOUR, true);
         
         // get the first chunk
         Queue<Vector2Int> chunk_queue = new Queue<Vector2Int> {};
@@ -90,35 +91,26 @@ public class MapManager : MonoBehaviour
 
             // see where the current chunk can branch to
             int branches = Random.Range(gen_preset.min_chunk_branching, gen_preset.max_chunk_branching + 1);
-            Directions2D.GetListOfArray(array_buffer, Directions2D.DirArray.HORZ_WEIGHT_FOUR, true);
-            foreach (Vector2Int dir in array_buffer)
+            branches = Mathf.Min(branches, adj_chunks.Keys.Count);
+            Debug.Log(branches);
+            for (int b = 0; b < branches; b++)
             {
-                Vector2Int new_chunk = curr_chunk + dir;
-                if (adj_chunks.ContainsKey(new_chunk)) // prevent overlapping with preexisting chunks
+                Vector2Int new_chunk = curr_chunk + array_buffer[Random.Range(0, array_buffer.Count)];
+                if (!adj_chunks.ContainsKey(new_chunk)) // prevent overlapping with preexisting chunks
                 {
-                    if (in_chunk_queue.Add(new_chunk))
-                    {
-                        adj_chunks.Remove(new_chunk);
-                        chunk_queue.Enqueue(new_chunk);
-                    }
-                }
-                branches--;
-                if (branches == 0) {break;}
-            }     
-            // if the algo still needs to branch but all adjacent spots are taken, just queue a random adjacent chunk
-            if (branches > 0)
-            {
-                Debug.Log(adj_chunks.Keys.Count);
-                for (int b = 0; b < branches; b++)
-                {
+                    // if the algo still needs to branch but all adjacent spots are taken, just queue a random adjacent chunk
                     int randint = Random.Range(0, adj_chunks.Keys.Count);
-                    Debug.Log(randint);
-                    Vector2Int new_chunk = adj_chunks.Keys.ElementAt(randint);
-                    if (in_chunk_queue.Add(new_chunk))
-                    {
-                        adj_chunks.Remove(new_chunk);
-                        chunk_queue.Enqueue(new_chunk);
-                    }
+                    Debug.Log(randint + " " + adj_chunks.Keys.Count + " " + new_chunk);
+                    new_chunk = adj_chunks.Keys.ElementAt(randint);
+                } else
+                {
+                    Debug.Log(adj_chunks.Keys.Count + " " + new_chunk);
+                }
+
+                if (in_chunk_queue.Add(new_chunk))
+                {
+                    adj_chunks.Remove(new_chunk);
+                    chunk_queue.Enqueue(new_chunk);
                 }
             }
         }
