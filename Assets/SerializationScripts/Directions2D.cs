@@ -69,7 +69,8 @@ public static class Directions2D
         return direction;
     }
 
-    public static void GetListOfArray(List<Vector2Int> list_pointer, DirArray direction_array, bool randomize = false)
+
+    public static void DirectionsFromPoint(List<Vector2Int> list_pointer, DirArray direction_array, bool randomize = false)
     {
         Vector2Int[] dir_pointer = four_directions;
         switch(direction_array)
@@ -105,4 +106,36 @@ public static class Directions2D
             }
         }
     }
+
+    public static void ValidPositionsFromPoint(List<Vector2Int> list_pointer, DirArray direction_array, Vector2Int curr_chunk, Dictionary<Vector2Int, MapChunk> placed_chunks, HashSet<Vector2Int> queue_chunks)
+    {
+        Vector2Int[] dir_pointer = four_directions;
+        switch(direction_array)
+        {
+            case DirArray.FOUR:
+                dir_pointer = four_directions;
+                break;
+            case DirArray.EIGHT:
+                dir_pointer = eight_directions;
+                break;
+            case DirArray.HORZ_WEIGHT_FOUR:
+                dir_pointer = horz_weight_four_dir;
+                break;
+            case DirArray.HORZ_WEIGHT_EIGHT:
+                dir_pointer = horz_weight_eight_dir;
+                break;
+        }
+
+        list_pointer.Clear();
+        foreach(Vector2Int dir in dir_pointer)
+        {
+            Vector2Int pos = curr_chunk + dir;
+            if (!placed_chunks.ContainsKey(pos) && !queue_chunks.Contains(pos)) // only add to list if it aint overlappign w anything
+            {
+                list_pointer.Add(pos);
+            }
+        }
+    }
+
+    
 }

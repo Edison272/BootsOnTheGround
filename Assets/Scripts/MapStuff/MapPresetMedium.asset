@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: MapPresetMedium
   m_EditorClassIdentifier: 
   map_chunks: 100
-  max_chunk_branching: 3
-  min_chunk_branching: 1
+  max_chunk_branching: 8
+  min_chunk_branching: 8
+  adj_type: 1
+  four_adj_tiles: 0
   check_points: 3
   places_of_interest: 7
