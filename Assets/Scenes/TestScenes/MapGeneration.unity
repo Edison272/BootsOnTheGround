@@ -149,13 +149,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 577f01ec55bdb0644be915696cd67e6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Floor: {fileID: 0}
-  Wall: {fileID: 0}
+  Floor: {fileID: 831637053}
+  Wall: {fileID: 375984974}
   gen_preset: {fileID: 11400000, guid: 87d9cead4141e214eba392b721fbe7cd, type: 2}
-  floor_tile: {fileID: 0}
-  wall_tile: {fileID: 0}
+  floor_tile: {fileID: 11400000, guid: 20023250912a16243b2e42920a1186e7, type: 2}
+  wall_tile: {fileID: 11400000, guid: b12cf1f2a5d38944d9f5e429a28551ed, type: 2}
   spawn_chunk: {x: 0, y: 0}
   final_chunk: {x: 0, y: 0}
+  map_center: {x: 0, y: 0}
+  critical_locs: []
+  show_chunks: 1
+  show_adj_chunks: 1
+  show_critical_chunks: 1
+  show_quads: 0
 --- !u!156049354 &65006978
 Grid:
   m_ObjectHideFlags: 0

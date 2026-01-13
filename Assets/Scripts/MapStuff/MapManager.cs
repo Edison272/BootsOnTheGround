@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+
+using Random = UnityEngine.Random; // LEAVE ME ALONE DAMNIT
 
 public class MapManager : MonoBehaviour
 {
@@ -14,51 +17,99 @@ public class MapManager : MonoBehaviour
     [SerializeField] TileBase wall_tile;
 
     [Header("ProcGen Stuff")]
-    public static readonly int chunk_size = 16; // each chunk is 16 minimap tiles
+    public static readonly int chunk_size = 8; // each chunk is 12z minimap tiles
+    public static readonly int border_width = 4; // each chunk is 12z minimap tiles
     public static readonly Vector2Int START_POS = Vector2Int.zero;
+    // each chunk expands to the TOP RIGHT when it becomes a 2D area instead of a single point
     public Dictionary<Vector2Int, MapChunk> all_chunks = new Dictionary<Vector2Int, MapChunk>();
     private Dictionary<Vector2Int, Vector2Int> adj_chunks = new Dictionary<Vector2Int, Vector2Int>();
+
+    // important chunks/positions
     public Vector2Int spawn_chunk; // where the player spawns in
     public Vector2Int final_chunk; // chunk with the main objective
+    public Vector2 map_center; // duh
+
+    public MapChunk[] critical_locs; // start & final + POI
+
+    // format is chunk, chunk + 1,0 , chunk + 1,1 , chunk + 0,1
+    public HashSet<MapQuad> quads = new HashSet<MapQuad>();
+
+    HashSet<Vector3Int> draw_ground = new HashSet<Vector3Int>();
+    HashSet<Vector3Int> draw_border = new HashSet<Vector3Int>();
+
+    [Header("Gizmo Stuff")]
+    [SerializeField] bool show_chunks = true;
+    [SerializeField] bool show_adj_chunks = true;
+    [SerializeField] bool show_critical_chunks = true;
+    [SerializeField] bool show_quads = true;
 
     public void GenerateMap()
     {
+        critical_locs = new MapChunk[2 + gen_preset.objectives];
         GenerateChunks();
-        Debug.Log(all_chunks.Count);
+        GeneratePOI();
+        DrawMap();
     }
     
     // Start is called before the first frame update
     void Start()
     {
         GenerateMap();
-        Debug.Log(all_chunks.Count);
     }
 
     // Update is called once per frame
     void Update()
     {
-        foreach (Vector2Int chunk in all_chunks.Keys)
+        if (show_chunks)
         {
-            DrawChunk(chunk, Color.white);
+            foreach (Vector2Int chunk in all_chunks.Keys)
+            {
+                DrawChunk(chunk, Color.white);
+            }
         }
-        foreach (Vector2Int chunk in adj_chunks.Keys)
+        if (show_adj_chunks)
         {
-            DrawChunk(chunk, Color.grey);
+            foreach (Vector2Int chunk in adj_chunks.Keys)
+            {
+                DrawChunk(chunk, Color.grey);
+            }
         }
-        DrawChunk(START_POS, Color.black);
-        DrawChunk(final_chunk, Color.red);
-        DrawChunk(spawn_chunk, Color.green);
+        if (show_critical_chunks)
+        {
+            DrawChunk(START_POS, Color.black);
+            DrawChunk(final_chunk, Color.red);
+            DrawChunk(spawn_chunk, Color.green);
+            foreach (MapChunk chunk in critical_locs)
+            {
+                if (chunk is MapQuad)
+                {
+                    MapQuad quad = (MapQuad)chunk;
+                    DrawQuad(quad.four_corners, Color.yellow);
+                    DrawStar(quad.position, Color.yellow);
+                }
+
+                foreach(MapChunk other_chunk in critical_locs)
+                {
+                    Debug.DrawLine((Vector2)chunk.position * chunk_size, (Vector2)other_chunk.position * chunk_size);
+                }
+            }
+        }
+        if (show_quads) {
+            foreach (MapQuad quad in quads)
+            {
+                DrawQuad(quad.four_corners, Color.cyan);
+            }
+        }
     }
 
-    #region Map Generation
-
+    #region Generate Chunks
     private void GenerateChunks() // generate the chunks and declare the start & final pos
     {
         // initialize data holders
         all_chunks.Clear();
         HashSet<Vector2Int> in_chunk_queue = new HashSet<Vector2Int>();
         adj_chunks.Clear();
-        List<Vector2Int> array_buffer = new List<Vector2Int>(); // use for branching
+        List<Vector2Int> list_buffer = new List<Vector2Int>(); // use for branching
         Vector2Int[] adjacent_array = gen_preset.four_adj_tiles ? Directions2D.four_directions : Directions2D.eight_directions;
         Directions2D.DirArray dir_array_type = gen_preset.four_adj_tiles ? Directions2D.DirArray.HORZ_WEIGHT_FOUR : Directions2D.DirArray.HORZ_WEIGHT_EIGHT;
         
@@ -87,18 +138,18 @@ public class MapManager : MonoBehaviour
             } 
 
             // see where the current chunk can branch to
-            Directions2D.ValidPositionsFromPoint(array_buffer, dir_array_type, curr_chunk, all_chunks, in_chunk_queue);
+            Directions2D.ValidPositionsFromPoint(list_buffer, dir_array_type, curr_chunk, all_chunks, in_chunk_queue);
             // preform semi-random branch
             int branches = Random.Range(gen_preset.min_chunk_branching, gen_preset.max_chunk_branching + 1);
             for (int b = 0; b < branches; b++)
             {
                 Vector2Int new_chunk = curr_chunk;
                 int randint = 0;
-                if (array_buffer.Count > 0) // prevent overlapping with preexisting chunks
+                if (list_buffer.Count > 0) // prevent overlapping with preexisting chunks
                 {
-                    randint = Random.Range(0, array_buffer.Count);
-                    new_chunk = array_buffer[randint];
-                    array_buffer.RemoveAt(randint);
+                    randint = Random.Range(0, list_buffer.Count);
+                    new_chunk = list_buffer[randint];
+                    list_buffer.RemoveAt(randint);
                 } 
                 else
                 {
@@ -125,14 +176,15 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
-
         // get spawn position based on tile step distance
+        // set neighbors of each chunk
         chunk_queue.Clear();
         chunk_queue.Enqueue(final_chunk);
         all_chunks[final_chunk].dist_from_final = 0;
         for (int i = 0; i < all_chunks.Count; i ++)
         {
             Vector2Int curr_chunk = chunk_queue.Dequeue();
+            list_buffer.Clear();
             foreach (Vector2Int dir in Directions2D.eight_directions) // establish all chunk's dist from the final
             {
                 Vector2Int next_chunk = curr_chunk + dir;
@@ -141,7 +193,15 @@ public class MapManager : MonoBehaviour
                     all_chunks[next_chunk].dist_from_final = all_chunks[curr_chunk].dist_from_final + 1;
                     chunk_queue.Enqueue(next_chunk);
                 }
+
+                // find neighbors
+                if (all_chunks.ContainsKey(next_chunk))
+                {
+                    list_buffer.Add(dir);
+                }
             }
+            // set neighbors
+            all_chunks[curr_chunk].SetNeighbors(list_buffer);
 
             if (chunk_queue.Count == 0)
             {
@@ -149,9 +209,12 @@ public class MapManager : MonoBehaviour
             }
         }
 
+        // find spawn chunk, map center, draw tiles, and chunk connections
         spawn_chunk = final_chunk;
+        map_center = Vector2.zero;
         foreach(Vector2Int pos in all_chunks.Keys)
         {
+            map_center += pos;
             if (all_chunks[pos].dist_from_final == all_chunks[spawn_chunk].dist_from_final)
             {
                 if ((final_chunk - pos).sqrMagnitude > (final_chunk - spawn_chunk).sqrMagnitude)
@@ -160,54 +223,187 @@ public class MapManager : MonoBehaviour
             else if (all_chunks[pos].dist_from_final > all_chunks[spawn_chunk].dist_from_final)
             {
                 spawn_chunk = pos;
-            } 
+            }
         }
-    }
+        map_center /= all_chunks.Keys.Count;
 
+        // declare first and last pos of critical locs
+        critical_locs[0] = all_chunks[spawn_chunk];
+        critical_locs[1] = all_chunks[final_chunk];
+    }
+    #endregion
+
+    #region Generate POI
     private void GeneratePOI() // generate potential POI based off of chunks in the map
     {
-        
+        quads.Clear();
+        foreach (Vector2Int chunk in all_chunks.Keys)
+        {
+            // add all four quads to the hashset. it'll figure it out
+            Vector2Int right = chunk + Directions2D.eight_directions[0];
+            Vector2Int top_corner = chunk + Directions2D.eight_directions[1];
+            Vector2Int up = chunk + Directions2D.eight_directions[2];
+            if (all_chunks.Keys.Contains(right) && all_chunks.Keys.Contains(top_corner) && all_chunks.Keys.Contains(up)) 
+            {
+                
+                quads.Add(new MapQuad(chunk, right, top_corner, up));
+            }
+        }
+
+        for (int i = 2; i < critical_locs.Length; i++) // fill in betweens of the list
+        {
+            float highest_short = -Mathf.Infinity;
+            foreach(MapQuad mq in quads)
+            {   
+                float shortest_dist = Mathf.Infinity;
+                if (Array.IndexOf(critical_locs, mq) != -1)
+                {
+                    continue;
+                }
+
+                for (int l = 0; l < critical_locs.Length; l++)
+                {
+                    if (critical_locs[l] == null)
+                    {
+                        continue; // exit loop bc theres no more critical locs to compare to
+                    }
+                    float dist = (mq.position - critical_locs[l].position).sqrMagnitude;
+                    if (dist < shortest_dist)
+                    {
+                        shortest_dist = dist;
+                    }
+                }
+
+                if (shortest_dist > highest_short)
+                {
+                    critical_locs[i] = mq;
+                    highest_short = shortest_dist;
+                }
+            }
+        }
+
     }
+#endregion
 
     private void Pathfind() // declare pathway chunks between all POI
     {
         
     }
 
+#region Draw Map
+    private void DrawMap() // put tiles on the map ts
+    {
+        Floor.ClearAllTiles();
+        Wall.ClearAllTiles();
+
+        draw_ground.Clear();
+        draw_border.Clear();
+
+        foreach(Vector2Int pos in all_chunks.Keys)
+        {
+            foreach(Vector2Int dir in all_chunks[pos].neighbor_chunks)
+            {
+                for (int i = 0; i <= chunk_size/2; i++)
+                {
+                    Vector2Int chunk_vec = pos * chunk_size + dir * i;
+                    int size_iter = chunk_size/2 + border_width;
+                    for (int x = -size_iter; x < size_iter; x++)
+                    {
+                        for (int y = -size_iter; y < size_iter; y++)
+                        {
+                            Vector2Int draw_offset = new Vector2Int(x, y);
+                            if (Mathf.Abs(x) <= chunk_size/2 && Mathf.Abs(y) <= chunk_size/2)
+                            {
+                                draw_ground.Add((Vector3Int)(draw_offset + chunk_vec));
+                            }
+                            else
+                            {
+                                draw_border.Add((Vector3Int)(draw_offset + chunk_vec));
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach(Vector3Int chunk in draw_ground)
+        {
+            Floor.SetTile(chunk, floor_tile);
+        }
+        foreach(Vector3Int chunk in draw_border)
+        {
+            if (!Floor.GetTile(chunk))
+            {
+                Wall.SetTile(chunk, wall_tile);
+            }
+            
+        }
+    }
+#endregion
+
+#region Tools
     private void DrawChunk(Vector2Int chunk_pos, Color line_color)
     {
         // Square Shape
         Debug.DrawLine(
-            (Vector2)chunk_pos * chunk_size, 
-            (Vector2)(chunk_pos + Directions2D.four_directions[1]) * chunk_size, 
+            (chunk_pos + Vector2.up*0.5f + Vector2.right*0.5f) * chunk_size, 
+            (chunk_pos + Vector2.up*0.5f + Vector2.left*0.5f) * chunk_size, 
             line_color
             );
         Debug.DrawLine(
-            (Vector2)(chunk_pos + Directions2D.four_directions[1]) * chunk_size, 
-            (Vector2)(chunk_pos + Directions2D.four_directions[1] + Directions2D.four_directions[2]) * chunk_size, 
+            (chunk_pos + Vector2.up*0.5f + Vector2.left*0.5f) * chunk_size, 
+            (chunk_pos + Vector2.down*0.5f + Vector2.left*0.5f) * chunk_size, 
             line_color 
             );
         Debug.DrawLine(
-            (Vector2)chunk_pos * chunk_size, 
-            (Vector2)(chunk_pos + Directions2D.four_directions[2]) * chunk_size, 
+            (chunk_pos + Vector2.down*0.5f + Vector2.left*0.5f) * chunk_size, 
+            (chunk_pos + Vector2.down*0.5f + Vector2.right*0.5f) * chunk_size, 
             line_color
             );
         Debug.DrawLine(
-            (Vector2)(chunk_pos + Directions2D.four_directions[2]) * chunk_size, 
-            (Vector2)(chunk_pos + Directions2D.four_directions[2] + Directions2D.four_directions[1]) * chunk_size, 
+            (chunk_pos + Vector2.down*0.5f + Vector2.right*0.5f) * chunk_size, 
+            (chunk_pos + Vector2.up*0.5f + Vector2.right*0.5f) * chunk_size, 
             line_color
             );
         // Crosses
         Debug.DrawLine(
-            (Vector2)(chunk_pos) * chunk_size, 
-            (Vector2)(chunk_pos + Directions2D.four_directions[2] + Directions2D.four_directions[1]) * chunk_size, 
+            (chunk_pos + Vector2.up*0.5f + Vector2.right*0.5f) * chunk_size, 
+            (chunk_pos + Vector2.down*0.5f + Vector2.left*0.5f) * chunk_size, 
             line_color
             );
         Debug.DrawLine(
-            (Vector2)(chunk_pos + Directions2D.four_directions[2]) * chunk_size, 
-            (Vector2)(chunk_pos + Directions2D.four_directions[1]) * chunk_size, 
+            (chunk_pos + Vector2.up*0.5f + Vector2.left*0.5f) * chunk_size, 
+            (chunk_pos + Vector2.down*0.5f + Vector2.right*0.5f) * chunk_size, 
             line_color
             );
+    }
+
+    public void DrawQuad((Vector2Int, Vector2Int, Vector2Int, Vector2Int) quad, Color line_color)
+    {
+        // straights
+        // Debug.DrawLine((Vector2)quad.Item1 * chunk_size, (Vector2)(quad.Item2 + Vector2Int.right) * chunk_size, line_color);
+        // Debug.DrawLine((Vector2)(quad.Item2 + Vector2Int.right) * chunk_size, (Vector2)(quad.Item3 + Vector2Int.up + Vector2Int.right) * chunk_size, line_color);
+        // Debug.DrawLine((Vector2)(quad.Item3 + Vector2Int.up + Vector2Int.right) * chunk_size, (Vector2)(quad.Item4 + Vector2Int.up) * chunk_size, line_color);
+        // Debug.DrawLine((Vector2)(quad.Item4 + Vector2Int.up) * chunk_size, (Vector2)quad.Item1 * chunk_size, line_color);
+
+        Debug.DrawLine((Vector2)quad.Item1 * chunk_size, (Vector2)(quad.Item2) * chunk_size, line_color);
+        Debug.DrawLine((Vector2)(quad.Item2) * chunk_size, (Vector2)(quad.Item3) * chunk_size, line_color);
+        Debug.DrawLine((Vector2)(quad.Item3) * chunk_size, (Vector2)(quad.Item4) * chunk_size, line_color);
+        Debug.DrawLine((Vector2)(quad.Item4) * chunk_size, (Vector2)quad.Item1 * chunk_size, line_color);
+
+        Debug.DrawLine((quad.Item1 + Vector2.down*0.5f + Vector2.left*0.5f) * chunk_size, (quad.Item2 + Vector2.down*0.5f + Vector2.right*0.5f) * chunk_size, line_color);
+        Debug.DrawLine((quad.Item2 + Vector2.down*0.5f + Vector2.right*0.5f) * chunk_size, (quad.Item3 + Vector2.up*0.5f + Vector2.right*0.5f) * chunk_size, line_color);
+        Debug.DrawLine((quad.Item3 + Vector2.up*0.5f + Vector2.right*0.5f) * chunk_size, (quad.Item4 + Vector2.up*0.5f + Vector2.left*0.5f) * chunk_size, line_color);
+        Debug.DrawLine((quad.Item4 + Vector2.up*0.5f + Vector2.left*0.5f) * chunk_size, (quad.Item1 + Vector2.down*0.5f + Vector2.left*0.5f) * chunk_size, line_color);
+    }
+
+    public void DrawStar(Vector2 point, Color line_color)
+    {
+        foreach (Vector2Int dir in Directions2D.eight_directions)
+        {
+            Debug.DrawLine(point * chunk_size, point * chunk_size + dir * chunk_size/4, line_color);
+        }
     }
 
     #endregion

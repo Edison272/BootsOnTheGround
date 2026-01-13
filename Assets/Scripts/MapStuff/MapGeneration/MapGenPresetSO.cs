@@ -14,7 +14,8 @@ public class MapGenPreset : ScriptableObject
     public bool four_adj_tiles = true;
 
     public int check_points = 3;
-    public int places_of_interest = 7;
+    public int objectives = 3;
+    public int minor_poi = 7; // extra goodies that might appear on the map
 
     public void OnValidate()
     {
