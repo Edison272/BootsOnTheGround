@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem.EnhancedTouch;
 
 
 public enum TargetType {Closest, Furthest, MostHP, LeastHP}
@@ -13,15 +14,17 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public EnemyManager enemy_manager;
     public MapManager map_manager;
 
+    public static GameOverseer THE_OVERSEER {get; private set;}
+
     void Awake()
     {
+        THE_OVERSEER = this;
+
         if (!player_control) {player_control = GameObject.Find("Player Controller")?.GetComponent<PlayerController>();}
         if (!squad_manager) {squad_manager = GameObject.Find("Squad Manager")?.GetComponent<SquadManager>();}
         if (!enemy_manager) {enemy_manager = GameObject.Find("Enemy Manager")?.GetComponent<EnemyManager>();}
         if (!map_manager) {map_manager = GameObject.Find("Map")?.GetComponent<MapManager>();}
 
-        squad_manager.overseer = this;
-        enemy_manager.overseer = this;
     }
 
     void Start()
@@ -52,7 +55,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     #region Targetting
     public Character GetTargetCharacter(bool is_squad, Character curr_character, TargetType targ_type = TargetType.Closest)
     {
-        Character[] check_data = is_squad ? squad_manager.squad : enemy_manager.enemies;
+        Character[] check_data = is_squad ? enemy_manager.enemies : squad_manager.squad;
 
         Func<Character, Character, float> ScoringFunc = GetNearestScore;
         switch (targ_type)
@@ -82,7 +85,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
             }
         }
 
-        return null;
+        return prime_target;
     }
 
     private float GetNearestScore(Character curr_character, Character character)

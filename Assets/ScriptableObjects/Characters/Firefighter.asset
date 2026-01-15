@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01d6ed72db80d54439e76ec450c54420, type: 3}
   m_Name: Firefighter
   m_EditorClassIdentifier: 
-  name: Entity
-  health: 100
+  character_name: Entity
+  health: 100000
   speed: 5
   range: 0
   char_prefab: {fileID: 2589057906099434769, guid: 852337d3087a78c459ce5ccd025a9628,

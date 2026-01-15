@@ -62,6 +62,12 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public int curr_range {get; private set;}
     public int base_range => base_data.range;
 
+    [field: Header("AI")]
+    public bool is_player_squad = false;
+    bool is_AI_active = false;
+    public BehaviorController behavior_controller;
+
+    #region initalizers
     // get base data from a scriptable object and assign them here. Called once at when this object is created
     public void AssignBaseData(CharacterSO base_data)
     {
@@ -93,6 +99,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
                 inventory[alt_item] = base_data.inventory[alt_item].GenerateItem(alt_hand);
             }
         }
+
         GetReady(); // set up all necessary data ready for the operator
     }
 
@@ -120,16 +127,20 @@ public class Character : MonoBehaviour, IHealth, IMovement
         // initialize default look position
         aim_dir = new Vector2(1, -1);
         Look(entity_rb.position + aim_dir);
+
+        // setup AI
+        behavior_controller = new BehaviorController(this);
     }
+    #endregion
 
     #region Updates
     // Update is called once per frame
     void Update()
     {
-
+        // constantly adjust aim position, since aim doesn't snap
         Aim();
 
-        // set switch item
+        // set switch item time duration
         if (curr_switch_cd > 0)
         {
             curr_switch_cd -= Time.deltaTime;
@@ -139,6 +150,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
             }
         }
 
+        // Update AI
+        if (is_AI_active)
+        {
+            behavior_controller.UpdateAI();
+        }
     }
 
     void FixedUpdate()
@@ -306,6 +322,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
     //     range_collider.GetContacts(things_in_range);
     //     return things_in_range;
     // }
+
+    public void ToggleAI(bool is_on)
+    {
+        is_AI_active = is_on;
+    }
 
     #endregion
 

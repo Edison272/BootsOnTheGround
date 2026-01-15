@@ -82,6 +82,7 @@ public class Item : MonoBehaviour
                 //functionality.
                 animator.SetBool("Resetting", false);
                 func_module.Reset();
+                reset_timer = 0;
 
             }
         }
@@ -120,9 +121,17 @@ public class Item : MonoBehaviour
 
     public void Use()
     {
-        if (is_equipped && func_module.CanFunction())
+        if (is_equipped)
         {
-            input_type.Use();
+            if (func_module.CanFunction())
+            {
+                input_type.Use();
+            }
+            else
+            {
+                Reset();
+            }
+            
         }
     }
 
@@ -134,8 +143,11 @@ public class Item : MonoBehaviour
     public void Reset()
     {
         is_equipped = false; // after item finishes resetting, animator uses the SetEquipped() to set is_equipped back to true
-        animator.SetBool("Resetting", true);
-        reset_timer = base_data.item_stats["reset_speed"] * reset_spd_scale;
+        if (reset_timer == 0)
+        {
+            animator.SetBool("Resetting", true);
+            reset_timer = base_data.item_stats["reset_speed"] * reset_spd_scale;
+        }
     }
 
     public void Action(int effect_index)

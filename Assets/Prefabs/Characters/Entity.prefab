@@ -337,6 +337,7 @@ MonoBehaviour:
   - {x: 2, y: -1}
   main_item: {fileID: 0}
   alt_item: {fileID: 0}
+  target: {fileID: 0}
 --- !u!95 &234494506826388213
 Animator:
   serializedVersion: 7
@@ -511,7 +512,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5616119787946771771
 Transform:
   m_ObjectHideFlags: 0

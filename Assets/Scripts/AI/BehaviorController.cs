@@ -20,5 +20,21 @@ public class BehaviorController
 
     [SerializeField] Character character;
 
-    
+    public BehaviorController(Character c)
+    {
+        character = c;
+    }
+
+    public void UpdateAI()
+    {
+        if (character.target == null)
+        {
+            character.target = GameOverseer.THE_OVERSEER.GetTargetCharacter(character.is_player_squad, character);
+        }
+        else
+        {
+            character.Look(character.target.GetPosition());
+            character.UseMainItem();
+        }
+    }
 }

@@ -9,9 +9,6 @@ public class EnemyManager : MonoBehaviour
 
     public Vector3 drop_pos;
 
-    [Header("Managers")]
-    public GameOverseer overseer;
-
     public void CreateEnemies()
     {
         enemies = new Character[enemy_presets.Length];
@@ -19,6 +16,7 @@ public class EnemyManager : MonoBehaviour
         {
             enemies[i] = enemy_presets[i].GenerateOp(transform.position);
             enemies[i].gameObject.tag = this.gameObject.tag;
+            enemies[i].ToggleAI(true);
         }
     }
 }
