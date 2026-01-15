@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
-
 public class PlayerController : MonoBehaviour
 {
     [Header("Input")]
@@ -39,9 +38,13 @@ public class PlayerController : MonoBehaviour
     float target_zoom; // set current zoom
     float curr_zoom_time;
 
-    [Header("Camera Stuff")]
+    [Header("UI Stuff")]
     [SerializeField] GameObject Reticle;
-    void Awake()
+
+    [Header("Squad Interactions")]
+    public SquadManager squad;
+    
+    void Awake() // initialize values before player assumes control
     {
         // get map
         controls = new BOTG_Controls();
@@ -62,7 +65,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    public void StartPlayer()
     {
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = false;
@@ -95,7 +98,6 @@ public class PlayerController : MonoBehaviour
         curr_zoom_time = 0;
         target_zoom = base_zoom_level + (5 - zoom_scalar) * 0.2f;
         zoom_diff = target_zoom - player_view.rectTransform.localScale.x;
-        Debug.Log(zoom_diff);
     }
 
     public void EnableControl()
@@ -208,7 +210,10 @@ public class PlayerController : MonoBehaviour
         SetAltAction(active_character.HasAltAction());
         SetCameraZoom(active_character.GetRangeScalar());
     }
-    void CmdMode(InputAction.CallbackContext context) {}
+    void CmdMode(InputAction.CallbackContext context)
+    {
+        squad.ToggleCommandMode();
+    }
     #endregion
 
     #region Action Enabling

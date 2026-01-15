@@ -18,12 +18,24 @@ MonoBehaviour:
   is_full_auto: 1
   dynamic_aim: 1
   rot_scale: 1
-  bonus_range_scalar: 5
+  bonus_range_scalar: 0
   func_enum: 0
+  curr_input: 2
+  curr_func: 0
   serialized_input_stats:
-    stat_list: []
+    stat_list:
+    - key: reset_speed
+      value: 0.1
+    - key: use_speed
+      value: 0.1
+    - key: max_increment
+      value: 1
   serialized_functionality_stats:
-    stat_list: []
+    stat_list:
+    - key: max_ammo
+      value: 30
+    - key: recoil_scalar
+      value: 0.1
   serialized_attacks:
   - prefab: {fileID: 2522484320474615995, guid: 44487439069528a4487bb6846ebae17b,
       type: 3}
@@ -37,14 +49,14 @@ MonoBehaviour:
     attack_stats:
       stat_list:
       - key: melee_duration
-        value: 0
+        value: 0.1
       - key: melee_count
-        value: 0
+        value: 1
       - key: melee_spread
         value: 0
       - key: even_spread
         value: 0
       - key: melee_size
-        value: 0
+        value: 1
       - key: movement
         value: 0

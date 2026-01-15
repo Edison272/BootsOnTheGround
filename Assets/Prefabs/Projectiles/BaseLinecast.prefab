@@ -100,8 +100,8 @@ LineRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 1, g: 0.65705234, b: 0, a: 0}
-      key1: {r: 1, g: 0.65705234, b: 0, a: 1}
-      key2: {r: 1, g: 1, b: 1, a: 0}
+      key1: {r: 1, g: 0.65705234, b: 0, a: 0.09117647}
+      key2: {r: 1, g: 1, b: 1, a: 1}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
@@ -116,8 +116,8 @@ LineRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
-      atime2: 0
+      atime1: 36815
+      atime2: 65535
       atime3: 0
       atime4: 0
       atime5: 0
@@ -126,7 +126,7 @@ LineRenderer:
       m_Mode: 0
       m_ColorSpace: 0
       m_NumColorKeys: 2
-      m_NumAlphaKeys: 2
+      m_NumAlphaKeys: 3
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
@@ -210,7 +210,7 @@ LineRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: e5f295d48f261374c835b7b0f1e2ee3f, type: 3}
+  - {fileID: 2100000, guid: 6422a9dfef85af943bfaf47664c3dedb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -254,8 +254,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0.57236767, b: 0, a: 0.05882353}
-      key1: {r: 1, g: 0.57236767, b: 0, a: 0.05882353}
+      key0: {r: 1, g: 0.57236767, b: 0, a: 0.11764706}
+      key1: {r: 1, g: 0.57236767, b: 0, a: 0.11764706}
       key2: {r: 1, g: 1, b: 1, a: 0.29411766}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -286,7 +286,7 @@ LineRenderer:
     numCapVertices: 0
     alignment: 0
     textureMode: 0
-    textureScale: {x: -5.08, y: 1}
+    textureScale: {x: 1, y: 1}
     shadowBias: 0
     generateLightingData: 0
   m_MaskInteraction: 0

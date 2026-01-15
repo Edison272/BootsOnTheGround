@@ -118,10 +118,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
+        width: 32
         height: 60
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -133,10 +133,31 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: VanguardSkirmisher_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 60
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 335ce01e725cd534abc92d3bafa2753f
+      internalID: 1777893048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 07c5baa624606cc4dac898056d527736
     internalID: 0
     vertices: []
     indices: 
@@ -145,6 +166,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       VanguardSkirmisher_0: -7120107870030893359
+      VanguardSkirmisher_1: 1777893048
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -12,6 +12,7 @@ public class LinecastBehavior : MonoBehaviour
 
     [field: Header("VFX")]
     public LineRenderer main_line_render; // show where the actual linecast is going
+    float main_lr_alpha; // used when setting the alpha color in FixedUpdate()
     public LineRenderer vfx_line_render; // show where the vfx linecast is going
     float render_duration;
     float curr_duration;
@@ -46,7 +47,8 @@ public class LinecastBehavior : MonoBehaviour
         }
 
         // change linerender vfx accordingly\
-        SetLRPositions(1, end_pos, end_pos + vfx_target_offset);
+        main_lr_alpha = main_line_render.startColor.a;
+        
 
     }
 
@@ -60,10 +62,19 @@ public class LinecastBehavior : MonoBehaviour
     void FixedUpdate()
     {
         curr_duration -= Time.fixedDeltaTime;
+
+        // fade out main linderender after being shot
+        float alpha = main_lr_alpha * curr_duration/render_duration;
+        main_line_render.startColor = new Color(main_line_render.startColor.r,main_line_render.startColor.g,main_line_render.startColor.b, alpha);
+        main_line_render.endColor = new Color(main_line_render.endColor.r,main_line_render.endColor.g,main_line_render.endColor.b, alpha);
+
+        // set line render length (temporary rendering method)
+        Vector2 render_pos = Vector2.Lerp(vfx_line_render.GetPosition(0), end_pos + vfx_target_offset, 1-curr_duration/render_duration);
+        SetLRPositions(1, end_pos, render_pos);
         if (curr_duration <= 0)
         {
             EndLinecast();
-        }
+        } 
     }
 
     public void StartLinecast(Linecast line_data, Vector2 src_pos, Vector2 targ_pos, Vector2 output_pos, Vector2 vfx_targ_offset, Character sender = null) // straight shot variant
@@ -83,6 +94,7 @@ public class LinecastBehavior : MonoBehaviour
         }
         // set origin position of line render
         SetLRPositions(0, src_pos, output_pos);
+        SetLRPositions(1, src_pos, output_pos);
         // generate the physics linecast
         GenerateLinecast();
     }

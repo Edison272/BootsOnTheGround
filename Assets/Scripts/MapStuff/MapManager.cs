@@ -50,12 +50,6 @@ public class MapManager : MonoBehaviour
         GeneratePOI();
         DrawMap();
     }
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        GenerateMap();
-    }
 
     // Update is called once per frame
     void Update()
@@ -342,7 +336,16 @@ public class MapManager : MonoBehaviour
     }
 #endregion
 
-#region Tools
+#region Tools 
+    public Vector2 GetChunkWorldPos(Vector2Int chunk)
+    {
+        Vector2 pos = Vector2.zero;
+        if (all_chunks.ContainsKey(chunk))
+        {
+            pos = all_chunks[chunk].position * chunk_size;
+        }
+        return pos;
+    }
     private void DrawChunk(Vector2Int chunk_pos, Color line_color)
     {
         // Square Shape

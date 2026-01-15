@@ -73,7 +73,7 @@ public class MeleeBehavior : MonoBehaviour
             faction_tag = owner.gameObject.tag;
         }
         // adjust size & position based on new size
-        main_body.transform.localScale = main_body.transform.localScale *= mele_data.melee_size;
+        main_body.transform.localScale = main_body.transform.localScale * mele_data.melee_size;
         main_body.transform.position = source_pos + (target_pos - source_pos).normalized * mele_data.melee_size * 0.1f;
 
         // adjust vfx height from vfx body

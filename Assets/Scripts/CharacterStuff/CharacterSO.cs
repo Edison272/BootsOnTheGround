@@ -6,7 +6,7 @@ using Unity.Mathematics;
 public class CharacterSO : ScriptableObject
 {
     //id
-    public string name = "Entity";
+    public string character_name = "Entity";
 
     //stats
     public int health;

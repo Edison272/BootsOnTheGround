@@ -56,6 +56,9 @@ public class Character : MonoBehaviour, IHealth, IMovement
     float curr_switch_cd = 0;
 
     [field: Header("Detection")]
+    // [SerializeField] CircleCollider2D range_collider;
+    // ContactPoint2D[] things_in_range;
+    public Character target = null;
     public int curr_range {get; private set;}
     public int base_range => base_data.range;
 
@@ -245,7 +248,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     #endregion
 
     #region Movement
-    public void SetMove(Vector2 set_move_dir) // called when the 
+    public void SetMove(Vector2 set_move_dir) // get directional movement
     {
         move_dir = set_move_dir;
         
@@ -294,6 +297,16 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         Debug.Log(base_data.name + " has healed " + heal_amt + " health");
     }
+    #endregion
+
+    #region  AI Stuff
+
+    // public ContactPoint2D[] GetAllInRange()
+    // {
+    //     range_collider.GetContacts(things_in_range);
+    //     return things_in_range;
+    // }
+
     #endregion
 
     #region  Inventory Management
