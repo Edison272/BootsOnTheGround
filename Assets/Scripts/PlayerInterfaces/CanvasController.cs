@@ -8,7 +8,8 @@ public class CanvasController : MonoBehaviour
 {
     public Animator ui_animator;
 
-    [SerializeField] GameObject[] op_status_positions;
+    [Header("Squad Sidebar")]
+    [SerializeField] GameObject[] op_layout_group;
     [SerializeField] GameObject op_status_instance;
 
     [SerializeField] TextMeshProUGUI player_mode_text;
@@ -29,11 +30,9 @@ public class CanvasController : MonoBehaviour
     public void SetOperatorProfiles()
     {
         Character[] squad_members = GameOverseer.THE_OVERSEER.squad_manager.squad;
-        int pos_index = 0;
         foreach(Character op in squad_members)
         {
-            GameObject op_status = Instantiate(op_status_instance, op_status_positions[pos_index].transform);
-            pos_index += 1;
+            GameObject op_status = Instantiate(op_status_instance, op_layout_group.transform);
         }
     }
 
