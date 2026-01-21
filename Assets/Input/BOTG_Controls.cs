@@ -335,7 +335,7 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a4a51f2b-d3cc-49a2-bb11-adad363464c4"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",

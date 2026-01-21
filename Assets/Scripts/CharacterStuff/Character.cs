@@ -301,7 +301,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     #region Damage/Health System
     public void TakeDamage(int damage_amt)
     {
-        Debug.Log(base_data.name + " has taken " + damage_amt + " damage");
+        //Debug.Log(base_data.name + " has taken " + damage_amt + " damage");
         curr_health -= damage_amt;
         if (curr_health <= 0)
         {
@@ -311,7 +311,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
     public void TakeHeal(int heal_amt)
     {
-        Debug.Log(base_data.name + " has healed " + heal_amt + " health");
+        //Debug.Log(base_data.name + " has healed " + heal_amt + " health");
     }
     #endregion
 

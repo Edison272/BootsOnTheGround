@@ -31,7 +31,7 @@ MonoBehaviour:
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
-      value: 2000
+      value: 60
     - key: recoil_scalar
       value: 0.1
   serialized_attacks:

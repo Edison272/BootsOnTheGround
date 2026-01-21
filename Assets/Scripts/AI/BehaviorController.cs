@@ -5,6 +5,7 @@ using UnityEngine;
 // control a character using a series of behaviors
 
 public enum BotStrategy{Offensive, Defensive, Evasive}
+public enum MovementMode{Hold, Follow, Retreat, Pursue}
 /*
 - Offensive
 Pursue target position
@@ -19,6 +20,8 @@ public class BehaviorController
     private Dictionary<string, BehaviorModule> action_behaviors; 
 
     [SerializeField] Character character;
+
+    public float action_time;
 
     public BehaviorController(Character c)
     {
@@ -35,6 +38,7 @@ public class BehaviorController
         {
             character.Look(character.target.GetPosition());
             character.UseMainItem();
+            
         }
     }
 }

@@ -13,6 +13,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public SquadManager squad_manager;
     public EnemyManager enemy_manager;
     public MapManager map_manager;
+    public CanvasController canvas_control;
 
     public static GameOverseer THE_OVERSEER {get; private set;}
 
@@ -24,6 +25,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!squad_manager) {squad_manager = GameObject.Find("Squad Manager")?.GetComponent<SquadManager>();}
         if (!enemy_manager) {enemy_manager = GameObject.Find("Enemy Manager")?.GetComponent<EnemyManager>();}
         if (!map_manager) {map_manager = GameObject.Find("Map")?.GetComponent<MapManager>();}
+        if (!map_manager) {canvas_control = GameObject.Find("Canvas")?.GetComponent<CanvasController>();}
 
     }
 
@@ -40,12 +42,14 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
             squad_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.spawn_chunk);
             enemy_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.final_chunk);
         }
+        // let everyone get to know eachother
         squad_manager.player = player_control;
         player_control.squad = squad_manager;
 
         // initialize squad and enemy managers in the right places
         squad_manager.CreateSquad();
         enemy_manager.CreateEnemies();
+        canvas_control.SetOperatorProfiles();
 
         // start player controller
         player_control.StartPlayer();

@@ -26,8 +26,8 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] Vector2 input_dir;
     [SerializeField] private Vector3 look_pos;
-    [SerializeField] private Vector3 raw_look_pos;
     [SerializeField] Character active_character;
+    bool in_command_mode = false; // can only move while in command mode
 
     [Header("Camera Stuff")]
     [SerializeField] float cam_bound = 1f; // how far camera can travel from the player
@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     float curr_zoom_time;
 
     [Header("UI Stuff")]
-    [SerializeField] GameObject Reticle;
+    [SerializeField] GameObject reticle;
 
     [Header("Squad Interactions")]
     public SquadManager squad;
@@ -75,10 +75,10 @@ public class PlayerController : MonoBehaviour
     public void SetPlayerCharacter(Character new_character)
     {
         active_character = new_character;
+        in_command_mode = false;
 
         // subscribe to the relevant events after active_character has been set
         movement.performed += Move;
-        looking.performed += Look;
         // subscribe action types
         SetMainAction(true);
         SetAltAction(active_character.HasAltAction());
@@ -90,6 +90,7 @@ public class PlayerController : MonoBehaviour
         controls.GroundActions.ToggleCommandMode.performed += CmdMode;
 
         SetCameraZoom(active_character.GetRangeScalar());
+        GameOverseer.THE_OVERSEER.canvas_control.SetCommandUI(in_command_mode);
     }
 
     public void SetCameraZoom(int zoom_scalar)
@@ -127,12 +128,25 @@ public class PlayerController : MonoBehaviour
                 player_view.rectTransform.localScale = new Vector3(target_zoom, target_zoom, 0);
             }
         }
+
+        // constantly read looking value
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(player_view.rectTransform, looking.ReadValue<Vector2>(), play_cam, out Vector2 local_pos);
+        Rect rect = player_view.rectTransform.rect;
+        // get viewport coordinates
+        float view_x = (local_pos.x - rect.xMin) / rect.width;
+        float view_y = (local_pos.y - rect.yMin) / rect.height;
+        // set look pos
+        Vector3 raw_look_pos = new Vector3(view_x, view_y, 0);
+        active_character.Look(main_cam.ViewportToWorldPoint(raw_look_pos));
         look_pos = main_cam.ViewportToWorldPoint(raw_look_pos);
+
+        // adjust reticle
+        reticle.transform.position = (Vector2)look_pos;
     }
 
     void FixedUpdate()
     {
-        Reticle.transform.position = (Vector2)look_pos;
+        
         if (active_character)
         {
             Vector3 char_pos = active_character.GetPosition();
@@ -172,16 +186,16 @@ public class PlayerController : MonoBehaviour
     }
     void StopMove(InputAction.CallbackContext context) {active_character.StopMove();}
     void Look(InputAction.CallbackContext context) {
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(player_view.rectTransform, context.ReadValue<Vector2>(), play_cam, out Vector2 local_pos);
+        // RectTransformUtility.ScreenPointToLocalPointInRectangle(player_view.rectTransform, context.ReadValue<Vector2>(), play_cam, out Vector2 local_pos);
 
-        Rect rect = player_view.rectTransform.rect;
+        // Rect rect = player_view.rectTransform.rect;
 
-        // get viewport coordinates
-        float view_x = (local_pos.x - rect.xMin) / rect.width;
-        float view_y = (local_pos.y - rect.yMin) / rect.height;
+        // // get viewport coordinates
+        // float view_x = (local_pos.x - rect.xMin) / rect.width;
+        // float view_y = (local_pos.y - rect.yMin) / rect.height;
         
-        raw_look_pos = new Vector3(view_x, view_y, 0);
-        active_character.Look(main_cam.ViewportToWorldPoint(raw_look_pos));
+        // raw_look_pos = new Vector3(view_x, view_y, 0);
+        // active_character.Look(main_cam.ViewportToWorldPoint(raw_look_pos));
     }
     void MainStart(InputAction.CallbackContext context) {
         active_character.UseMainItem();
@@ -212,7 +226,31 @@ public class PlayerController : MonoBehaviour
     }
     void CmdMode(InputAction.CallbackContext context)
     {
-        squad.ToggleCommandMode();
+        in_command_mode = !in_command_mode; // switch command mode type
+        if (in_command_mode)
+        {
+            // disable actions
+            SetMainAction(false);
+            SetMainAction(false);
+            controls.GroundActions.ResetItem.performed -= ResetItem;
+            controls.GroundActions.SwitchItem.performed -= SwitchItem;
+
+            // change UI
+            reticle.SetActive(false);
+            SetCameraZoom(5);
+        } else
+        {
+            // reenable actions
+            SetMainAction(true);
+            SetAltAction(active_character.HasAltAction());
+            controls.GroundActions.ResetItem.performed += ResetItem;
+            controls.GroundActions.SwitchItem.performed += SwitchItem;
+
+            // change UI
+            reticle.SetActive(true);
+            SetCameraZoom(active_character.GetRangeScalar());
+        }
+        GameOverseer.THE_OVERSEER.canvas_control.SetCommandUI(in_command_mode);
     }
     #endregion
 
