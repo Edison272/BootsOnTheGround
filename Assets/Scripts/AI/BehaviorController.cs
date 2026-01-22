@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,9 +26,15 @@ public class BehaviorController
 
     public float action_time;
 
+    public Vector2 move_pos;
+
+    // Move Command
+    Func<Vector2> GetMoveDir; // follow by default
+
     public BehaviorController(Character c)
     {
         character = c;
+        GetMoveDir = FollowCommand;
     }
 
     public void UpdateAI()
@@ -42,10 +49,43 @@ public class BehaviorController
             character.UseMainItem();
             
         }
+
+        character.SetMove(GetMoveDir());
     }
 
     public void SetCommand(CommandMode command)
     {
         Debug.Log(character.name + " will " + command);
+        switch (command)
+        {
+            case CommandMode.Follow:
+                GetMoveDir = FollowCommand;
+                break;
+            case CommandMode.Disperse:
+                GetMoveDir = DisperseCommand;
+                break;
+            case CommandMode.Engage:
+                GetMoveDir = EngageCommand;
+                break;
+            case CommandMode.Hold:
+                GetMoveDir = HoldCommand;
+                break;
+        }
+    }
+    private Vector2 FollowCommand()
+    {
+        return Vector2.right;
+    }
+    private Vector2 DisperseCommand()
+    {
+        return Vector2.up;
+    }
+    private Vector2 EngageCommand()
+    {
+        return Vector2.down;
+    }
+    private Vector2 HoldCommand()
+    {
+        return Vector2.left;
     }
 }

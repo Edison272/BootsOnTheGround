@@ -270,6 +270,12 @@ public class Character : MonoBehaviour, IHealth, IMovement
         
         anim.SetBool("Moving", true);
     }
+    public void SetMovePos(Vector2 set_move_pos) // get target_position
+    {
+        move_dir = (set_move_pos - entity_rb.velocity).normalized;
+        
+        anim.SetBool("Moving", true);
+    }
 
     public void Move() 
     {
