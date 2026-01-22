@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CommandMode {Follow, Disperse, Engage, Count}
+public enum CommandMode {Follow, Disperse, Engage, Hold, Count}
 /*
 - Follow the player around closely, move when they move
 - Disperse take cover and maintain distance from threats. Move further away from the player if necessary

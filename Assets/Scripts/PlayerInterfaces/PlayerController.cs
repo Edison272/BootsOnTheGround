@@ -237,7 +237,7 @@ public class PlayerController : MonoBehaviour
 
             // change UI
             reticle.SetActive(false);
-            SetCameraZoom(5);
+            SetCameraZoom(4);
         } else
         {
             // reenable actions
@@ -250,6 +250,7 @@ public class PlayerController : MonoBehaviour
             reticle.SetActive(true);
             SetCameraZoom(active_character.GetRangeScalar());
         }
+        Cursor.visible = in_command_mode;
         GameOverseer.THE_OVERSEER.canvas_control.SetCommandUI(in_command_mode);
     }
     #endregion

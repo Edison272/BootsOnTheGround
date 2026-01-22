@@ -65,7 +65,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     [field: Header("AI")]
     public bool is_player_squad = false;
     bool is_AI_active = false;
-    public BehaviorController behavior_controller;
+    BehaviorController behavior_controller;
 
     #region initalizers
     // get base data from a scriptable object and assign them here. Called once at when this object is created
@@ -326,6 +326,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public void ToggleAI(bool is_on)
     {
         is_AI_active = is_on;
+    }
+
+    public void SetCommandBehavior(CommandMode command)
+    {
+        behavior_controller.SetCommand(command);
     }
 
     #endregion

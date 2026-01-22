@@ -19,6 +19,8 @@ public class BehaviorController
     private Dictionary<string, BehaviorModule> movement_behaviors; 
     private Dictionary<string, BehaviorModule> action_behaviors; 
 
+    public CommandMode command;
+    
     [SerializeField] Character character;
 
     public float action_time;
@@ -40,5 +42,10 @@ public class BehaviorController
             character.UseMainItem();
             
         }
+    }
+
+    public void SetCommand(CommandMode command)
+    {
+        Debug.Log(character.name + " will " + command);
     }
 }
