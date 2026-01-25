@@ -338,6 +338,7 @@ MonoBehaviour:
   main_item: {fileID: 0}
   alt_item: {fileID: 0}
   target: {fileID: 0}
+  is_player_squad: 0
 --- !u!95 &234494506826388213
 Animator:
   serializedVersion: 7

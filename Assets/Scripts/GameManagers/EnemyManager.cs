@@ -17,6 +17,7 @@ public class EnemyManager : MonoBehaviour
             enemies[i] = enemy_presets[i].GenerateOp(transform.position);
             enemies[i].gameObject.tag = this.gameObject.tag;
             enemies[i].ToggleAI(true);
+            enemies[i].SetCommandBehavior(CommandMode.Hold);
         }
     }
 }

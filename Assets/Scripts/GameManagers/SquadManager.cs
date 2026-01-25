@@ -35,6 +35,15 @@ public class SquadManager : MonoBehaviour
         }
         player.SetPlayerCharacter(squad[player_char_index]);
         squad[player_char_index].ToggleAI(false);
+        SetSquadLeader();
+    }
+
+    public void SetSquadLeader() // set squad leader to player characte
+    {
+        foreach(Character squadmate in squad)
+        {
+            squadmate.SetLeader(squad[player_char_index]);
+        }
     }
 
     public void ToggleCommandMode()

@@ -334,6 +334,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
         is_AI_active = is_on;
     }
 
+    public void SetLeader(Character new_leader)
+    {
+        behavior_controller.SetLeader(new_leader);
+    }
+
     public void SetCommandBehavior(CommandMode command)
     {
         behavior_controller.SetCommand(command);

@@ -31,7 +31,7 @@ public class CanvasController : MonoBehaviour
     public void SetOperatorProfiles()
     {
         Character[] squad_members = GameOverseer.THE_OVERSEER.squad_manager.squad;
-        for (int i = 0; i < squad_members.Length; i++)
+        for (int i = 1; i < squad_members.Length; i++) // make UI for every operator EXCEPT the player
         {
             op_statuses[i].gameObject.SetActive(true);
             op_statuses[i].ConstructUI(squad_members[i], i);

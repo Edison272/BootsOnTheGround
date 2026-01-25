@@ -23,6 +23,7 @@ public class BehaviorController
     public CommandMode command;
     
     [SerializeField] Character character;
+    [SerializeField] Character leader; // who they follow/ base their strategies around
 
     public float action_time;
 
@@ -34,22 +35,27 @@ public class BehaviorController
     public BehaviorController(Character c)
     {
         character = c;
-        GetMoveDir = FollowCommand;
+        GetMoveDir = HoldCommand;
+    }
+    public void SetLeader(Character new_leader)
+    {
+        leader = new_leader;
     }
 
     public void UpdateAI()
     {
-        if (character.target == null)
+        Character targ = GameOverseer.THE_OVERSEER.GetTargetCharacter(character.is_player_squad, character);
+        if (character.target != targ)
         {
-            character.target = GameOverseer.THE_OVERSEER.GetTargetCharacter(character.is_player_squad, character);
+            character.target = targ;
         }
-        else
+
+        if (character.target)
         {
             character.Look(character.target.GetPosition());
             character.UseMainItem();
-            
         }
-
+        
         character.SetMove(GetMoveDir());
     }
 
@@ -74,18 +80,24 @@ public class BehaviorController
     }
     private Vector2 FollowCommand()
     {
-        return Vector2.right;
+        Vector2 move_dir = Vector2.zero;
+        move_dir = (leader.GetPosition() - character.GetPosition()).normalized;
+        return move_dir;
     }
     private Vector2 DisperseCommand()
     {
-        return Vector2.up;
+        Vector2 move_dir = Vector2.zero;
+        return move_dir;
     }
     private Vector2 EngageCommand()
     {
-        return Vector2.down;
+        Vector2 move_dir = Vector2.zero;
+        move_dir = (character.target.GetPosition() - character.GetPosition()).normalized;
+        return move_dir;
     }
     private Vector2 HoldCommand()
     {
-        return Vector2.left;
+        character.StopMove();
+        return Vector2.zero;
     }
 }

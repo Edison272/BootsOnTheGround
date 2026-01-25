@@ -60,7 +60,6 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public Character GetTargetCharacter(bool is_squad, Character curr_character, TargetType targ_type = TargetType.Closest)
     {
         Character[] check_data = is_squad ? enemy_manager.enemies : squad_manager.squad;
-
         Func<Character, Character, float> ScoringFunc = GetNearestScore;
         switch (targ_type)
         {
@@ -80,27 +79,29 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
 
         float highest_score = -Mathf.Infinity;
         Character prime_target = null;
-        foreach(Character character in check_data)
+        foreach(Character target in check_data)
         {
-            float score = ScoringFunc(curr_character, character);
+            float score = ScoringFunc(curr_character, target);
             if (score > highest_score)
             {
-                prime_target = character;
+                prime_target = target;
+                highest_score = score;
+                
             }
         }
 
         return prime_target;
     }
 
-    private float GetNearestScore(Character curr_character, Character character)
+    private float GetNearestScore(Character curr_character, Character target)
     {
-        float score = 1/(curr_character.GetPosition() - character.GetPosition()).sqrMagnitude + 0.001f;
+        float score = 1/(curr_character.GetPosition() - target.GetPosition()).sqrMagnitude + 0.001f;
         return score;
     }
 
-    private float GetFurthestScore(Character curr_character, Character character)
+    private float GetFurthestScore(Character curr_character, Character target)
     {
-        float score = (curr_character.GetPosition() - character.GetPosition()).sqrMagnitude;
+        float score = (curr_character.GetPosition() - target.GetPosition()).sqrMagnitude;
         if (score > curr_character.curr_range)
         {
             score = -1;
