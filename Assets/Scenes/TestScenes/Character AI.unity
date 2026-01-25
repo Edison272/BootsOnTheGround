@@ -1609,7 +1609,7 @@ MonoBehaviour:
   active_character: {fileID: 0}
   cam_bound: 4
   camera_zoom_time: 0.5
-  base_zoom_level: -1
+  base_zoom_level: 3
   reticle: {fileID: 1499111066}
   squad: {fileID: 0}
 --- !u!4 &545320182
@@ -3343,7 +3343,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy_presets:
-  - {fileID: 11400000, guid: ef71d6d7633b6d940b5feb9d0d7cb5e2, type: 2}
+  - {fileID: 11400000, guid: 95140286b158c4848a6236f0d6e3c245, type: 2}
   - {fileID: 11400000, guid: ef71d6d7633b6d940b5feb9d0d7cb5e2, type: 2}
   - {fileID: 11400000, guid: ef71d6d7633b6d940b5feb9d0d7cb5e2, type: 2}
   - {fileID: 11400000, guid: ef71d6d7633b6d940b5feb9d0d7cb5e2, type: 2}
@@ -3528,7 +3528,7 @@ RectTransform:
   m_GameObject: {fileID: 1376251735}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 862357270}
@@ -5383,8 +5383,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   squad_preset:
-  - {fileID: 11400000, guid: ef71d6d7633b6d940b5feb9d0d7cb5e2, type: 2}
-  - {fileID: 11400000, guid: ef71d6d7633b6d940b5feb9d0d7cb5e2, type: 2}
+  - {fileID: 11400000, guid: e29f75cf3321b0b4e919809d63167cc1, type: 2}
+  - {fileID: 11400000, guid: 95140286b158c4848a6236f0d6e3c245, type: 2}
   - {fileID: 11400000, guid: ef71d6d7633b6d940b5feb9d0d7cb5e2, type: 2}
   - {fileID: 11400000, guid: ef71d6d7633b6d940b5feb9d0d7cb5e2, type: 2}
   - {fileID: 11400000, guid: ef71d6d7633b6d940b5feb9d0d7cb5e2, type: 2}

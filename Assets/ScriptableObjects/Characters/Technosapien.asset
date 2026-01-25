@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01d6ed72db80d54439e76ec450c54420, type: 3}
-  m_Name: Firefighter 1
+  m_Name: Technosapien
   m_EditorClassIdentifier: 
   character_name: Entity
   health: 100000
   speed: 5
   range: 0
-  char_prefab: {fileID: 2589057906099434769, guid: 852337d3087a78c459ce5ccd025a9628,
+  char_prefab: {fileID: 3748648633196015940, guid: 551671337826080419fd5110a5f48b73,
     type: 3}
   detection_mask:
     serializedVersion: 2

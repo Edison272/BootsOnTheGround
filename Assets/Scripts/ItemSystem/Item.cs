@@ -203,6 +203,6 @@ public class Item : MonoBehaviour
 
     public int GetRange()
     {
-        return base_data.bonus_range_scalar/2;
+        return base_data.bonus_range_scalar;
     }
 }

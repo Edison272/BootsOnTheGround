@@ -16,7 +16,6 @@ public class ItemSO : ScriptableObject
 
     [field: Header("Aiming")]
     public bool dynamic_aim = true; // allow dynamic aim for the object to be able to turn to face the target
-    private static float step = 0.5f;
     [Range(0.0f, 1.0f)] public float rot_scale = 1f;    // 0 to 1
     [Range(0, 5)] public int bonus_range_scalar = 1; // how far the user can see with this item DO NOT CHANGE THE RANGE
     [field: Header("Functionality")]

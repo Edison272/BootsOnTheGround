@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float cam_bound = 1f; // how far camera can travel from the player
     [SerializeField] float camera_zoom_time = 0.5f;
     public float base_zoom_level = 1;
+    public float zoom_factor = 0.5f;
     float zoom_diff; // set current zoom
     float curr_zoom; // set current zoom
     float target_zoom; // set current zoom
@@ -60,7 +61,6 @@ public class PlayerController : MonoBehaviour
         zoom_diff = 0;
 
         // set starting zoom
-        base_zoom_level = 1;
         target_zoom = base_zoom_level;
     }
 
@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
     {
         curr_zoom = player_view.rectTransform.localScale.x;
         curr_zoom_time = 0;
-        target_zoom = base_zoom_level + (5 - zoom_scalar) * 0.2f;
+        target_zoom = base_zoom_level + (5 - zoom_scalar) * zoom_factor;
         zoom_diff = target_zoom - player_view.rectTransform.localScale.x;
     }
 
