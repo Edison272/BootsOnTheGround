@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01d6ed72db80d54439e76ec450c54420, type: 3}
   m_Name: VanguardOperator
   m_EditorClassIdentifier: 
-  character_name: Entity
-  health: 100000
+  character_name: Vanguard Operator
+  health: 1000
   speed: 5
-  range: 0
+  range: 10
+  close_range: 3
   char_prefab: {fileID: 451806311013494924, guid: 57eac7a4f6188db4fb446881b72b0710,
     type: 3}
   detection_mask:

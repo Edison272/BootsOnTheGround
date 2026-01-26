@@ -27,7 +27,7 @@ public class BehaviorController
 
     public float action_time;
 
-    public Vector2 move_pos;
+    public Vector2 move_to_pos;
 
     // Move Command
     Func<Vector2> GetMoveDir; // follow by default
@@ -44,19 +44,30 @@ public class BehaviorController
 
     public void UpdateAI()
     {
-        Character targ = GameOverseer.THE_OVERSEER.GetTargetCharacter(character.is_player_squad, character);
+        Character targ = GameOverseer.THE_OVERSEER.GetTargetCharacter(character.is_player_squad, character, character.curr_range);
         if (character.target != targ)
         {
             character.target = targ;
         }
 
-        if (character.target)
+        if (character.target && (character.GetPosition() - character.target.GetPosition()).sqrMagnitude <= character.curr_range * character.curr_range)
         {
             character.Look(character.target.GetPosition());
-            character.UseMainItem();
+            RaycastHit2D contact = Physics2D.Linecast(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, GameOverseer.avoid_map_mask);
+            if (!contact)
+            {
+                character.UseMainItem();
+                Debug.DrawLine(character.GetPosition(), contact.point, Color.white);
+            } else
+            {
+                Debug.DrawLine(character.GetPosition(), contact.point, Color.grey);
+            }
+        } else
+        {
+            Debug.DrawLine(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, Color.black);
         }
         
-        character.SetMove(GetMoveDir());
+        character.SetMove(GetMoveDir() + 0.5f * ObstacleAvoidanceVector());
     }
 
     public void SetCommand(CommandMode command)
@@ -99,5 +110,26 @@ public class BehaviorController
     {
         character.StopMove();
         return Vector2.zero;
+    }
+
+    private Vector2 ObstacleAvoidanceVector()
+    {
+        Vector2 net_dir = Vector2.zero;
+        foreach(Vector2 dir in Directions2D.eight_directions)
+        {   
+            Vector2 projection_pos = character.GetPosition() + dir * (character.hitbox_radius + 0.05f);
+            Vector2 check_pos = character.GetPosition() + dir * (character.hitbox_radius + character.close_range);
+            RaycastHit2D contact = Physics2D.Linecast(projection_pos, check_pos, GameOverseer.avoid_map_mask);
+            if (contact) // go in opposite direction if theres something in the way
+            {
+                net_dir += (character.GetPosition() - contact.point).normalized;
+                Debug.DrawLine(projection_pos, contact.point, Color.white);
+                //Debug.DrawLine(character.GetPosition(), net_dir, Color.red);
+            } else
+            {
+                Debug.DrawLine(projection_pos, check_pos, Color.white);
+            }
+        }
+        return net_dir;
     }
 }

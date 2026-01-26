@@ -29,7 +29,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
     //aim & handling
     [field: Header("Aiming")]
-    Vector2 aim_dir = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
+    public Vector2 aim_dir {get; private set;} = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
     private Action AimStyle; // single-item or akimbo aiming?
     public  float aim_angle = 0; // angle (deg) the character is looking in
     
@@ -61,6 +61,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public Character target = null;
     public int curr_range {get; private set;}
     public int base_range => base_data.range;
+    public int close_range => base_data.close_range;
 
     [field: Header("AI")]
     public bool is_player_squad = false;
@@ -267,8 +268,14 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public void SetMove(Vector2 set_move_dir) // get directional movement
     {
         move_dir = set_move_dir;
+        if (move_dir != Vector2.zero)
+        {
+            anim.SetBool("Moving", true);
+        } else
+        {
+            anim.SetBool("Moving", false);
+        }
         
-        anim.SetBool("Moving", true);
     }
     public void SetMovePos(Vector2 set_move_pos) // get target_position
     {
@@ -363,6 +370,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         {
             alt_item = inventory[item_indexes[index].y];
         }
+        curr_range = base_range + GetRangeScalar();
     }
     void UnequipActive() // unequip animation for the currently selected weapons
     {
@@ -385,7 +393,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         {
             curr_item_index = Mathf.Clamp(spec_index, 0, item_indexes.Length);
         }
-        UnequipActive(); //unequipped item will call the "SetSwitchItem" to set the new active item
+        UnequipActive(); //unequipped item will call the "SetSwitchItem" in animator to set the new active item
         current_indexes = (item_indexes[curr_item_index].x, item_indexes[curr_item_index].y);
         EquipActive(curr_item_index); // set up the new shi
         curr_switch_cd = switch_cd;
@@ -426,4 +434,20 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         return inventory[current_indexes.Item1].GetRange();
     }
+
+    #region Debug Gizmos
+    void OnDrawGizmosSelected()
+    {
+        // Draw ranges when properly initialized
+        if (base_data)
+        {
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(transform.position, curr_range);
+            Gizmos.color = Color.gray;
+            Gizmos.DrawWireSphere(transform.position, base_range);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, close_range);
+        }
+    }
+    #endregion
 }

@@ -9,9 +9,10 @@ public class CharacterSO : ScriptableObject
     public string character_name = "Entity";
 
     //stats
-    public int health;
-    public int speed;
-    public int range;
+    public int health = 100;
+    public int speed = 3;
+    public int range = 4;
+    public int close_range = 3; // entering close range forces character to retarget
 
     public GameObject char_prefab;
 

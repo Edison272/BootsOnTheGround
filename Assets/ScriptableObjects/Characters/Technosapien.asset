@@ -15,7 +15,8 @@ MonoBehaviour:
   character_name: Entity
   health: 100000
   speed: 5
-  range: 0
+  range: 10
+  close_range: 3
   char_prefab: {fileID: 3748648633196015940, guid: 551671337826080419fd5110a5f48b73,
     type: 3}
   detection_mask:

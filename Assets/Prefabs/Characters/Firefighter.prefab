@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4954260517961003373}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3861744065797134465}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3157333933848039773}
   - component: {fileID: 1612916281273619627}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Scarecrow 2.0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 1630390891512033495}
   - component: {fileID: 592922226325099996}
   - component: {fileID: 234494506826388213}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Firefighter
   m_TagString: Allies
   m_Icon: {fileID: 0}
@@ -186,7 +186,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7387620949624410435}
-  - {fileID: 5616119787946771771}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &2002327823337540958
@@ -371,7 +370,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7387620949624410435}
   - component: {fileID: 6221262693360569181}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EntityVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -422,7 +421,7 @@ GameObject:
   - component: {fileID: 998312239358308184}
   - component: {fileID: 6886730566898585352}
   - component: {fileID: 3249363352574431910}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -487,7 +486,7 @@ SpriteRenderer:
   m_SortingLayerID: 1532253401
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -8247630722614121492, guid: c43478577f2965846a357db9d86cf7d2,
+  m_Sprite: {fileID: 1756291415134021759, guid: 555efa8fc27588d46b7f306108004936,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -530,74 +529,6 @@ MonoBehaviour:
   m_labelHash: 3.516899e-12
   m_SpriteKey: 0
   m_SpriteHash: 0
---- !u!1 &7642838895040214477
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5616119787946771771}
-  - component: {fileID: 7306887074718146800}
-  m_Layer: 6
-  m_Name: Range
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &5616119787946771771
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7642838895040214477}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6959899179741513831}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &7306887074718146800
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7642838895040214477}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 5
 --- !u!1 &7648554998878762737
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,7 +538,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 967626683832254148}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AltHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +571,7 @@ GameObject:
   - component: {fileID: 3729062052854726817}
   - component: {fileID: 2751281752748244989}
   - component: {fileID: 7832330674716368127}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Particle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5470,7 +5401,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1413471862373244730}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MainHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5502,7 +5433,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6844991418755074979}
   - component: {fileID: 8878506247682842204}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FieldRadio
   m_TagString: Untagged
   m_Icon: {fileID: 0}

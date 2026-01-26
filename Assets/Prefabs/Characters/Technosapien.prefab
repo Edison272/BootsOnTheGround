@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1580428330662182035}
   - component: {fileID: 7029713313381339150}
   - component: {fileID: 7489269861912167968}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,74 +120,6 @@ MonoBehaviour:
   m_labelHash: 0
   m_SpriteKey: 0
   m_SpriteHash: 462075512
---- !u!1 &1504315169724382065
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4775478188198850807}
-  - component: {fileID: 5149058388378383998}
-  m_Layer: 6
-  m_Name: Range
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &4775478188198850807
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1504315169724382065}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3326984341611251286}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &5149058388378383998
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1504315169724382065}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 5
 --- !u!1 &2269008320510598663
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,7 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8829919945817746719}
   - component: {fileID: 1407796942191549196}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Blade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -285,7 +217,7 @@ GameObject:
   - component: {fileID: 6117146287947758973}
   - component: {fileID: 6071695083739659367}
   - component: {fileID: 2097538872879112438}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Particle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5115,7 +5047,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2477120119492418200}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5148,7 +5080,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6490006881492499626}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5184,7 +5116,7 @@ GameObject:
   - component: {fileID: 209069272589052454}
   - component: {fileID: 113375787929565946}
   - component: {fileID: 1829299006570118993}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Technosapien
   m_TagString: Allies
   m_Icon: {fileID: 0}
@@ -5205,7 +5137,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5290123988940720502}
-  - {fileID: 4775478188198850807}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &3754004090218794434
@@ -5390,7 +5321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5290123988940720502}
   - component: {fileID: 6711641175450195176}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EntityVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5438,7 +5369,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5661354599399050861}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AltHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5469,7 +5400,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5797660579965630531}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MainHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}

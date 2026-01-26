@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5741987448534367817}
   - component: {fileID: 5870067429670407839}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Molly Grenade_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 3627706986709048892}
   - component: {fileID: 6828856121093149430}
   - component: {fileID: 7749533643281916857}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Particle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4933,7 +4933,7 @@ GameObject:
   - component: {fileID: 3065144286897928456}
   - component: {fileID: 9158106588733026888}
   - component: {fileID: 5932633629762312097}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: VanguardOperator
   m_TagString: Allies
   m_Icon: {fileID: 0}
@@ -4954,7 +4954,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3379310842694490860}
-  - {fileID: 200030111206976023}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &84295080529661972
@@ -5138,7 +5137,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6785436856985877348}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5161,74 +5160,6 @@ Transform:
   - {fileID: 3627706986709048892}
   m_Father: {fileID: 3379310842694490860}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &838911706275302119
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 200030111206976023}
-  - component: {fileID: 2458183530196434355}
-  m_Layer: 6
-  m_Name: Range
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &200030111206976023
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 838911706275302119}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7351828420513927655}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &2458183530196434355
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 838911706275302119}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 5
 --- !u!1 &2010946061415518204
 GameObject:
   m_ObjectHideFlags: 0
@@ -5239,7 +5170,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9167700538122210440}
   - component: {fileID: 4925242426059380220}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Molly Grenade_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5326,7 +5257,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2968763025419768726}
   - component: {fileID: 7265223205619211545}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Molly Grenade_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5413,7 +5344,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3379310842694490860}
   - component: {fileID: 8888186970247055216}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EntityVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5461,7 +5392,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7868652503050007635}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AltHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5492,7 +5423,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3302783401078088278}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ammo Set
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5530,7 +5461,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2129739820282107340}
   - component: {fileID: 6482392716904740932}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Molly Grenade_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5619,7 +5550,7 @@ GameObject:
   - component: {fileID: 8326184025573258511}
   - component: {fileID: 657156148188553619}
   - component: {fileID: 7045694155137036219}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5737,7 +5668,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6017028818120629166}
   - component: {fileID: 2330910277443904750}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Molly Grenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5823,7 +5754,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7450687156985619}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5856,7 +5787,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5085575706263581991}
   - component: {fileID: 7247995243936425707}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Molly Grenade_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5942,7 +5873,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3839230435322074497}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MainHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}

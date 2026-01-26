@@ -206,6 +206,12 @@ public class PlayerController : MonoBehaviour
         main_continuous = false;
     }
     void MainAction() {active_character.UseMainItem();}
+    void PointCmdStart(InputAction.CallbackContext context) {
+        GameOverseer.THE_OVERSEER.canvas_control.PlayerStartInput();
+    }
+    void PointCmdEnd(InputAction.CallbackContext context) {
+        GameOverseer.THE_OVERSEER.canvas_control.PlayerEndInput();
+    }
     void AltStart(InputAction.CallbackContext context) {
         active_character.UseAltItem();
         alt_continuous = alt_hold_input;
@@ -231,15 +237,21 @@ public class PlayerController : MonoBehaviour
         {
             // disable actions
             SetMainAction(false);
-            SetMainAction(false);
+            SetAltAction(false);
             controls.GroundActions.ResetItem.performed -= ResetItem;
             controls.GroundActions.SwitchItem.performed -= SwitchItem;
 
+            // enable click detection on canvas
+            ToggleCommandInput(true);
+
             // change UI
             reticle.SetActive(false);
-            SetCameraZoom(4);
+            SetCameraZoom(5);
         } else
         {
+            // disable click detection on canvas
+            ToggleCommandInput(false);
+            
             // reenable actions
             SetMainAction(true);
             SetAltAction(active_character.HasAltAction());
@@ -256,6 +268,20 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Action Enabling
+
+    void ToggleCommandInput(bool cmd_on)
+    {
+        if (cmd_on)
+        {
+            main_action.started += PointCmdStart;
+            main_action.canceled += PointCmdEnd;
+        } 
+        else
+        {
+            main_action.started -= PointCmdStart;
+            main_action.canceled -= PointCmdEnd;
+        }
+    }
     void SetMainAction(bool enable) // set main action. set parameter false to turn off main actions
     {
         if (enable)
@@ -272,7 +298,7 @@ public class PlayerController : MonoBehaviour
             main_continuous = false; // stop any ongoing attacks
             
         }
-    } 
+    }
     void SetAltAction(bool enable) // set alt action. set parameter false to turn off main actions
     {
         if (enable)

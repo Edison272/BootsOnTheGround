@@ -17,6 +17,11 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
 
     public static GameOverseer THE_OVERSEER {get; private set;}
 
+    // Layermask stuff
+    public static readonly LayerMask avoid_map_mask = 1 << 7; // check if map is in the way of this raycast
+    public static readonly LayerMask avoid_obstacles_mask = (1 << 6) | (1 << 7); // check if map and entities are in the way of this raycast
+
+
     void Awake()
     {
         THE_OVERSEER = this;
@@ -25,7 +30,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!squad_manager) {squad_manager = GameObject.Find("Squad Manager")?.GetComponent<SquadManager>();}
         if (!enemy_manager) {enemy_manager = GameObject.Find("Enemy Manager")?.GetComponent<EnemyManager>();}
         if (!map_manager) {map_manager = GameObject.Find("Map")?.GetComponent<MapManager>();}
-        if (!map_manager) {canvas_control = GameObject.Find("Canvas")?.GetComponent<CanvasController>();}
+        if (!map_manager) {canvas_control = GameObject.Find("Canvas Controller")?.GetComponent<CanvasController>();}
 
     }
 
@@ -57,7 +62,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     
 
     #region Targetting
-    public Character GetTargetCharacter(bool is_squad, Character curr_character, TargetType targ_type = TargetType.Closest)
+    public Character GetTargetCharacter(bool is_squad, Character curr_character, float max_range = 1000f, TargetType targ_type = TargetType.Closest)
     {
         Character[] check_data = is_squad ? enemy_manager.enemies : squad_manager.squad;
         Func<Character, Character, float> ScoringFunc = GetNearestScore;
@@ -81,6 +86,10 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         Character prime_target = null;
         foreach(Character target in check_data)
         {
+            if ((curr_character.GetPosition() - target.GetPosition()).sqrMagnitude > max_range * max_range)
+            {
+                continue;
+            }
             float score = ScoringFunc(curr_character, target);
             if (score > highest_score)
             {

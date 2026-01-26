@@ -83,4 +83,24 @@ public class CanvasController : MonoBehaviour
             stat_ui.ConfirmOperator(false);
         }
     }
+
+    public void GetCommandUI()
+    {
+        
+    }
+    public void ConfirmCommand() // used for holding position or engaging targets
+    {
+        
+    }
+
+    #region Player-Canvas Input
+    public void PlayerStartInput()
+    {
+        Debug.Log("Mouse down");
+    }
+    public void PlayerEndInput()
+    {
+        Debug.Log("Mouse Up");
+    }
+    #endregion
 }
