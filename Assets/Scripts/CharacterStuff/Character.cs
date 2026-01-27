@@ -44,6 +44,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     [field: Header("Damage")]
     public int curr_health {get; private set;}
     public int max_health => base_data.health;
+    public float health_ratio {get; private set;}
 
     [field: Header("Inventory")]
     public Item[] inventory;
@@ -66,7 +67,9 @@ public class Character : MonoBehaviour, IHealth, IMovement
     [field: Header("AI")]
     public bool is_player_squad = false;
     bool is_AI_active = false;
-    BehaviorController behavior_controller;
+    public BehaviorController behavior_controller {get; private set;}
+    [field: Header("Character State")]
+    public bool is_alive = true;
 
     #region initalizers
     // get base data from a scriptable object and assign them here. Called once at when this object is created
@@ -85,6 +88,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
         // setup health
         curr_health = max_health;
+        health_ratio = 1;
         
         // setup inventory
         inventory = new Item[base_data.inventory.Length];
@@ -312,19 +316,24 @@ public class Character : MonoBehaviour, IHealth, IMovement
     #endregion
 
     #region Damage/Health System
-    public void TakeDamage(int damage_amt)
+    public void ChangeHealth(int change_amt)
     {
         //Debug.Log(base_data.name + " has taken " + damage_amt + " damage");
-        curr_health -= damage_amt;
-        if (curr_health <= 0)
-        {
-            Destroy(this.gameObject);
-        }
-    }
 
-    public void TakeHeal(int heal_amt)
-    {
-        //Debug.Log(base_data.name + " has healed " + heal_amt + " health");
+        curr_health -= change_amt;
+        
+        if (change_amt > 0) // this is damage
+        {
+            if (curr_health <= 0)
+            {
+                Destroy(this.gameObject);
+            }
+        } else // negative damage is healing
+        {
+            
+        }
+
+        health_ratio = curr_health/(float)max_health;
     }
     #endregion
 
@@ -335,7 +344,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
     //     range_collider.GetContacts(things_in_range);
     //     return things_in_range;
     // }
-
     public void ToggleAI(bool is_on)
     {
         is_AI_active = is_on;

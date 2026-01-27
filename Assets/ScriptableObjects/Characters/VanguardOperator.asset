@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: VanguardOperator
   m_EditorClassIdentifier: 
   character_name: Vanguard Operator
-  health: 1000
+  health: 107500
   speed: 5
   range: 10
   close_range: 3

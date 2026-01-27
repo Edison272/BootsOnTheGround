@@ -25,7 +25,7 @@ MonoBehaviour:
   serialized_input_stats:
     stat_list:
     - key: reset_speed
-      value: 0.1
+      value: 0.5
     - key: use_speed
       value: 0.1
   serialized_functionality_stats:

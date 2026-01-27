@@ -40,7 +40,7 @@ public class LinecastBehavior : MonoBehaviour
         {
             if (contact.transform.gameObject.tag != faction_tag && contact.transform.gameObject.tag != "NoHit")
             {
-                contact.transform.gameObject.GetComponent<IHealth>()?.TakeDamage(atk_data.damage);
+                contact.transform.gameObject.GetComponent<IHealth>()?.ChangeHealth(atk_data.damage);
 
                 end_pos = contact.point;
             }

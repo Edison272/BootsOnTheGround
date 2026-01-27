@@ -18,23 +18,53 @@ public class CanvasController : MonoBehaviour
     [SerializeField] Button[] available_commands;
     [SerializeField] TextMeshProUGUI player_mode_text;
     [SerializeField] public Character[] character_buffer;
+
+    [Header("Command Internals")]
+    private CommandMode curr_command = CommandMode.Follow;
+
+    [Header("Pointer UI")]
+    bool pointer_requested = false;
+    [SerializeField] GameObject[] movement_indicators;
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         foreach(OperatorStatusUI stat_ui in op_statuses)
         {
             stat_ui.gameObject.SetActive(false);
         }
     }
+
+    void Update()
+    {
+        if (pointer_requested)
+        {
+            foreach(OperatorStatusUI stat_ui in op_statuses)
+            {
+                int i = stat_ui.squad_index;
+                if (character_buffer[i] != null)
+                {
+                    movement_indicators[i].transform.position =  GameOverseer.THE_OVERSEER.player_control.look_pos;
+                    LineRenderer lr = movement_indicators[i].GetComponent<LineRenderer>();
+                    lr.SetPosition(0, character_buffer[i].GetPosition());
+                    lr.SetPosition(1, movement_indicators[i].transform.position);
+                }
+            }
+        }
+    }
     //  set up UI for all operators after they've been initialized. Called by Game Overseer
     public void SetOperatorProfiles()
     {
         Character[] squad_members = GameOverseer.THE_OVERSEER.squad_manager.squad;
+        movement_indicators = new GameObject[squad_members.Length];
         for (int i = 1; i < squad_members.Length; i++) // make UI for every operator EXCEPT the player
         {
             op_statuses[i].gameObject.SetActive(true);
             op_statuses[i].ConstructUI(squad_members[i], i);
+
+            // get a movement indicator
+            movement_indicators[i] = Instantiate(Resources.Load<GameObject>("UI/MovePointer"));
+            movement_indicators[i].SetActive(false);
         }
         character_buffer = new Character[squad_members.Length];
     }
@@ -59,48 +89,62 @@ public class CanvasController : MonoBehaviour
     }
     public void SetCommandType(int command_mode)
     {
-        CommandMode cmd_mode = (CommandMode)command_mode;
-        switch (cmd_mode)
+        pointer_requested = false;
+        curr_command = (CommandMode)command_mode;
+        if (command_mode <= (int)CommandMode.Engage) 
         {
-            case CommandMode.Follow:
-                break;
-            case CommandMode.Disperse:
-                break;
-            case CommandMode.Engage:
-                break;
-            case CommandMode.Hold:
-                break;
+            ConfirmCommand();
+        } 
+        else
+        {
+            pointer_requested = true;
+            foreach(OperatorStatusUI stat_ui in op_statuses)
+            {
+                int i = stat_ui.squad_index;
+                if (character_buffer[i] != null)
+                {
+                    movement_indicators[i].SetActive(true);
+                }
+            }
         }
+    }
 
+    public void ConfirmCommand() // used for holding position or engaging targets
+    {
         int ops_commanded = 0;
         foreach(OperatorStatusUI stat_ui in op_statuses)
         {
-            if (character_buffer[stat_ui.squad_index] != null)
+            int i = stat_ui.squad_index;
+            if (character_buffer[i] != null)
             {
-                character_buffer[stat_ui.squad_index].SetCommandBehavior(cmd_mode);
+                character_buffer[i].SetCommandBehavior(curr_command);
                 ops_commanded += 1;
+
+                if (pointer_requested)
+                {
+                    character_buffer[i].behavior_controller.anchor_position = GameOverseer.THE_OVERSEER.player_control.look_pos;
+                }
+
+                movement_indicators[i].SetActive(false);
             }
             stat_ui.ConfirmOperator(false);
         }
-    }
-
-    public void GetCommandUI()
-    {
-        
-    }
-    public void ConfirmCommand() // used for holding position or engaging targets
-    {
-        
+        pointer_requested = false;
     }
 
     #region Player-Canvas Input
     public void PlayerStartInput()
     {
-        Debug.Log("Mouse down");
+        if (pointer_requested)
+        {
+            Debug.Log("Mouse down");
+            ConfirmCommand();
+        }
+        
     }
     public void PlayerEndInput()
     {
-        Debug.Log("Mouse Up");
+        // Debug.Log("Mouse Up");
     }
     #endregion
 }

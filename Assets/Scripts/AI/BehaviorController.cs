@@ -27,6 +27,7 @@ public class BehaviorController
 
     public float action_time;
 
+    public Vector2 anchor_position; // the general point which the operator hovers around
     public Vector2 move_to_pos;
 
     // Move Command
@@ -36,6 +37,7 @@ public class BehaviorController
     {
         character = c;
         GetMoveDir = HoldCommand;
+        anchor_position = character.GetPosition();
     }
     public void SetLeader(Character new_leader)
     {
@@ -108,8 +110,9 @@ public class BehaviorController
     }
     private Vector2 HoldCommand()
     {
-        character.StopMove();
-        return Vector2.zero;
+        Vector2 move_dir = Vector2.zero;
+        move_dir = (anchor_position - character.GetPosition()).normalized;
+        return move_dir;
     }
 
     private Vector2 ObstacleAvoidanceVector()

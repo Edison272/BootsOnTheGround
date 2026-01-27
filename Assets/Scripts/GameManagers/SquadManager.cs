@@ -1,7 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+using Random = UnityEngine.Random;
 
 public enum CommandMode {Follow, Disperse, Engage, Hold, Count}
 /*
@@ -19,9 +20,6 @@ public class SquadManager : MonoBehaviour
 
     [Header("Managers")]
     public PlayerController player;
-
-    [Header("Commands")]
-    public CommandMode curr_command;
     
 
     public void CreateSquad()
@@ -46,9 +44,9 @@ public class SquadManager : MonoBehaviour
         }
     }
 
-    public void ToggleCommandMode()
-    {
-        curr_command = (CommandMode)(((int)curr_command + 1) % (int)CommandMode.Count-1);
-        Debug.Log("Set Command to: "  + curr_command);
-    }
+    // public void ToggleCommandMode()
+    // {
+    //     curr_command = (CommandMode)(((int)curr_command + 1) % (int)CommandMode.Count-1);
+    //     Debug.Log("Set Command to: "  + curr_command);
+    // }
 }

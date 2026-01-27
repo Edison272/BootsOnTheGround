@@ -25,7 +25,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] RawImage player_view; // a canvas raw image the player uses to see the world
     
     [SerializeField] Vector2 input_dir;
-    [SerializeField] private Vector3 look_pos;
+    public Vector3 canvas_pointer_pos {get; private set;}
+    public Vector3 look_pos {get; private set;}
     [SerializeField] Character active_character;
     bool in_command_mode = false; // can only move while in command mode
 
@@ -136,9 +137,9 @@ public class PlayerController : MonoBehaviour
         float view_x = (local_pos.x - rect.xMin) / rect.width;
         float view_y = (local_pos.y - rect.yMin) / rect.height;
         // set look pos
-        Vector3 raw_look_pos = new Vector3(view_x, view_y, 0);
-        active_character.Look(main_cam.ViewportToWorldPoint(raw_look_pos));
-        look_pos = main_cam.ViewportToWorldPoint(raw_look_pos);
+        canvas_pointer_pos = new Vector3(view_x, view_y, 0);
+        active_character.Look(main_cam.ViewportToWorldPoint(canvas_pointer_pos));
+        look_pos = main_cam.ViewportToWorldPoint(canvas_pointer_pos);
 
         // adjust reticle
         reticle.transform.position = (Vector2)look_pos;
@@ -161,7 +162,7 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 char_pos = active_character.GetPosition();
             // update look position if player moves around
-            Vector3 cam_pos = (look_pos - char_pos) * 0.15f;
+            Vector3 cam_pos = (look_pos - char_pos) * 0.25f;
             cam_pos.z = -10;
             main_cam.transform.position = cam_pos + char_pos;
         }

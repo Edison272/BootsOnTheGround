@@ -102,16 +102,16 @@ RectTransform:
   m_GameObject: {fileID: 836456985863763691}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -2.0837889}
-  m_LocalScale: {x: 0.12000002, y: 0.12000002, z: 0.12000002}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5272420894568899410}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 6.3465157, y: -0.21250439}
-  m_SizeDelta: {x: 200, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -5.653441, y: -3.4625242}
+  m_SizeDelta: {x: 464.8, y: 50}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &8250087876415531388
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -207,7 +207,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -451.82996, w: 16.61682}
+  m_margin: {x: 0, y: 0, z: -4.8115997, w: 16.61682}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -342,6 +342,7 @@ MonoBehaviour:
   ui_operator: {fileID: 0}
   squad_index: 0
   selection_effects: {fileID: 2751707500998753803}
+  hp_text: {fileID: 8427446208152197125}
   hp_bar: {fileID: 7693185434683780371}
   shield_bar: {fileID: 5216224632341201962}
 --- !u!1 &2751707500998753803
@@ -922,7 +923,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -5.528427, y: -2.4312742}
+  m_AnchoredPosition: {x: -5.528427, y: -5.681274}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &4136197148689501397

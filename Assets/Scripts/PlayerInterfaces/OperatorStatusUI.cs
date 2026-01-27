@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class OperatorStatusUI : MonoBehaviour
@@ -12,6 +13,7 @@ public class OperatorStatusUI : MonoBehaviour
     [SerializeField] GameObject selection_effects;
 
     [Header("Health Bar")]
+    public TextMeshProUGUI hp_text;
     public RectTransform hp_bar;
     public RectTransform shield_bar;
     
@@ -25,7 +27,9 @@ public class OperatorStatusUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        hp_text.text = ui_operator.curr_health + "/" + ui_operator.max_health;
+        hp_bar.transform.localScale = new Vector3(1 * ui_operator.health_ratio, 1, 0);
+        shield_bar.transform.localScale = Vector3.zero;
     }
 
     public void ConstructUI(Character this_op, int index)
