@@ -25,14 +25,26 @@ public class SquadManager : MonoBehaviour
     public void CreateSquad()
     {
         squad = new Character[squad_preset.Length];
+
+        // player position
+        squad[player_char_index] = squad_preset[player_char_index].GenerateOp(transform.position);
+        squad[player_char_index].is_player_squad = true;
+        player.SetPlayerCharacter(squad[player_char_index]);
+        squad[player_char_index].ToggleAI(false);
+
+        // set squadmates around player
         for(int i = 0; i < squad_preset.Length; i++)
         {
-            squad[i] = squad_preset[i].GenerateOp(transform.position);
+            if (i == player_char_index)
+            {
+                continue;
+            }
+            Vector3 vec_offset = (Vector3)(Vector2)Directions2D.eight_directions[(int)(7 * (i/(float)squad_preset.Length))];
+            squad[i] = squad_preset[i].GenerateOp(transform.position + vec_offset * Random.Range(1f, 2f));
             squad[i].is_player_squad = true;
             squad[i].ToggleAI(true);
         }
-        player.SetPlayerCharacter(squad[player_char_index]);
-        squad[player_char_index].ToggleAI(false);
+
         SetSquadLeader();
     }
 

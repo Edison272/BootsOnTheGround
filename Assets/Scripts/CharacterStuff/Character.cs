@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Character : MonoBehaviour, IHealth, IMovement
@@ -269,29 +270,29 @@ public class Character : MonoBehaviour, IHealth, IMovement
     #endregion
 
     #region Movement
-    public void SetMove(Vector2 set_move_dir) // get directional movement
+    public void SetMove(Vector2 set_move_dir) // get directional movement, useful for dynamic maneuvers
     {
-        move_dir = set_move_dir;
-        if (move_dir != Vector2.zero)
+        move_dir = set_move_dir * curr_speed;
+        behavior_controller.move_to_pos = GetPosition() + move_dir * curr_speed;
+    }
+    public void SetMovePos(Vector2 set_move_pos) // get target_position, useful for AI with discrete positioning
+    {
+        Vector2 pos_change = set_move_pos - GetPosition();
+        float time = pos_change.magnitude/curr_speed;
+        move_dir = pos_change / Mathf.Max(time, Time.fixedDeltaTime);
+    }
+
+    public void Move() 
+    {
+        entity_rb.velocity = move_dir;
+        //entity_rb.MovePosition(entity_rb.position + velocity + move_dir*Time.deltaTime*Mathf.Max(0, move_speed));
+        if (entity_rb.velocity.x > 0.1f || entity_rb.velocity.y > 0.1f)
         {
             anim.SetBool("Moving", true);
         } else
         {
             anim.SetBool("Moving", false);
         }
-        
-    }
-    public void SetMovePos(Vector2 set_move_pos) // get target_position
-    {
-        move_dir = (set_move_pos - entity_rb.velocity).normalized;
-        
-        anim.SetBool("Moving", true);
-    }
-
-    public void Move() 
-    {
-        entity_rb.velocity = move_dir*curr_speed;
-        //entity_rb.MovePosition(entity_rb.position + velocity + move_dir*Time.deltaTime*Mathf.Max(0, move_speed));
     }
     void IMovement.ForceMove(Vector2 direction, float scalar)
     {
