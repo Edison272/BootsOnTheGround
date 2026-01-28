@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] Vector2 input_dir;
     public Vector3 canvas_pointer_pos {get; private set;}
-    public Vector3 look_pos {get; private set;}
+    public Vector2 look_pos {get; private set;}
     [SerializeField] Character active_character;
     bool in_command_mode = false; // can only move while in command mode
 
@@ -112,6 +112,7 @@ public class PlayerController : MonoBehaviour
         controls.Disable();
     }
 
+    #region Updates
     // Update is called once per frame
     void Update()
     {
@@ -139,7 +140,7 @@ public class PlayerController : MonoBehaviour
         // set look pos
         canvas_pointer_pos = new Vector3(view_x, view_y, 0);
         active_character.Look(main_cam.ViewportToWorldPoint(canvas_pointer_pos));
-        look_pos = main_cam.ViewportToWorldPoint(canvas_pointer_pos);
+        look_pos = (Vector2)main_cam.ViewportToWorldPoint(canvas_pointer_pos);
 
         // adjust reticle
         reticle.transform.position = (Vector2)look_pos;
@@ -148,11 +149,11 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         
-        if (active_character)
-        {
-            Vector3 char_pos = active_character.GetPosition();
-            Debug.DrawLine(char_pos, look_pos);
-        }
+        // if (active_character)
+        // {
+        //     Vector3 char_pos = active_character.GetPosition();
+        //     Debug.DrawLine(char_pos, look_pos);
+        // }
         
     }
 
@@ -160,11 +161,23 @@ public class PlayerController : MonoBehaviour
     {
         if (active_character)
         {
-            Vector3 char_pos = active_character.GetPosition();
-            // update look position if player moves around
-            Vector3 cam_pos = (look_pos - char_pos) * 0.25f;
+            Vector2 char_pos = active_character.GetPosition();
+            // update cam position to move to look position within circular bounds
+            float cam_range = 5 + 1.5f * active_character.GetRangeScalar();
+            Vector2 offset = (look_pos - char_pos) * 0.5f;
+            if (offset.magnitude > cam_range)
+            {
+                offset = offset.normalized * cam_range;
+            }
+
+            Vector3 cam_pos = char_pos + offset;
             cam_pos.z = -10;
-            main_cam.transform.position = cam_pos + char_pos;
+
+            // Vector3 cam_pos = (look_pos + char_pos) * 0.5f;
+            // cam_pos.x = Mathf.Clamp(cam_pos.x, -cam_range + char_pos.x, cam_range + char_pos.x);
+            // cam_pos.y = Mathf.Clamp(cam_pos.y, -cam_range + char_pos.y, cam_range + char_pos.y);
+            // cam_pos.z = -10;
+            main_cam.transform.position = cam_pos;
         }
         if (curr_zoom_time > 0)
         {
@@ -172,7 +185,7 @@ public class PlayerController : MonoBehaviour
             player_view.rectTransform.localScale = new Vector3(scale_Val, scale_Val, 0);
         }
     }
-
+    #endregion
     #region Input Functions
     void Move(InputAction.CallbackContext context) {
         input_dir = context.ReadValue<Vector2>();

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 // control a character using a series of behaviors
@@ -30,7 +31,8 @@ public class BehaviorController
     public Vector2 anchor_position; // the general point which the operator hovers around
     public Vector2 move_to_pos; // the resulting position the bot aims to move to
 
-    public float base_follow_range = 10f;
+    [Header("Positioning")]
+    public float base_engage_dist = 6f;
 
     // Move Command
     Action MovementType;
@@ -54,20 +56,29 @@ public class BehaviorController
             character.target = targ;
         }
 
-        if (character.target && (character.GetPosition() - character.target.GetPosition()).sqrMagnitude <= character.curr_range * character.curr_range)
+        if (character.target)
         {
-            character.Look(character.target.GetPosition());
-            RaycastHit2D contact = Physics2D.Linecast(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, GameOverseer.avoid_map_mask);
-            if (!contact)
+            if ((character.GetPosition() - character.target.GetPosition()).sqrMagnitude <= character.curr_range * character.curr_range)
             {
-                character.UseMainItem();
-                Debug.DrawLine(character.GetPosition(), contact.point, Color.white);
-            } else
+                character.Look(character.target.GetPosition());
+                RaycastHit2D contact = Physics2D.Linecast(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, GameOverseer.avoid_map_mask);
+                if (!contact)
+                {
+                    character.UseMainItem();
+                    Debug.DrawLine(character.GetPosition(), contact.point, Color.white);
+                } else
+                {
+                    Debug.DrawLine(character.GetPosition(), contact.point, Color.grey);
+                }
+            } 
+            else
             {
-                Debug.DrawLine(character.GetPosition(), contact.point, Color.grey);
+                character.target = null;
             }
-        } else
+        } 
+        else
         {
+            character.Look(character.GetPosition() + character.last_move_dir);
             Debug.DrawLine(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, Color.black);
         }
         
@@ -95,11 +106,18 @@ public class BehaviorController
     }
     private void FollowCommand()
     {
-        Vector2 move_dir = Vector2.zero;
         anchor_position = leader.GetPosition();
 
-        move_dir = (leader.GetPosition() - character.GetPosition()).normalized;
-        character.SetMove(move_dir);
+        Vector2 obj_pos = leader.GetPosition() + leader.move_dir * 3;
+        if (character.target)
+        {
+            obj_pos = character.target.GetPosition();
+
+        }
+        Vector2 move_pos = (obj_pos - anchor_position).normalized * Mathf.Clamp((anchor_position - obj_pos).magnitude - character.curr_range, 1, base_engage_dist);
+
+        Debug.DrawLine(character.GetPosition(), move_pos);
+        character.SetMovePos(anchor_position + move_pos);
     }
     private void DisperseCommand()
     {
@@ -120,7 +138,7 @@ public class BehaviorController
         {
             Vector2 net_dir = (character.GetPosition() - contact.point).normalized;
             Debug.DrawLine(projection_pos, contact.point, Color.white);
-            character.SetMove(net_dir + ObstacleAvoidanceVector(1) * 0.1f);
+            character.SetMove(net_dir + ObstacleAvoidanceVector(0.1f));
         } else
         {
             character.SetMovePos(anchor_position);
@@ -138,7 +156,7 @@ public class BehaviorController
             RaycastHit2D contact = Physics2D.Linecast(projection_pos, check_pos, GameOverseer.avoid_map_mask);
             if (contact) // go in opposite direction if theres something in the way
             {
-                Vector2 opp_vector = (character.GetPosition() - contact.point);
+                Vector2 opp_vector = (character.GetPosition() - contact.point).normalized;
                 net_dir += opp_vector;
                 Debug.DrawLine(projection_pos, contact.point, Color.white);
                 //Debug.DrawLine(character.GetPosition(), net_dir, Color.red);

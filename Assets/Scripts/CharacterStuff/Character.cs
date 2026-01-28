@@ -38,6 +38,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public float curr_speed {get; private set;} = 1; //how fast an operator can move
     public float base_speed => base_data.speed;
     public Vector2 move_dir {get; private set;} = Vector2.zero;
+    public Vector2 last_move_dir {get; private set;} = Vector2.zero;
     public Vector2 force_dir {get; private set;} = Vector2.zero;
     public Rigidbody2D entity_rb {get; private set;}
     public float force_move_time {get; private set;}
@@ -155,18 +156,17 @@ public class Character : MonoBehaviour, IHealth, IMovement
                 SetSwitchItem();
             }
         }
-
-        // Update AI
-        if (is_AI_active)
-        {
-            behavior_controller.UpdateAI();
-        }
     }
 
     void FixedUpdate()
     {
         // movement
         Move();
+        // Update AI
+        if (is_AI_active)
+        {
+            behavior_controller.UpdateAI();
+        }
     }
     #endregion
 
@@ -253,8 +253,8 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
     void SingleAim() // aim one weapon from center of mass
     {   
-        if(direction_state.Item2 != aim_dir.y < 0) {
-            direction_state.Item2 = aim_dir.y < 0; // update direction state
+        if(direction_state.Item2 != aim_dir.y <= 0) {
+            direction_state.Item2 = aim_dir.y <= 0; // update direction state
 
             // switch hand  indexes
             main_hand.SetSiblingIndex(alt_hand.GetSiblingIndex());
@@ -280,18 +280,22 @@ public class Character : MonoBehaviour, IHealth, IMovement
         Vector2 pos_change = set_move_pos - GetPosition();
         float time = pos_change.magnitude/curr_speed;
         move_dir = pos_change / Mathf.Max(time, Time.fixedDeltaTime);
+        move_dir = new Vector2(Mathf.Round(move_dir.x * 100) / 100, Mathf.Round(move_dir.y * 100) / 100);
     }
 
     public void Move() 
     {
         entity_rb.velocity = move_dir;
         //entity_rb.MovePosition(entity_rb.position + velocity + move_dir*Time.deltaTime*Mathf.Max(0, move_speed));
-        if (entity_rb.velocity.x > 0.1f || entity_rb.velocity.y > 0.1f)
+        if (Mathf.Abs(entity_rb.velocity.x) > 0.01f || Mathf.Abs(entity_rb.velocity.y) > 0.01f)
         {
             anim.SetBool("Moving", true);
+            last_move_dir = entity_rb.velocity.normalized;
         } else
         {
             anim.SetBool("Moving", false);
+            move_dir = Vector2.zero;
+            entity_rb.velocity = Vector2.zero;
         }
     }
     void IMovement.ForceMove(Vector2 direction, float scalar)

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using System;
 
 [CreateAssetMenu(fileName = "Character", menuName = "ScriptableObjects/Entities/Operator", order = 1)]
 public class CharacterSO : ScriptableObject
