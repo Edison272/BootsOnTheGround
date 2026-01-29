@@ -33,7 +33,7 @@ MonoBehaviour:
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
-      value: 30
+      value: 400
     - key: recoil_scalar
       value: 0.1
   serialized_attacks:
@@ -58,5 +58,51 @@ MonoBehaviour:
         value: 0
       - key: melee_size
         value: 1
+      - key: movement
+        value: 0
+  - prefab: {fileID: 2522484320474615995, guid: 44487439069528a4487bb6846ebae17b,
+      type: 3}
+    attack_enum: 2
+    attack_data:
+      damage: 25
+      pierce: 0
+      knockback_amt: 0
+      effect_time: 0
+      slow_amt: 0
+    attack_stats:
+      stat_list:
+      - key: melee_duration
+        value: 0.15
+      - key: melee_count
+        value: 1
+      - key: melee_spread
+        value: 0
+      - key: even_spread
+        value: 0
+      - key: melee_size
+        value: 1.5
+      - key: movement
+        value: 0
+  - prefab: {fileID: 2522484320474615995, guid: 44487439069528a4487bb6846ebae17b,
+      type: 3}
+    attack_enum: 2
+    attack_data:
+      damage: 50
+      pierce: 0
+      knockback_amt: 0
+      effect_time: 0
+      slow_amt: 0
+    attack_stats:
+      stat_list:
+      - key: melee_duration
+        value: 0.15
+      - key: melee_count
+        value: 1
+      - key: melee_spread
+        value: 0
+      - key: even_spread
+        value: 0
+      - key: melee_size
+        value: 2.25
       - key: movement
         value: 0

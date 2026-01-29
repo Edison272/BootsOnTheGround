@@ -17,7 +17,7 @@ MonoBehaviour:
   speed: 5
   range: 10
   close_range: 3
-  char_prefab: {fileID: 3748648633196015940, guid: 551671337826080419fd5110a5f48b73,
+  char_prefab: {fileID: 3748648633196015940, guid: 6f0193247fccd844e8466e66f99063aa,
     type: 3}
   detection_mask:
     serializedVersion: 2

@@ -26,13 +26,16 @@ public class BehaviorController
     [SerializeField] Character character;
     [SerializeField] Character leader; // who they follow/ base their strategies around
 
-    public float action_time;
-
-    public Vector2 anchor_position; // the general point which the operator hovers around
-    public Vector2 move_to_pos; // the resulting position the bot aims to move to
+    [Header("Actions")]
+    float aggro_time = 1; // do an attack or something
+    float rest_time; // don't attack
+    float curr_time; // time buffer
+    bool is_acting = true;
 
     [Header("Positioning")]
     public float base_engage_dist = 6f;
+    public Vector2 anchor_position; // the general point which the operator hovers around
+    public Vector2 move_to_pos; // the resulting position the bot aims to move to
 
     // Move Command
     Action MovementType;
@@ -51,12 +54,27 @@ public class BehaviorController
     public void UpdateAI()
     {
         Character targ = GameOverseer.THE_OVERSEER.GetTargetCharacter(character.is_player_squad, character, character.curr_range);
-        if (character.target != targ)
+        if (targ && character.target != targ)
         {
             character.target = targ;
         }
 
-        if (character.target)
+        if (curr_time > 0)
+        {
+            curr_time -= Time.fixedDeltaTime;
+        } else
+        {
+            curr_time = 0;
+            is_acting = !is_acting;
+            if (!is_acting)
+            {
+                character.StopMainItem();
+            }
+            
+            curr_time += is_acting ? aggro_time : rest_time;
+        }
+
+        if (character.target && is_acting)
         {
             if ((character.GetPosition() - character.target.GetPosition()).sqrMagnitude <= character.curr_range * character.curr_range)
             {
@@ -85,6 +103,7 @@ public class BehaviorController
         MovementType();
     }
 
+    #region Commands
     public void SetCommand(CommandMode command)
     {
         Debug.Log(character.name + " will " + command);
@@ -126,7 +145,14 @@ public class BehaviorController
     private void EngageCommand()
     {
         Vector2 move_dir = Vector2.zero;
-        move_dir = (character.target.GetPosition() - character.GetPosition()).normalized;
+        if (character.target && (character.target.GetPosition() - character.GetPosition()).sqrMagnitude >= character.curr_range * character.curr_range)
+        {
+            move_dir = (character.target.GetPosition() - character.GetPosition()).normalized;
+        } else
+        {
+            move_dir = (anchor_position - character.GetPosition()).normalized;
+        }
+        
         character.SetMove(move_dir);
     }
     private void HoldCommand()
@@ -145,7 +171,8 @@ public class BehaviorController
         }
         
     }
-
+    #endregion
+    #region Helper Vector Weight Functions
     private Vector2 ObstacleAvoidanceVector(float avoidance_range)
     {
         Vector2 net_dir = Vector2.zero;
@@ -167,4 +194,13 @@ public class BehaviorController
         }
         return net_dir;
     }
+    #endregion
+    #region Data Modification Functions
+    public void SetActionTime(float a_time, float r_time, bool set_acting = false)
+    {
+        aggro_time = a_time;
+        rest_time = r_time;
+        is_acting = set_acting;
+    }
+    #endregion
 }

@@ -15,6 +15,7 @@ public class SquadManager : MonoBehaviour
     public CharacterSO[] squad_preset;
     public Character[] squad;
     public int player_char_index = 0;
+    public Character player_character;
 
     public Vector3 drop_pos;
 
@@ -28,9 +29,11 @@ public class SquadManager : MonoBehaviour
 
         // player position
         squad[player_char_index] = squad_preset[player_char_index].GenerateOp(transform.position);
-        squad[player_char_index].is_player_squad = true;
-        player.SetPlayerCharacter(squad[player_char_index]);
-        squad[player_char_index].ToggleAI(false);
+        player_character = squad[player_char_index];
+        player_character.is_player_squad = true;
+        player.SetPlayerCharacter(player_character);
+        player_character.ToggleAI(false);
+        
 
         // set squadmates around player
         for(int i = 0; i < squad_preset.Length; i++)
@@ -52,7 +55,7 @@ public class SquadManager : MonoBehaviour
     {
         foreach(Character squadmate in squad)
         {
-            squadmate.SetLeader(squad[player_char_index]);
+            squadmate.behavior_controller.SetLeader(squad[player_char_index]);
         }
     }
 
@@ -61,4 +64,9 @@ public class SquadManager : MonoBehaviour
     //     curr_command = (CommandMode)(((int)curr_command + 1) % (int)CommandMode.Count-1);
     //     Debug.Log("Set Command to: "  + curr_command);
     // }
+
+    public void SquadMateLost()
+    {
+        
+    }
 }

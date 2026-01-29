@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01d6ed72db80d54439e76ec450c54420, type: 3}
-  m_Name: Firefighter
+  m_Name: OverwatchOperator
   m_EditorClassIdentifier: 
-  character_name: Entity
+  character_name: Overwatch Operator
   health: 10000
   speed: 5
-  range: 10
-  close_range: 3
-  char_prefab: {fileID: 2589057906099434769, guid: 852337d3087a78c459ce5ccd025a9628,
+  range: 20
+  close_range: 5
+  char_prefab: {fileID: 451806311013494924, guid: 2d6ca66186eb2734abeb900d8825ba0f,
     type: 3}
   detection_mask:
     serializedVersion: 2
@@ -25,10 +25,5 @@ MonoBehaviour:
   max_space: 5
   inventory:
   - {fileID: 11400000, guid: 2d1f52d9f7d9dbf40a235b8fa7414e45, type: 2}
-  - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
-  - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
-  - {fileID: 11400000, guid: 8f509684d152d6d4d9baeacc717da5d2, type: 2}
   item_indexes:
   - {x: 0, y: -1}
-  - {x: 1, y: 2}
-  - {x: 3, y: -1}

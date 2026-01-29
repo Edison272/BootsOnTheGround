@@ -30,7 +30,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!squad_manager) {squad_manager = GameObject.Find("Squad Manager")?.GetComponent<SquadManager>();}
         if (!enemy_manager) {enemy_manager = GameObject.Find("Enemy Manager")?.GetComponent<EnemyManager>();}
         if (!map_manager) {map_manager = GameObject.Find("Map")?.GetComponent<MapManager>();}
-        if (!map_manager) {canvas_control = GameObject.Find("Canvas Controller")?.GetComponent<CanvasController>();}
+        if (!canvas_control) {canvas_control = GameObject.Find("Canvas Controller")?.GetComponent<CanvasController>();}
 
     }
 
@@ -53,7 +53,6 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
 
         // initialize squad and enemy managers in the right places
         squad_manager.CreateSquad();
-        enemy_manager.CreateEnemies();
         canvas_control.SetOperatorProfiles();
 
         // start player controller

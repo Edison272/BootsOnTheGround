@@ -62,9 +62,9 @@ public class Character : MonoBehaviour, IHealth, IMovement
     // [SerializeField] CircleCollider2D range_collider;
     // ContactPoint2D[] things_in_range;
     public Character target = null;
-    public int curr_range {get; private set;}
-    public int base_range => base_data.range;
-    public int close_range => base_data.close_range;
+    public float curr_range {get; private set;}
+    public float base_range => base_data.range;
+    public float close_range => base_data.close_range;
 
     [field: Header("AI")]
     public bool is_player_squad = false;
@@ -72,6 +72,9 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public BehaviorController behavior_controller {get; private set;}
     [field: Header("Character State")]
     public bool is_alive = true;
+    
+    [field: Header("Event Bus")]
+    public Action<Character> OnDeath;
 
     #region initalizers
     // get base data from a scriptable object and assign them here. Called once at when this object is created
@@ -108,6 +111,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
         }
 
         GetReady(); // set up all necessary data ready for the operator
+    }
+
+    public void ConnectToEventBus(Action<Character> death)
+    {
+        OnDeath = death;
     }
 
     // make sure the operator's data is set up
