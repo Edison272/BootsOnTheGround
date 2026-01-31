@@ -74,12 +74,12 @@ public class EnemyManager : MonoBehaviour
     public void SummonEnemyWave(Vector2 position, float radius, int min_enemy_amt, int max_enemy_amt)
     {
         int enemy_amt = Random.Range(min_enemy_amt, max_enemy_amt+1);
-        enemies = enemies_hashset.ToArray();
         for (int i = 0; i < enemy_amt; i++)
         {
             Vector3 spawn_pos = position + Random.insideUnitCircle * Random.Range(0, radius);
             CreateEnemy(Random.Range(0, enemy_presets.Length), spawn_pos);
         }
+        enemies = enemies_hashset.ToArray();
     }
 
     public void EnemyLost(Character character)

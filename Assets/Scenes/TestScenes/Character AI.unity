@@ -600,7 +600,7 @@ MonoBehaviour:
   player_control: {fileID: 545320181}
   squad_manager: {fileID: 1956860150}
   enemy_manager: {fileID: 1324054240}
-  map_manager: {fileID: 0}
+  map_manager: {fileID: 46239841}
   canvas_control: {fileID: 0}
 --- !u!4 &180107609
 Transform:
@@ -2016,7 +2016,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0
   far clip plane: 1000
   field of view: 60
   orthographic: 1
@@ -4785,7 +4785,7 @@ MonoBehaviour:
   wave_time: 2.5
   wave_radius: 3
   spawn_dist: 18
-  min_wave_size: 4
+  min_wave_size: 1
   max_wave_size: 10
   spawn_positions:
   - {x: -1, y: 0}

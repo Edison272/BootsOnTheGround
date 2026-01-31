@@ -125,15 +125,15 @@ public class BehaviorController
     }
     private void FollowCommand()
     {
-        anchor_position = leader.GetPosition();
+        anchor_position = (character.GetPosition() - leader.GetPosition()).normalized * 2f + leader.GetPosition();
 
-        Vector2 obj_pos = leader.GetPosition() + leader.move_dir * 3;
+        Vector2 obj_pos = anchor_position + leader.move_dir * 3;
         if (character.target)
         {
             obj_pos = character.target.GetPosition();
 
         }
-        Vector2 move_pos = (obj_pos - anchor_position).normalized * Mathf.Clamp((anchor_position - obj_pos).magnitude - character.curr_range, 1, base_engage_dist);
+        Vector2 move_pos = (obj_pos - anchor_position).normalized * Mathf.Clamp((anchor_position - obj_pos).magnitude, 2, base_engage_dist);
 
         Debug.DrawLine(character.GetPosition(), move_pos);
         character.SetMovePos(anchor_position + move_pos);
