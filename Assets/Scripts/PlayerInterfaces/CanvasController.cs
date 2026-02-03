@@ -8,6 +8,9 @@ using UnityEngine.UI;
 public class CanvasController : MonoBehaviour
 {
     public Animator ui_animator;
+    [Header("Cameras")]
+    [SerializeField] private Camera main_cam; // used to get the FULL area around the player and render that for player view
+    [SerializeField] private Camera play_cam; // the area the player sees and interacts with
 
     [Header("Squad Sidebar")]
     [SerializeField] GameObject squad_sidebar;
@@ -18,6 +21,7 @@ public class CanvasController : MonoBehaviour
     [SerializeField] Button[] available_commands;
     [SerializeField] TextMeshProUGUI player_mode_text;
     [SerializeField] public Character[] character_buffer;
+    [SerializeField] GameObject command_reticle;
 
     [Header("Command Internals")]
     private CommandMode curr_command = CommandMode.Follow;
@@ -32,6 +36,7 @@ public class CanvasController : MonoBehaviour
         foreach(OperatorStatusUI stat_ui in op_statuses)
         {
             stat_ui.gameObject.SetActive(false);
+            command_reticle.SetActive(false);
         }
     }
 
@@ -51,11 +56,16 @@ public class CanvasController : MonoBehaviour
                 }
             }
         }
+
+        if (command_reticle.activeSelf)
+        {
+            command_reticle.transform.position = GameOverseer.THE_OVERSEER.player_control.look_pos;
+        }
     }
     //  set up UI for all operators after they've been initialized. Called by Game Overseer
     public void SetOperatorProfiles()
     {
-        Character[] squad_members = GameOverseer.THE_OVERSEER.squad_manager.squad;
+        Character[] squad_members = GameOverseer.THE_OVERSEER.squad_manager.operators;
         movement_indicators = new GameObject[squad_members.Length];
         for (int i = 1; i < squad_members.Length; i++) // make UI for every operator EXCEPT the player
         {
@@ -85,7 +95,7 @@ public class CanvasController : MonoBehaviour
 
     public void SetBuffer(int index, bool is_present)
     {
-        character_buffer[index] = is_present ? GameOverseer.THE_OVERSEER.squad_manager.squad[index] : null;
+        character_buffer[index] = is_present ? GameOverseer.THE_OVERSEER.squad_manager.operators[index] : null;
     }
     public void SetCommandType(int command_mode)
     {
@@ -132,6 +142,16 @@ public class CanvasController : MonoBehaviour
         pointer_requested = false;
     }
 
+    #region Op Placement UI FX
+
+    public void ToggleReticleCommandUI(bool enable)
+    {
+        command_reticle.SetActive(enable);
+    }
+
+
+    #endregion
+
     #region Player-Canvas Input
     public void PlayerStartInput()
     {
@@ -146,5 +166,6 @@ public class CanvasController : MonoBehaviour
     {
         // Debug.Log("Mouse Up");
     }
+    
     #endregion
 }

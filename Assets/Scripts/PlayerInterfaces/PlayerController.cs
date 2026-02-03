@@ -32,7 +32,6 @@ public class PlayerController : MonoBehaviour
     bool in_command_mode = false; // can only move while in command mode
 
     [Header("Camera Stuff")]
-    [SerializeField] float cam_bound = 1f; // how far camera can travel from the player
     [SerializeField] float camera_zoom_time = 0.5f;
     public float base_zoom_level = 1;
     public float zoom_factor = 0.5f;
@@ -43,10 +42,11 @@ public class PlayerController : MonoBehaviour
     Vector2 save_mouse_pos = Vector2.zero;
 
     [Header("UI Stuff")]
-    [SerializeField] GameObject reticle;
+    [SerializeField] GameObject cursor;
 
     [Header("Squad Interactions")]
     public SquadManager squad;
+    private int op_select_index = -1;
     
     void Awake() // initialize values before player assumes control
     {
@@ -149,8 +149,8 @@ public class PlayerController : MonoBehaviour
         active_character.Look(main_cam.ViewportToWorldPoint(canvas_pointer_pos));
         look_pos = (Vector2)main_cam.ViewportToWorldPoint(canvas_pointer_pos);
 
-        // adjust reticle
-        reticle.transform.position = (Vector2)look_pos;
+        // adjust cursor
+        cursor.transform.position = (Vector2)look_pos;
     }
 
     void FixedUpdate()
@@ -227,12 +227,6 @@ public class PlayerController : MonoBehaviour
         main_continuous = false;
     }
     void MainAction() {active_character.UseMainItem();}
-    void PointCmdStart(InputAction.CallbackContext context) {
-        GameOverseer.THE_OVERSEER.canvas_control.PlayerStartInput();
-    }
-    void PointCmdEnd(InputAction.CallbackContext context) {
-        GameOverseer.THE_OVERSEER.canvas_control.PlayerEndInput();
-    }
     void AltStart(InputAction.CallbackContext context) {
         active_character.UseAltItem();
         alt_continuous = alt_hold_input;
@@ -251,56 +245,83 @@ public class PlayerController : MonoBehaviour
         SetAltAction(active_character.HasAltAction());
         SetCameraZoom(active_character.GetRangeScalar());
     }
-    void CmdMode(InputAction.CallbackContext context)
+    #endregion
+    #region Command Input Functions
+    void CmdMode(InputAction.CallbackContext context) // used to see the whole map ts
     {
         in_command_mode = !in_command_mode; // switch command mode type
         if (in_command_mode)
         {
-            // disable actions
-            SetMainAction(false);
-            SetAltAction(false);
-            controls.GroundActions.ResetItem.performed -= ResetItem;
-            controls.GroundActions.SwitchItem.performed -= SwitchItem;
+            // // disable actions
+            // SetMainAction(false);
+            // SetAltAction(false);
+            // controls.GroundActions.ResetItem.performed -= ResetItem;
+            // controls.GroundActions.SwitchItem.performed -= SwitchItem;
 
-            // enable click detection on canvas
-            ToggleCommandInput(true);
+            // // enable click detection on canvas
+            // ToggleCommandInput(true);
 
             // change UI
-            reticle.SetActive(false);
+            cursor.SetActive(false);
             SetCameraZoom(5);
 
             // save mouse pos
             save_mouse_pos = look_pos;
         } else
         {
-            // disable click detection on canvas
-            ToggleCommandInput(false);
+            // // disable click detection on canvas
+            // ToggleCommandInput(false);
             
-            // reenable actions
-            SetMainAction(true);
-            SetAltAction(active_character.HasAltAction());
-            controls.GroundActions.ResetItem.performed += ResetItem;
-            controls.GroundActions.SwitchItem.performed += SwitchItem;
+            // // reenable actions
+            // SetMainAction(true);
+            // SetAltAction(active_character.HasAltAction());
+            // controls.GroundActions.ResetItem.performed += ResetItem;
+            // controls.GroundActions.SwitchItem.performed += SwitchItem;
 
             // change UI
-            reticle.SetActive(true);
+            cursor.SetActive(true);
             SetCameraZoom(active_character.GetRangeScalar());
 
-            Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
-            Debug.Log(new Vector2(Screen.width / 2, Screen.height / 2));
+            //Mouse.current.WarpCursorPosition(new Vector2(Screen.width * canvas_pointer_pos.x, Screen.height * canvas_pointer_pos.y));
         }
         Cursor.visible = in_command_mode;
         GameOverseer.THE_OVERSEER.canvas_control.SetCommandUI(in_command_mode);
     }
 
-    void OpDeploy1(InputAction.CallbackContext context) {GetOperator(0);}
-    void OpDeploy2(InputAction.CallbackContext context) {GetOperator(1);}
-    void OpDeploy3(InputAction.CallbackContext context) {GetOperator(2);}
-    void OpDeploy4(InputAction.CallbackContext context) {GetOperator(3);}
+    void OpDeploy1(InputAction.CallbackContext context) {GetOperator(1);} // start at 1 bc og player char is in index 0
+    void OpDeploy2(InputAction.CallbackContext context) {GetOperator(2);}
+    void OpDeploy3(InputAction.CallbackContext context) {GetOperator(3);}
+    void OpDeploy4(InputAction.CallbackContext context) {GetOperator(4);}
 
     private void GetOperator(int deploy_index = 1)
     {
-        squad.DeployOperator(deploy_index, look_pos);
+        // cancel command if it was done twice
+        if (op_select_index == deploy_index) {
+            ResolveConfirm();
+        } 
+        // otherwise do smth cool n shi
+        else {
+            op_select_index = deploy_index;
+            ToggleCommandInput(true);
+            GameOverseer.THE_OVERSEER.canvas_control.ToggleReticleCommandUI(true);
+        }
+        
+    }
+
+    void ConfirmClickM1(InputAction.CallbackContext context) {
+        squad.UseOperator(op_select_index, look_pos);
+        ResolveConfirm(); // reset
+    }
+    void ConfirmClickM2(InputAction.CallbackContext context) {
+        squad.RetreatOperator(op_select_index);
+        ResolveConfirm(); // reset
+    }
+
+    void ResolveConfirm()
+    {
+        op_select_index = -1;
+        ToggleCommandInput(false);
+        GameOverseer.THE_OVERSEER.canvas_control.ToggleReticleCommandUI(false);
     }
 
     #endregion
@@ -311,13 +332,21 @@ public class PlayerController : MonoBehaviour
     {
         if (cmd_on)
         {
-            main_action.started += PointCmdStart;
-            main_action.canceled += PointCmdEnd;
+            main_action.started += ConfirmClickM1;
+            alt_action.started += ConfirmClickM2;
+            SetMainAction(false);
+            SetAltAction(false);
         } 
         else
         {
-            main_action.started -= PointCmdStart;
-            main_action.canceled -= PointCmdEnd;
+            main_action.started -= ConfirmClickM1;
+            alt_action.started -= ConfirmClickM2;
+            SetMainAction(true);
+            SetAltAction(active_character.HasAltAction());
+
+            // make sure the player doesn't leak an attack after commanding
+            main_continuous = false;
+            alt_continuous = false;
         }
     }
     void SetMainAction(bool enable) // set main action. set parameter false to turn off main actions
@@ -327,6 +356,7 @@ public class PlayerController : MonoBehaviour
             main_action.started += MainStart;
             main_action.canceled += MainStop;
             main_hold_input = active_character.main_item.IsHoldInput();
+            // allow continuous attacking between weapon switches
             main_continuous = main_action.IsPressed() && main_hold_input;
         }
         else
@@ -353,7 +383,6 @@ public class PlayerController : MonoBehaviour
             alt_continuous = false; // stop any ongoing attacks
         }
     }
-
 
     #endregion
 }

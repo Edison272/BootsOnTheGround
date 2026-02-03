@@ -9,18 +9,38 @@ public class Operator : Character
 {
     [Header("ID")]
     private OperatorSO base_data;
-    public OpClass op_class => base_data.op_class;
+    public OpClass op_class => this.base_data.op_class;
 
     [Header("Ability")]
     private float ability_cd;
 
-    public void AssignBaseOpData()
+    public bool is_deployed = false;
+
+    public void AssignBaseOpData(OperatorSO base_op_data)
+    {
+        AssignBaseData(base_op_data);
+    }
+
+    public void ToggleOp(bool isActive)
+    {
+        vfx_body.SetActive(isActive);
+        entity_rb.simulated = isActive;
+        main_body.GetComponent<SpriteRenderer>().enabled = isActive;
+        is_deployed = isActive;
+    }
+
+    public void Deploy()
+    {
+        GetReady();
+    }
+
+    public void Retreat()
     {
         
     }
 
-    public void UseAbility()
+    public void UseAbility(Vector2 target_area)
     {
-        
+        Debug.Log("I CAST FIREBALL");
     }
 }

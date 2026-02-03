@@ -30,6 +30,7 @@ public class CharacterSO : ScriptableObject
         GameObject op_object = MonoBehaviour.Instantiate(char_prefab, pos, Quaternion.identity);
         Character new_op = op_object.GetComponent<Character>();
         new_op.AssignBaseData(this);
+        new_op.GetReady();
 
         return new_op;
     }

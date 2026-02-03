@@ -8,12 +8,16 @@ public class OperatorSO : CharacterSO
 {
     //id
     public OpClass op_class = OpClass.Vanguard;
+    [Header("Deployment")]
+    public int command_cost = 3;
+    public float deployment_speed = 1f; // how long the player needs to wait before the operator is deployed to the field
+    public float field_time = -1f; // how long the operator is on the field. -1 means the operator stays indefinitely
 
     public Operator GenerateOp(Vector3 pos)
     {
         GameObject op_object = MonoBehaviour.Instantiate(char_prefab, pos, Quaternion.identity);
         Operator new_op = op_object.GetComponent<Operator>();
-        new_op.AssignBaseData(this);
+        new_op.AssignBaseOpData(this);
 
         return new_op;
     }

@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    public CharacterSO[] enemy_presets;
-    public Character[] enemies = new Character[0];
-    private HashSet<Character> enemies_hashset = new HashSet<Character>();
+    [SerializeField] private CharacterSO[] enemy_presets;
+    public HashSet<Character> enemies = new HashSet<Character>();
 
     public Vector3 drop_pos;
     
@@ -28,18 +27,6 @@ public class EnemyManager : MonoBehaviour
         new Vector2(0.8660254f, -0.5f)
     }; // TEMPORARY
 
-    public void CreateEnemies()
-    {
-        enemies = new Character[enemy_presets.Length];
-        for(int i = 0; i < enemy_presets.Length; i++)
-        {
-            enemies[i] = enemy_presets[i].GenerateChar(transform.position);
-            enemies[i].gameObject.tag = this.gameObject.tag;
-            enemies[i].ToggleAI(true);
-            enemies[i].SetCommandBehavior(CommandMode.Hold);
-        }
-    }
-
     public void CreateEnemy(int index, Vector3 position)
     {
         // setup the enemy character file
@@ -52,9 +39,6 @@ public class EnemyManager : MonoBehaviour
         new_enemy.behavior_controller.anchor_position = GameOverseer.THE_OVERSEER.squad_manager.player_character.GetPosition();
         new_enemy.SetCommandBehavior(CommandMode.Engage);
         new_enemy.behavior_controller.SetActionTime(1, 2);
-
-        // add to data structures
-        enemies_hashset.Add(new_enemy);
     }
 
     public void Update()
@@ -79,11 +63,10 @@ public class EnemyManager : MonoBehaviour
             Vector3 spawn_pos = position + Random.insideUnitCircle * Random.Range(0, radius);
             CreateEnemy(Random.Range(0, enemy_presets.Length), spawn_pos);
         }
-        enemies = enemies_hashset.ToArray();
     }
 
     public void EnemyLost(Character character)
     {
-        enemies_hashset.Remove(character);
+        enemies.Remove(character);
     }
 }

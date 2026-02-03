@@ -28,7 +28,7 @@ public class BehaviorController
 
     [Header("Actions")]
     float aggro_time = 1; // do an attack or something
-    float rest_time; // don't attack
+    float rest_time = 0f; // don't attack
     float curr_time; // time buffer
     bool is_acting = true;
 

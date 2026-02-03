@@ -316,7 +316,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62069ca382fc037498b666a80ffef526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  base_data: {fileID: 0}
   main_body: {fileID: 2324682301764112193}
   vfx_body: {fileID: 7941020676620913669}
   front: {fileID: 2697784800219195457}
@@ -333,7 +332,6 @@ MonoBehaviour:
   target: {fileID: 0}
   is_player_squad: 0
   is_alive: 1
-  base_data: {fileID: 0}
 --- !u!95 &6077050304190322983
 Animator:
   serializedVersion: 7

@@ -13,11 +13,12 @@ public enum CommandMode {Follow, Disperse, Engage, Hold, Count}
 */
 public class SquadManager : MonoBehaviour
 {
-    public CharacterSO[] squad_preset;
-    public OperatorSO[] operator_preset;
-    public Character[] squad;
+    public CharacterSO[] helper_presets;
+    public OperatorSO[] operator_presets;
+    public HashSet<Character> squad;
+    public HashSet<Character> helpers;
     public Operator[] operators;
-    public int player_char_index = 0;
+    public static readonly int player_char_index = 0; // PLAYER CHARACTER IS FIRST IN SQUAD ARRAY
     public Character player_character;
 
     public Vector3 drop_pos;
@@ -25,32 +26,25 @@ public class SquadManager : MonoBehaviour
     [Header("Managers")]
     public PlayerController player;
     
-
-    public void CreateSquad()
+    public void InitializeAllies()
     {
-        squad = new Character[squad_preset.Length];
-        operators = new Operator[operator_preset.Length];
+        squad = new HashSet<Character>();
+        helpers = new HashSet<Character>();
+        operators = new Operator[operator_presets.Length];
 
-        // player position
-        squad[player_char_index] = squad_preset[player_char_index].GenerateChar(transform.position);
-        player_character = squad[player_char_index];
+        CreateOperators();
+
+        // Activate the player-controlled operator
+        player_character = operators[player_char_index];
         player_character.is_player_squad = true;
         player.SetPlayerCharacter(player_character);
         player_character.ToggleAI(false);
-        
+        UseOperator(player_char_index, transform.position);
+    }
 
-        // set squadmates around player
-        for(int i = 0; i < squad_preset.Length; i++)
-        {
-            if (i == player_char_index)
-            {
-                continue;
-            }
-            Vector3 vec_offset = (Vector3)(Vector2)Directions2D.eight_directions[(int)(7 * (i/(float)squad_preset.Length))];
-            squad[i] = squad_preset[i].GenerateChar(transform.position + vec_offset * Random.Range(1f, 2f));
-            squad[i].is_player_squad = true;
-            squad[i].ToggleAI(true);
-        }
+    public void CreateSquad()
+    {
+
 
         SetSquadLeader();
     }
@@ -59,18 +53,45 @@ public class SquadManager : MonoBehaviour
     {
         foreach(Character squadmate in squad)
         {
-            squadmate.behavior_controller.SetLeader(squad[player_char_index]);
+            squadmate.behavior_controller.SetLeader(operators[player_char_index]);
         }
     }
 
-    public void DeployOperator(int op_index, Vector2 deploy_pos)
+    public void CreateOperators()
     {
-        op_index = Mathf.Clamp(op_index, 0, operator_preset.Length-1);
-        if (!operators[op_index])
+        // setup all operators. Assign their values but do not set them to active
+        for(int i = 0; i < operators.Length; i++)
         {
-            operators[player_char_index] = operator_preset[op_index].GenerateOp(deploy_pos);
-            operators[player_char_index].is_player_squad = true;
-            operators[player_char_index].ToggleAI(true);
+            operators[i] = operator_presets[i].GenerateOp(Vector2.zero);
+            operators[i].is_player_squad = true;
+            operators[i].ToggleAI(true);
+            operators[i].ToggleOp(false);
+            squad.Add(operators[i]);
+        }
+    }
+
+    public void UseOperator(int op_index, Vector2 deploy_pos)
+    {
+        Operator select_op = operators[Mathf.Clamp(op_index, 0, operator_presets.Length-1)];
+        if (!select_op.is_deployed)
+        {
+            select_op.SetPosition(deploy_pos);
+            select_op.ToggleOp(true);
+            select_op.Deploy();
+        }
+        else
+        {
+            select_op.UseAbility(deploy_pos);
+        }
+    }
+
+    public void RetreatOperator(int op_index)
+    {
+        Operator select_op = operators[Mathf.Clamp(op_index, 0, operator_presets.Length-1)];
+        if (select_op.is_deployed)
+        {
+            select_op.ToggleOp(false);
+            select_op.is_deployed = false;
         }
     }
 

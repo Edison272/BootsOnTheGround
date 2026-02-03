@@ -71,7 +71,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     protected bool is_AI_active = false;
     public BehaviorController behavior_controller {get; private set;}
     [field: Header("Character State")]
-    public bool is_alive = true;
+    public bool is_alive;
     
     [field: Header("Event Bus")]
     public Action<Character> OnDeath;
@@ -91,6 +91,14 @@ public class Character : MonoBehaviour, IHealth, IMovement
         akimbo_hand_pos = ((Vector2) main_hand.localPosition, (Vector2) alt_hand.localPosition);
         single_hand_pos = new Vector2(0, main_hand.localPosition.y);
 
+        // set basic sibling order of entity VFX (operator faces BOTTOM RIGHT by default)
+        anim.SetBool("FaceFront", true);
+        main_hand.SetSiblingIndex(4);
+        front.SetSiblingIndex(3);
+        vfx_body.transform.SetSiblingIndex(2);
+        back.SetSiblingIndex(1);
+        alt_hand.SetSiblingIndex(0);
+
         // setup health
         curr_health = max_health;
         health_ratio = 1;
@@ -109,8 +117,32 @@ public class Character : MonoBehaviour, IHealth, IMovement
                 inventory[alt_item] = base_data.inventory[alt_item].GenerateItem(alt_hand);
             }
         }
+        // set initial active items
+        foreach(Item item in inventory)
+        {
+            item.NewUser(this);
+            item.UnequipItem();
+        }
+        EquipActive(0);
+        SetSwitchItem();
+        SetAimStyle(alt_item);
 
-        GetReady(); // set up all necessary data ready for the operator
+        // initialize default look position
+        aim_dir = new Vector2(1, -1);
+        Look(entity_rb.position + aim_dir);
+
+        // setup AI
+        behavior_controller = new BehaviorController(this);
+    }
+    // make sure the operator LOOKS ready
+    public void GetReady()
+    {        
+        // equip items
+        SetSwitchItem();
+        SetAimStyle(alt_item);
+        // initialize default look position
+        aim_dir = new Vector2(1, -1);
+        Look(entity_rb.position + aim_dir);
     }
 
     public void ResetData()
@@ -123,34 +155,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
         OnDeath = death;
     }
 
-    // make sure the operator's data is set up
-    public void GetReady()
-    {
-        // set basic sibling order of entity VFX (operator faces BOTTOM RIGHT by default)
-        anim.SetBool("FaceFront", true);
-        main_hand.SetSiblingIndex(4);
-        front.SetSiblingIndex(3);
-        vfx_body.transform.SetSiblingIndex(2);
-        back.SetSiblingIndex(1);
-        alt_hand.SetSiblingIndex(0);
-        
-        // set initial active items
-        foreach(Item item in inventory)
-        {
-            item.NewUser(this);
-            item.UnequipItem();
-        }
-        // setup first item and make it ready to aim and allat
-        EquipActive(0);
-        SetSwitchItem();
-        SetAimStyle(alt_item);
-        // initialize default look position
-        aim_dir = new Vector2(1, -1);
-        Look(entity_rb.position + aim_dir);
-
-        // setup AI
-        behavior_controller = new BehaviorController(this);
-    }
     #endregion
 
     #region Updates
@@ -283,6 +287,10 @@ public class Character : MonoBehaviour, IHealth, IMovement
     #endregion
 
     #region Movement
+    public void SetPosition(Vector2 new_position)
+    {
+        main_body.transform.position = new_position;
+    }
     public void SetMove(Vector2 set_move_dir) // get directional movement, useful for dynamic maneuvers
     {
         move_dir = set_move_dir * curr_speed;

@@ -52,7 +52,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         player_control.squad = squad_manager;
 
         // initialize squad and enemy managers in the right places
-        squad_manager.CreateSquad();
+        squad_manager.InitializeAllies();
         canvas_control.SetOperatorProfiles();
 
         // start player controller
@@ -63,7 +63,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     #region Targetting
     public Character GetTargetCharacter(bool is_squad, Character curr_character, float max_range = 1000f, TargetType targ_type = TargetType.Closest)
     {
-        Character[] check_data = is_squad ? enemy_manager.enemies : squad_manager.squad;
+        IEnumerable<Character> check_data = is_squad ? enemy_manager.enemies : squad_manager.squad;
         Func<Character, Character, float> ScoringFunc = GetNearestScore;
         switch (targ_type)
         {
@@ -85,7 +85,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         Character prime_target = null;
         foreach(Character target in check_data)
         {
-            if (!target || (curr_character.GetPosition() - target.GetPosition()).sqrMagnitude > max_range * max_range)
+            if (!target || !target.is_alive || (curr_character.GetPosition() - target.GetPosition()).sqrMagnitude > max_range * max_range)
             {
                 continue;
             }
