@@ -106,7 +106,7 @@ public class BehaviorController
     #region Commands
     public void SetCommand(CommandMode command)
     {
-        Debug.Log(character.name + " will " + command);
+        //Debug.Log(character.name + " will " + command);
         switch (command)
         {
             case CommandMode.Follow:

@@ -33,7 +33,7 @@ public class EnemyManager : MonoBehaviour
         enemies = new Character[enemy_presets.Length];
         for(int i = 0; i < enemy_presets.Length; i++)
         {
-            enemies[i] = enemy_presets[i].GenerateOp(transform.position);
+            enemies[i] = enemy_presets[i].GenerateChar(transform.position);
             enemies[i].gameObject.tag = this.gameObject.tag;
             enemies[i].ToggleAI(true);
             enemies[i].SetCommandBehavior(CommandMode.Hold);
@@ -43,7 +43,7 @@ public class EnemyManager : MonoBehaviour
     public void CreateEnemy(int index, Vector3 position)
     {
         // setup the enemy character file
-        Character new_enemy = enemy_presets[index].GenerateOp(position);
+        Character new_enemy = enemy_presets[index].GenerateChar(position);
         new_enemy.gameObject.tag = this.gameObject.tag;
         new_enemy.ConnectToEventBus(EnemyLost);
 

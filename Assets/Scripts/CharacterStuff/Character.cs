@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Character : MonoBehaviour, IHealth, IMovement
 {
-    [SerializeField] CharacterSO base_data;
+    private CharacterSO base_data;
 
     [field: Header("Body Parts")]
     public GameObject main_body;//basically the hitbox
@@ -20,18 +20,18 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
     [field: Header("VFX")]
     public Animator anim;
-    private Vector2 sprite_center; // center of mass of this srpite
+    protected Vector2 sprite_center; // center of mass of this srpite
     public float hitbox_radius {get; private set;}
     // character has 4 VFX states based on aim direciton, stored as two booleans, X and Y
     // T, F = Right Bottom | T, T = Right Top | F, T = Left Top | F, F = Left Bottom
-    (bool, bool) direction_state = (true, true);
-    (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.6f), new Vector2 (0.5f, 0.6f));  // (main pos (left), alt pos (right))
+    protected (bool, bool) direction_state = (true, true);
+    protected (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.6f), new Vector2 (0.5f, 0.6f));  // (main pos (left), alt pos (right))
     Vector2 single_hand_pos = new Vector2 (0, 0.6f);  // (main pos, alt pos)
 
     //aim & handling
     [field: Header("Aiming")]
     public Vector2 aim_dir {get; private set;} = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
-    private Action AimStyle; // single-item or akimbo aiming?
+    protected Action AimStyle; // single-item or akimbo aiming?
     public  float aim_angle = 0; // angle (deg) the character is looking in
     
     [field: Header("Movement")]
@@ -51,12 +51,12 @@ public class Character : MonoBehaviour, IHealth, IMovement
     [field: Header("Inventory")]
     public Item[] inventory;
     public Vector2Int[] item_indexes;  // Access items from the items list with indexes. Vector X for Main Item, Vector Y for Alt Item
-    int curr_item_index = 0;           // access items indexes list
+    protected int curr_item_index = 0;           // access items indexes list
     public Item main_item;
     public Item alt_item;
-    (int, int) current_indexes;
-    float switch_cd = 0.5f; // time the char must wait before they can switch to the next weapon
-    float curr_switch_cd = 0;
+    protected (int, int) current_indexes;
+    protected float switch_cd = 0.5f; // time the char must wait before they can switch to the next weapon
+    protected float curr_switch_cd = 0;
 
     [field: Header("Detection")]
     // [SerializeField] CircleCollider2D range_collider;
@@ -68,7 +68,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
     [field: Header("AI")]
     public bool is_player_squad = false;
-    bool is_AI_active = false;
+    protected bool is_AI_active = false;
     public BehaviorController behavior_controller {get; private set;}
     [field: Header("Character State")]
     public bool is_alive = true;
@@ -111,6 +111,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
         }
 
         GetReady(); // set up all necessary data ready for the operator
+    }
+
+    public void ResetData()
+    {
+        
     }
 
     public void ConnectToEventBus(Action<Character> death)
@@ -201,7 +206,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public void Aim()
     {        
         // aim the items
-        main_item.Aim(aim_dir);
+        main_item?.Aim(aim_dir);
         alt_item?.Aim(aim_dir);
     }
 

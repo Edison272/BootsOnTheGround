@@ -181,7 +181,7 @@ Transform:
   m_GameObject: {fileID: 2589057906099434769}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.525, y: 0.548, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -338,6 +338,7 @@ MonoBehaviour:
   alt_item: {fileID: 0}
   target: {fileID: 0}
   is_player_squad: 0
+  is_alive: 1
 --- !u!95 &234494506826388213
 Animator:
   serializedVersion: 7

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using System;
 
-[CreateAssetMenu(fileName = "Character", menuName = "ScriptableObjects/Entities/Operator", order = 1)]
+[CreateAssetMenu(fileName = "Character", menuName = "ScriptableObjects/Entities/Character", order = 1)]
 public class CharacterSO : ScriptableObject
 {
     //id
@@ -25,7 +25,7 @@ public class CharacterSO : ScriptableObject
     public ItemSO[] inventory;
     public Vector2Int[] item_indexes;
 
-    public Character GenerateOp(Vector3 pos)
+    public Character GenerateChar(Vector3 pos)
     {
         GameObject op_object = MonoBehaviour.Instantiate(char_prefab, pos, Quaternion.identity);
         Character new_op = op_object.GetComponent<Character>();

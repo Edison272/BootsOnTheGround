@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 using Random = UnityEngine.Random;
@@ -13,7 +14,9 @@ public enum CommandMode {Follow, Disperse, Engage, Hold, Count}
 public class SquadManager : MonoBehaviour
 {
     public CharacterSO[] squad_preset;
+    public OperatorSO[] operator_preset;
     public Character[] squad;
+    public Operator[] operators;
     public int player_char_index = 0;
     public Character player_character;
 
@@ -26,9 +29,10 @@ public class SquadManager : MonoBehaviour
     public void CreateSquad()
     {
         squad = new Character[squad_preset.Length];
+        operators = new Operator[operator_preset.Length];
 
         // player position
-        squad[player_char_index] = squad_preset[player_char_index].GenerateOp(transform.position);
+        squad[player_char_index] = squad_preset[player_char_index].GenerateChar(transform.position);
         player_character = squad[player_char_index];
         player_character.is_player_squad = true;
         player.SetPlayerCharacter(player_character);
@@ -43,7 +47,7 @@ public class SquadManager : MonoBehaviour
                 continue;
             }
             Vector3 vec_offset = (Vector3)(Vector2)Directions2D.eight_directions[(int)(7 * (i/(float)squad_preset.Length))];
-            squad[i] = squad_preset[i].GenerateOp(transform.position + vec_offset * Random.Range(1f, 2f));
+            squad[i] = squad_preset[i].GenerateChar(transform.position + vec_offset * Random.Range(1f, 2f));
             squad[i].is_player_squad = true;
             squad[i].ToggleAI(true);
         }
@@ -56,6 +60,17 @@ public class SquadManager : MonoBehaviour
         foreach(Character squadmate in squad)
         {
             squadmate.behavior_controller.SetLeader(squad[player_char_index]);
+        }
+    }
+
+    public void DeployOperator(int op_index, Vector2 deploy_pos)
+    {
+        op_index = Mathf.Clamp(op_index, 0, operator_preset.Length-1);
+        if (!operators[op_index])
+        {
+            operators[player_char_index] = operator_preset[op_index].GenerateOp(deploy_pos);
+            operators[player_char_index].is_player_squad = true;
+            operators[player_char_index].ToggleAI(true);
         }
     }
 

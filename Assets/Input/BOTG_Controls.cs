@@ -153,6 +153,42 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpDeploy1"",
+                    ""type"": ""Button"",
+                    ""id"": ""7b811eb7-ec39-4673-a2b9-7f362ca6aa81"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpDeploy2"",
+                    ""type"": ""Button"",
+                    ""id"": ""ac18a45b-4490-485e-a9da-7bfaabcc23aa"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpDeploy3"",
+                    ""type"": ""Button"",
+                    ""id"": ""a8efc324-b814-4b38-a113-f63c5f744760"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpDeploy4"",
+                    ""type"": ""Button"",
+                    ""id"": ""7108bf40-e9e9-45e6-a689-c232a694181e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -324,7 +360,7 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""f558ef83-bb83-43c5-b09a-62a0a779467e"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -335,11 +371,55 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a4a51f2b-d3cc-49a2-bb11-adad363464c4"",
-                    ""path"": ""<Keyboard>/tab"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Toggle Command Mode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2584f0d3-89a0-4b83-ae1d-403fe7bcc124"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpDeploy1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1b9ba60b-8ba3-428f-b409-fea2a0136107"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpDeploy2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b6a433e9-ec43-46b9-bdfe-f23607adb8f0"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpDeploy3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""15cd2e48-67a0-4c98-9065-fb87b49787bf"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpDeploy4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -934,6 +1014,10 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         m_GroundActions_ResetItem = m_GroundActions.FindAction("Reset Item", throwIfNotFound: true);
         m_GroundActions_SwitchItem = m_GroundActions.FindAction("Switch Item", throwIfNotFound: true);
         m_GroundActions_ToggleCommandMode = m_GroundActions.FindAction("Toggle Command Mode", throwIfNotFound: true);
+        m_GroundActions_OpDeploy1 = m_GroundActions.FindAction("OpDeploy1", throwIfNotFound: true);
+        m_GroundActions_OpDeploy2 = m_GroundActions.FindAction("OpDeploy2", throwIfNotFound: true);
+        m_GroundActions_OpDeploy3 = m_GroundActions.FindAction("OpDeploy3", throwIfNotFound: true);
+        m_GroundActions_OpDeploy4 = m_GroundActions.FindAction("OpDeploy4", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1034,6 +1118,10 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_GroundActions_ResetItem;
     private readonly InputAction m_GroundActions_SwitchItem;
     private readonly InputAction m_GroundActions_ToggleCommandMode;
+    private readonly InputAction m_GroundActions_OpDeploy1;
+    private readonly InputAction m_GroundActions_OpDeploy2;
+    private readonly InputAction m_GroundActions_OpDeploy3;
+    private readonly InputAction m_GroundActions_OpDeploy4;
     /// <summary>
     /// Provides access to input actions defined in input action map "GroundActions".
     /// </summary>
@@ -1073,6 +1161,22 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "GroundActions/ToggleCommandMode".
         /// </summary>
         public InputAction @ToggleCommandMode => m_Wrapper.m_GroundActions_ToggleCommandMode;
+        /// <summary>
+        /// Provides access to the underlying input action "GroundActions/OpDeploy1".
+        /// </summary>
+        public InputAction @OpDeploy1 => m_Wrapper.m_GroundActions_OpDeploy1;
+        /// <summary>
+        /// Provides access to the underlying input action "GroundActions/OpDeploy2".
+        /// </summary>
+        public InputAction @OpDeploy2 => m_Wrapper.m_GroundActions_OpDeploy2;
+        /// <summary>
+        /// Provides access to the underlying input action "GroundActions/OpDeploy3".
+        /// </summary>
+        public InputAction @OpDeploy3 => m_Wrapper.m_GroundActions_OpDeploy3;
+        /// <summary>
+        /// Provides access to the underlying input action "GroundActions/OpDeploy4".
+        /// </summary>
+        public InputAction @OpDeploy4 => m_Wrapper.m_GroundActions_OpDeploy4;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1120,6 +1224,18 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
             @ToggleCommandMode.started += instance.OnToggleCommandMode;
             @ToggleCommandMode.performed += instance.OnToggleCommandMode;
             @ToggleCommandMode.canceled += instance.OnToggleCommandMode;
+            @OpDeploy1.started += instance.OnOpDeploy1;
+            @OpDeploy1.performed += instance.OnOpDeploy1;
+            @OpDeploy1.canceled += instance.OnOpDeploy1;
+            @OpDeploy2.started += instance.OnOpDeploy2;
+            @OpDeploy2.performed += instance.OnOpDeploy2;
+            @OpDeploy2.canceled += instance.OnOpDeploy2;
+            @OpDeploy3.started += instance.OnOpDeploy3;
+            @OpDeploy3.performed += instance.OnOpDeploy3;
+            @OpDeploy3.canceled += instance.OnOpDeploy3;
+            @OpDeploy4.started += instance.OnOpDeploy4;
+            @OpDeploy4.performed += instance.OnOpDeploy4;
+            @OpDeploy4.canceled += instance.OnOpDeploy4;
         }
 
         /// <summary>
@@ -1152,6 +1268,18 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
             @ToggleCommandMode.started -= instance.OnToggleCommandMode;
             @ToggleCommandMode.performed -= instance.OnToggleCommandMode;
             @ToggleCommandMode.canceled -= instance.OnToggleCommandMode;
+            @OpDeploy1.started -= instance.OnOpDeploy1;
+            @OpDeploy1.performed -= instance.OnOpDeploy1;
+            @OpDeploy1.canceled -= instance.OnOpDeploy1;
+            @OpDeploy2.started -= instance.OnOpDeploy2;
+            @OpDeploy2.performed -= instance.OnOpDeploy2;
+            @OpDeploy2.canceled -= instance.OnOpDeploy2;
+            @OpDeploy3.started -= instance.OnOpDeploy3;
+            @OpDeploy3.performed -= instance.OnOpDeploy3;
+            @OpDeploy3.canceled -= instance.OnOpDeploy3;
+            @OpDeploy4.started -= instance.OnOpDeploy4;
+            @OpDeploy4.performed -= instance.OnOpDeploy4;
+            @OpDeploy4.canceled -= instance.OnOpDeploy4;
         }
 
         /// <summary>
@@ -1501,6 +1629,34 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnToggleCommandMode(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "OpDeploy1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnOpDeploy1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "OpDeploy2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnOpDeploy2(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "OpDeploy3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnOpDeploy3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "OpDeploy4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnOpDeploy4(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

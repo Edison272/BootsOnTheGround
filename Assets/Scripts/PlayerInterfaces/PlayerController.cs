@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Vector2 input_dir;
     public Vector3 canvas_pointer_pos {get; private set;}
     public Vector2 look_pos {get; private set;}
+    private Vector2 raw_look_pos;
     [SerializeField] Character active_character;
     bool in_command_mode = false; // can only move while in command mode
 
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
     float curr_zoom; // set current zoom
     float target_zoom; // set current zoom
     float curr_zoom_time;
+    Vector2 save_mouse_pos = Vector2.zero;
 
     [Header("UI Stuff")]
     [SerializeField] GameObject reticle;
@@ -89,6 +91,11 @@ public class PlayerController : MonoBehaviour
         controls.GroundActions.SwitchItem.performed += SwitchItem;
         // Toggle Command Mode
         controls.GroundActions.ToggleCommandMode.performed += CmdMode;
+        // Deploy Op with num keys
+        controls.GroundActions.OpDeploy1.performed += OpDeploy1;
+        controls.GroundActions.OpDeploy2.performed += OpDeploy2;
+        controls.GroundActions.OpDeploy3.performed += OpDeploy3;
+        controls.GroundActions.OpDeploy4.performed += OpDeploy4;
 
         SetCameraZoom(active_character.GetRangeScalar());
         GameOverseer.THE_OVERSEER.canvas_control.SetCommandUI(in_command_mode);
@@ -132,11 +139,11 @@ public class PlayerController : MonoBehaviour
         }
 
         // constantly read looking value
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(player_view.rectTransform, looking.ReadValue<Vector2>(), play_cam, out Vector2 local_pos);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(player_view.rectTransform, looking.ReadValue<Vector2>(), play_cam, out raw_look_pos);
         Rect rect = player_view.rectTransform.rect;
         // get viewport coordinates
-        float view_x = (local_pos.x - rect.xMin) / rect.width;
-        float view_y = (local_pos.y - rect.yMin) / rect.height;
+        float view_x = (raw_look_pos.x - rect.xMin) / rect.width;
+        float view_y = (raw_look_pos.y - rect.yMin) / rect.height;
         // set look pos
         canvas_pointer_pos = new Vector3(view_x, view_y, 0);
         active_character.Look(main_cam.ViewportToWorldPoint(canvas_pointer_pos));
@@ -161,7 +168,7 @@ public class PlayerController : MonoBehaviour
     {
         if (active_character)
         {
-            Vector2 char_pos = active_character.GetPosition();
+            Vector2 char_pos = active_character.gameObject.transform.position;
             // update cam position to move to look position within circular bounds
             float cam_range = 5 + 1.5f * active_character.GetRangeScalar();
             Vector2 offset = (look_pos - char_pos) * 0.5f;
@@ -261,6 +268,9 @@ public class PlayerController : MonoBehaviour
             // change UI
             reticle.SetActive(false);
             SetCameraZoom(5);
+
+            // save mouse pos
+            save_mouse_pos = look_pos;
         } else
         {
             // disable click detection on canvas
@@ -275,10 +285,24 @@ public class PlayerController : MonoBehaviour
             // change UI
             reticle.SetActive(true);
             SetCameraZoom(active_character.GetRangeScalar());
+
+            Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
+            Debug.Log(new Vector2(Screen.width / 2, Screen.height / 2));
         }
         Cursor.visible = in_command_mode;
         GameOverseer.THE_OVERSEER.canvas_control.SetCommandUI(in_command_mode);
     }
+
+    void OpDeploy1(InputAction.CallbackContext context) {GetOperator(0);}
+    void OpDeploy2(InputAction.CallbackContext context) {GetOperator(1);}
+    void OpDeploy3(InputAction.CallbackContext context) {GetOperator(2);}
+    void OpDeploy4(InputAction.CallbackContext context) {GetOperator(3);}
+
+    private void GetOperator(int deploy_index = 1)
+    {
+        squad.DeployOperator(deploy_index, look_pos);
+    }
+
     #endregion
 
     #region Action Enabling
