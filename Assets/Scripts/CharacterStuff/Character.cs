@@ -8,7 +8,6 @@ using UnityEngine;
 public class Character : MonoBehaviour, IHealth, IMovement
 {
     private CharacterSO base_data;
-
     [field: Header("Body Parts")]
     public GameObject main_body;//basically the hitbox
     public GameObject vfx_body; //the vfx body
@@ -69,7 +68,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     [field: Header("AI")]
     public bool is_player_squad = false;
     protected bool is_AI_active = false;
-    public BehaviorController behavior_controller {get; private set;}
+    public BehaviorController behavior_controller;
     [field: Header("Character State")]
     public bool is_alive;
     

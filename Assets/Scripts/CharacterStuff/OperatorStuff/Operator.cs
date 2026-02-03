@@ -8,8 +8,8 @@ using UnityEngine;
 public class Operator : Character
 {
     [Header("ID")]
-    private OperatorSO base_data;
-    public OpClass op_class => this.base_data.op_class;
+    private OperatorSO base_op_data;
+    public OpClass op_class => this.base_op_data.op_class;
 
     [Header("Ability")]
     private float ability_cd;
@@ -18,6 +18,7 @@ public class Operator : Character
 
     public void AssignBaseOpData(OperatorSO base_op_data)
     {
+        this.base_op_data = base_op_data;
         AssignBaseData(base_op_data);
     }
 
@@ -31,6 +32,7 @@ public class Operator : Character
 
     public void Deploy()
     {
+        behavior_controller.anchor_position = GetPosition();
         GetReady();
     }
 

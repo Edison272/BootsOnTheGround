@@ -5025,7 +5025,7 @@ MonoBehaviour:
   enemy_presets:
   - {fileID: 11400000, guid: aaecaa88835daf840932c8276c714313, type: 2}
   drop_pos: {x: 2, y: 0, z: 0}
-  curr_time: 3
+  curr_time: 10
   wave_time: 2.5
   wave_radius: 3
   spawn_dist: 18

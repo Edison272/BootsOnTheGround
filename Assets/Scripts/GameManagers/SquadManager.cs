@@ -66,6 +66,7 @@ public class SquadManager : MonoBehaviour
             operators[i].is_player_squad = true;
             operators[i].ToggleAI(true);
             operators[i].ToggleOp(false);
+            operators[i].behavior_controller.SetLeader(operators[player_char_index]);
             squad.Add(operators[i]);
         }
     }

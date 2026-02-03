@@ -16,6 +16,7 @@ Hold your ground, stay close to your objective position
 - Evasive
 Prioritize Self Preservation
 */
+[System.Serializable]
 public class BehaviorController
 {
     private Dictionary<string, BehaviorModule> movement_behaviors; 
@@ -43,8 +44,8 @@ public class BehaviorController
     public BehaviorController(Character c)
     {
         character = c;
-        MovementType = HoldCommand;
-        anchor_position = character.GetPosition();
+        SetCommand(CommandMode.Hold);
+        anchor_position = c.GetPosition();
     }
     public void SetLeader(Character new_leader)
     {
@@ -107,6 +108,7 @@ public class BehaviorController
     public void SetCommand(CommandMode command)
     {
         //Debug.Log(character.name + " will " + command);
+        this.command = command;
         switch (command)
         {
             case CommandMode.Follow:
