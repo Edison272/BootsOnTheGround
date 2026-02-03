@@ -38,8 +38,9 @@ public class SquadManager : MonoBehaviour
         player_character = operators[player_char_index];
         player_character.is_player_squad = true;
         player.SetPlayerCharacter(player_character);
-        player_character.ToggleAI(false);
         UseOperator(player_char_index, transform.position);
+        player_character.ToggleAI(false);
+        
     }
 
     public void CreateSquad()
@@ -78,6 +79,7 @@ public class SquadManager : MonoBehaviour
         {
             select_op.SetPosition(deploy_pos);
             select_op.ToggleOp(true);
+            select_op.ToggleAI(true);
             select_op.Deploy();
         }
         else
@@ -92,6 +94,7 @@ public class SquadManager : MonoBehaviour
         if (select_op.is_deployed)
         {
             select_op.ToggleOp(false);
+            select_op.ToggleAI(false);
             select_op.is_deployed = false;
         }
     }

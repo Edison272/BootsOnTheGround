@@ -38,11 +38,16 @@ public class Operator : Character
 
     public void Retreat()
     {
-        
+    
     }
 
     public void UseAbility(Vector2 target_area)
     {
         Debug.Log("I CAST FIREBALL");
+    }
+
+    public override bool IsInAction()
+    {
+        return is_alive && is_deployed;
     }
 }

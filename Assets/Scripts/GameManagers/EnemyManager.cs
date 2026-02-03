@@ -39,6 +39,7 @@ public class EnemyManager : MonoBehaviour
         new_enemy.behavior_controller.anchor_position = GameOverseer.THE_OVERSEER.squad_manager.player_character.GetPosition();
         new_enemy.SetCommandBehavior(CommandMode.Engage);
         new_enemy.behavior_controller.SetActionTime(1, 2);
+        enemies.Add(new_enemy);
     }
 
     public void Update()

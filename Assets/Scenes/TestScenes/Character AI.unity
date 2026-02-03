@@ -291,10 +291,10 @@ MonoBehaviour:
   final_chunk: {x: 0, y: 0}
   map_center: {x: 0, y: 0}
   critical_locs: []
-  show_chunks: 1
+  show_chunks: 0
   show_adj_chunks: 0
-  show_critical_chunks: 1
-  show_quads: 1
+  show_critical_chunks: 0
+  show_quads: 0
 --- !u!156049354 &46239842
 Grid:
   m_ObjectHideFlags: 0
@@ -5025,12 +5025,12 @@ MonoBehaviour:
   enemy_presets:
   - {fileID: 11400000, guid: aaecaa88835daf840932c8276c714313, type: 2}
   drop_pos: {x: 2, y: 0, z: 0}
-  curr_time: 10
-  wave_time: 2.5
+  curr_time: 4
+  wave_time: 1
   wave_radius: 3
-  spawn_dist: 18
+  spawn_dist: 9.67
   min_wave_size: 1
-  max_wave_size: 10
+  max_wave_size: 2
   spawn_positions:
   - {x: -1, y: 0}
   - {x: 1, y: 0}

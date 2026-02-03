@@ -54,41 +54,47 @@ public class BehaviorController
 
     public void UpdateAI()
     {
+        if (!character.target || !character.target.IsInAction())
+        {
+            character.target = null;
+        }
+        
         Character targ = GameOverseer.THE_OVERSEER.GetTargetCharacter(character.is_player_squad, character, character.curr_range);
-        if (targ && character.target != targ)
+        if (targ)
         {
             character.target = targ;
         }
 
-        if (curr_time > 0)
-        {
-            curr_time -= Time.fixedDeltaTime;
-        } else
-        {
-            curr_time = 0;
-            is_acting = !is_acting;
-            if (!is_acting)
-            {
-                character.StopMainItem();
-            }
+        // if (curr_time > 0)
+        // {
+        //     curr_time -= Time.fixedDeltaTime;
+        // } else
+        // {
+        //     curr_time = 0;
+        //     is_acting = !is_acting;
+        //     if (!is_acting)
+        //     {
+        //         character.StopMainItem();
+        //     }
             
-            curr_time += is_acting ? aggro_time : rest_time;
-        }
+        //     curr_time += is_acting ? aggro_time : rest_time;
+        // }
 
-        if (character.target && is_acting)
+        if (character.target)
         {
             if ((character.GetPosition() - character.target.GetPosition()).sqrMagnitude <= character.curr_range * character.curr_range)
             {
                 character.Look(character.target.GetPosition());
-                RaycastHit2D contact = Physics2D.Linecast(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, GameOverseer.avoid_map_mask);
-                if (!contact)
-                {
-                    character.UseMainItem();
-                    Debug.DrawLine(character.GetPosition(), contact.point, Color.white);
-                } else
-                {
-                    Debug.DrawLine(character.GetPosition(), contact.point, Color.grey);
-                }
+                character.UseMainItem();
+                // RaycastHit2D contact = Physics2D.Linecast(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, GameOverseer.avoid_map_mask);
+                // if (!contact)
+                // {
+                //     character.UseMainItem();
+                //     Debug.DrawLine(character.GetPosition(), contact.point, Color.white);
+                // } else
+                // {
+                //     Debug.DrawLine(character.GetPosition(), contact.point, Color.grey);
+                // }
             } 
             else
             {
@@ -147,14 +153,12 @@ public class BehaviorController
     private void EngageCommand()
     {
         Vector2 move_dir = Vector2.zero;
-        if (character.target && (character.target.GetPosition() - character.GetPosition()).sqrMagnitude >= character.curr_range * character.curr_range)
+        if (character.target)
         {
-            move_dir = (character.target.GetPosition() - character.GetPosition()).normalized;
-        } else
-        {
-            move_dir = (anchor_position - character.GetPosition()).normalized;
+            anchor_position = character.target.GetPosition();
+            
         }
-        
+        move_dir = (anchor_position - character.GetPosition()).normalized;
         character.SetMove(move_dir);
     }
     private void HoldCommand()

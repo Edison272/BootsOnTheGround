@@ -383,6 +383,10 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         behavior_controller.SetCommand(command);
     }
+    public virtual bool IsInAction()
+    {
+        return is_alive;
+    }
 
     #endregion
 

@@ -85,7 +85,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         Character prime_target = null;
         foreach(Character target in check_data)
         {
-            if (!target || !target.is_alive || (curr_character.GetPosition() - target.GetPosition()).sqrMagnitude > max_range * max_range)
+            if (!target || !target.IsInAction() || (curr_character.GetPosition() - target.GetPosition()).sqrMagnitude > max_range * max_range)
             {
                 continue;
             }
