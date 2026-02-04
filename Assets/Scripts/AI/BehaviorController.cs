@@ -16,13 +16,13 @@ Hold your ground, stay close to your objective position
 - Evasive
 Prioritize Self Preservation
 */
-[System.Serializable]
 public class BehaviorController
 {
     private Dictionary<string, BehaviorModule> movement_behaviors; 
     private Dictionary<string, BehaviorModule> action_behaviors; 
 
     public CommandMode command;
+    public TargetType favorite_target = TargetType.Closest;
     
     [SerializeField] Character character;
     [SerializeField] Character leader; // who they follow/ base their strategies around
@@ -53,58 +53,60 @@ public class BehaviorController
     }
 
     public void UpdateAI()
-    {
-        if (!character.target || !character.target.IsInAction())
+    {   
+        if (curr_time > 0)
         {
-            character.target = null;
-        }
-        
-        Character targ = GameOverseer.THE_OVERSEER.GetTargetCharacter(character.is_player_squad, character, character.curr_range);
-        if (targ)
+            curr_time -= Time.fixedDeltaTime;
+        } else
         {
-            character.target = targ;
-        }
-
-        // if (curr_time > 0)
-        // {
-        //     curr_time -= Time.fixedDeltaTime;
-        // } else
-        // {
-        //     curr_time = 0;
-        //     is_acting = !is_acting;
-        //     if (!is_acting)
-        //     {
-        //         character.StopMainItem();
-        //     }
+            curr_time = 0;
+            is_acting = !is_acting;
+            if (!is_acting)
+            {
+                character.StopMainItem();
+            }
             
-        //     curr_time += is_acting ? aggro_time : rest_time;
-        // }
+            curr_time += is_acting ? aggro_time : rest_time;
+        }
 
         if (character.target)
         {
-            if ((character.GetPosition() - character.target.GetPosition()).sqrMagnitude <= character.curr_range * character.curr_range)
+            // reset if target untrackable
+            if (!character.target.IsInAction() || (character.GetPosition() - character.target.GetPosition()).sqrMagnitude > character.curr_range * character.curr_range)
+            {
+                character.target = null;
+                return;
+            }
+            
+            // only switch targets if the target is in close quarters range
+            Character targ = GameOverseer.THE_OVERSEER.GetTargetCharacter(character.is_player_squad, character, character.curr_range, TargetType.Closest);
+            float sqr_close_range = character.close_range * character.close_range;
+            if ((character.GetPosition() - targ.GetPosition()).sqrMagnitude <= sqr_close_range)
+            {
+                character.target = targ;
+            }
+
+            // shoot target with clear Line of Sight
+            RaycastHit2D contact = Physics2D.Linecast(character.GetPosition(), character.target.GetPosition(), GameOverseer.avoid_map_mask);
+            if (!contact)
             {
                 character.Look(character.target.GetPosition());
                 character.UseMainItem();
-                // RaycastHit2D contact = Physics2D.Linecast(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, GameOverseer.avoid_map_mask);
-                // if (!contact)
-                // {
-                //     character.UseMainItem();
-                //     Debug.DrawLine(character.GetPosition(), contact.point, Color.white);
-                // } else
-                // {
-                //     Debug.DrawLine(character.GetPosition(), contact.point, Color.grey);
-                // }
-            } 
-            else
+                Debug.DrawLine(character.GetPosition(), contact.point, Color.white);
+            } else
             {
-                character.target = null;
+                Debug.DrawLine(character.GetPosition(), contact.point, Color.grey);
             }
         } 
         else
         {
+            Character targ = GameOverseer.THE_OVERSEER.GetTargetCharacter(character.is_player_squad, character, character.curr_range, favorite_target);
             character.Look(character.GetPosition() + character.last_move_dir);
             Debug.DrawLine(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, Color.black);
+            if (targ)
+            {
+                character.target = targ;
+            }
         }
         
         MovementType();

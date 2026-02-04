@@ -85,11 +85,12 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         Character prime_target = null;
         foreach(Character target in check_data)
         {
+            float weight = 1f;
             if (!target || !target.IsInAction() || (curr_character.GetPosition() - target.GetPosition()).sqrMagnitude > max_range * max_range)
             {
                 continue;
             }
-            float score = ScoringFunc(curr_character, target);
+            float score = ScoringFunc(curr_character, target) * weight;
             if (score > highest_score)
             {
                 prime_target = target;

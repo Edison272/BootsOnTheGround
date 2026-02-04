@@ -5029,8 +5029,8 @@ MonoBehaviour:
   wave_time: 1
   wave_radius: 3
   spawn_dist: 9.67
-  min_wave_size: 1
-  max_wave_size: 2
+  min_wave_size: 4
+  max_wave_size: 8
   spawn_positions:
   - {x: -1, y: 0}
   - {x: 1, y: 0}
