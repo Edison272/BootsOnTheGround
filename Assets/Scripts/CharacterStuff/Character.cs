@@ -378,6 +378,10 @@ public class Character : MonoBehaviour, IHealth, IMovement
         move_pos = GetPosition();
         anim.SetBool("Moving", false);
     }
+    public float GetTravelTime() // return how long it is expected to take for the operator to reach their position
+    {
+        return (move_pos - GetPosition()).magnitude / base_speed + max_accel_time;
+    }
     private float Accelerate(float modifier = 1f)
     {
         if (curr_accel_time < max_accel_time)

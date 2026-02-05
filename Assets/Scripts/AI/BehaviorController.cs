@@ -24,6 +24,8 @@ public class BehaviorController
     protected Queue<Action> movement_queue = new Queue<Action>();
     protected float move_wait_time = 1;
     protected float curr_move_time = 0;
+    protected float estimated_travel_time = 0; // time expected to be taken to complete a move
+    protected float curr_travel_time = 0;
     protected int movement_priority = 1;
     protected Queue<Action> action_queue = new Queue<Action>();
     protected float action_wait_time = 0;
@@ -121,11 +123,31 @@ public class BehaviorController
         //MovementType();
 
         // orders & context will add a bunch of stuff to the queue which the AI will handle 1 by 1
-        if (character.destination_reached && movement_queue.Count > 0)
+        if (character.destination_reached)
         {
-            Action move = movement_queue.Dequeue();
-            move();
-            Debug.Log("movement queue in use");
+            if (movement_queue.Count > 0)
+            {
+                Action move = movement_queue.Dequeue();
+                move();
+                estimated_travel_time = character.GetTravelTime();
+                curr_travel_time = 0;
+                Debug.Log("movement queue in use");
+            }
+
+            estimated_travel_time = 0;
+            curr_travel_time = 0;
+        } 
+        else
+        {
+            // character couldn't reach path on time. something went wrong
+            curr_travel_time += Time.fixedDeltaTime;
+            if (curr_travel_time >= estimated_travel_time)
+            {
+                character.StopMove();
+                Debug.Log("I'm lost...");
+                movement_queue.Clear();
+                curr_travel_time = 0;
+            }
         }
     }
 
@@ -151,11 +173,12 @@ public class BehaviorController
         }
         movement_queue.Clear();
         MovementType();
+        estimated_travel_time = character.GetTravelTime();
+        Debug.Log(estimated_travel_time);
+        curr_travel_time = 0;
     }
     protected virtual void FollowCommand()
-    {
-        Debug.Log("Following");
-        
+    {        
         anchor_position = (character.GetPosition() - leader.GetPosition()).normalized * 2f + leader.GetPosition();
 
         Vector2 obj_pos = anchor_position + leader.move_dir * 3;
@@ -191,17 +214,7 @@ public class BehaviorController
     {
         Vector2 dir = (anchor_position - character.GetPosition()).normalized;
         Vector2 projection_pos = character.GetPosition() + dir * (character.hitbox_radius + 0.05f);
-        RaycastHit2D contact = Physics2D.Linecast(projection_pos, anchor_position, GameOverseer.avoid_map_mask);
-        if (contact) // go in opposite direction if theres something in the way
-        {
-            Vector2 net_dir = (character.GetPosition() - contact.point).normalized;
-            Debug.DrawLine(projection_pos, contact.point, Color.white);
-            character.SetMove(net_dir + ObstacleAvoidanceVector(dir));
-        } 
-        else
-        {
-            character.SetMovePos(anchor_position);
-        }
+        character.SetMovePos(anchor_position);
     }
     #endregion
     #region Helper Vector Weight Functions
