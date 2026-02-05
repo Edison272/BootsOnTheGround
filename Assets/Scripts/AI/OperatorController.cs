@@ -23,10 +23,11 @@ public class OperatorController : BehaviorController
 
     protected override void FollowCommand()
     {
-        anchor_position = squad_manager.op_formation[squad_index];
-        Vector2 move_dir = (anchor_position - character.GetPosition()).normalized;
-        //Debug.Log(anchor_position);
-        character.SetMove(move_dir);
+        // anchor_position = squad_manager.op_formation[squad_index];
+        // Vector2 move_dir = (anchor_position - character.GetPosition()).normalized;
+        // //Debug.Log(anchor_position);
+        // character.SetMove(move_dir);
+        base.FollowCommand();
     }
 
     protected override void HoldCommand()

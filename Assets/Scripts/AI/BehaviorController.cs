@@ -21,8 +21,13 @@ public class BehaviorController
     protected Dictionary<string, BehaviorModule> movement_behaviors; 
     protected Dictionary<string, BehaviorModule> action_behaviors; 
 
-    protected List<Action> movement_queue;
-    protected List<Action> action_queue;
+    protected Queue<Action> movement_queue = new Queue<Action>();
+    protected float move_wait_time = 1;
+    protected float curr_move_time = 0;
+    protected int movement_priority = 1;
+    protected Queue<Action> action_queue = new Queue<Action>();
+    protected float action_wait_time = 0;
+    protected float curr_action_time = 0;
 
     public CommandMode command;
     public TargetType favorite_target = TargetType.Closest;
@@ -113,7 +118,15 @@ public class BehaviorController
             }
         }
         
-        MovementType();
+        //MovementType();
+
+        // orders & context will add a bunch of stuff to the queue which the AI will handle 1 by 1
+        if (character.destination_reached && movement_queue.Count > 0)
+        {
+            Action move = movement_queue.Dequeue();
+            move();
+            Debug.Log("movement queue in use");
+        }
     }
 
     #region Commands
@@ -136,9 +149,13 @@ public class BehaviorController
                 MovementType = HoldCommand;
                 break;
         }
+        movement_queue.Clear();
+        MovementType();
     }
     protected virtual void FollowCommand()
     {
+        Debug.Log("Following");
+        
         anchor_position = (character.GetPosition() - leader.GetPosition()).normalized * 2f + leader.GetPosition();
 
         Vector2 obj_pos = anchor_position + leader.move_dir * 3;
@@ -151,6 +168,9 @@ public class BehaviorController
 
         Debug.DrawLine(character.GetPosition(), move_pos);
         character.SetMovePos(anchor_position + move_pos);
+
+        // constantly follow that player
+        movement_queue.Enqueue(FollowCommand);
     }
     protected virtual void DisperseCommand()
     {

@@ -297,9 +297,12 @@ public class Character : MonoBehaviour, IHealth, IMovement
     #endregion
 
     #region Movement
-    public void SetPosition(Vector2 new_position)
+    
+    public void SetPosition(Vector2 new_position)  // completely change positions and forget where they wanted to go before
     {
         main_body.transform.position = new_position;
+        move_pos = new_position;
+        destination_reached = true;
     }
     public void SetMove(Vector2 set_move_dir) // get directional movement, useful for dynamic & sudden maneuvers
     {
