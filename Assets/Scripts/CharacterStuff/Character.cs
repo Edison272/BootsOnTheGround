@@ -37,6 +37,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public float base_speed => base_data.speed;
     public Vector2 move_dir {get; private set;} = Vector2.zero;
     public Vector2 move_pos {get; private set;} = Vector2.zero;
+    private Vector2 lerp_move_pos = Vector2.zero;
     public bool destination_reached {get; private set;} = false;
     public Vector2 last_move_dir {get; private set;} = Vector2.zero;
     public Vector2 force_dir {get; private set;} = Vector2.zero;
@@ -304,6 +305,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         last_move_dir = move_dir;
         destination_reached = false;
+        curr_accel_time *= Vector2.Dot(last_move_dir, move_dir);
         move_dir = set_move_dir.normalized;
         move_pos = GetPosition() + move_dir * 1000;
     }
@@ -311,6 +313,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         last_move_dir = move_dir;
         destination_reached = false;
+        curr_accel_time *= Vector2.Dot(last_move_dir, move_dir);
         move_dir = (set_move_pos - GetPosition()).normalized;
         move_pos = set_move_pos;
     }
@@ -322,8 +325,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
             // move against knockback
             if (move_dir != Vector2.zero)
             {
-                curr_speed = move_speed * Mathf.Min(1, curr_accel_time/max_accel_time) * 0.6f;
-                curr_accel_time += Time.fixedDeltaTime;
+                curr_speed = Accelerate();
                 entity_rb.AddForce(move_dir * curr_speed, ForceMode2D.Impulse);
                 anim.SetBool("Moving", true);
             }
@@ -336,9 +338,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         } 
         else if ((move_pos - GetPosition()).sqrMagnitude > 0.01f && !destination_reached)
         {
-            // acceleration
-            curr_speed = move_speed * Mathf.Min(1, curr_accel_time/max_accel_time);
-            curr_accel_time += Time.fixedDeltaTime;
+            curr_speed = Accelerate();
 
             // // control speed for smooth destination arrival
             // float speed_rate = (move_pos - GetPosition()).magnitude/curr_speed;
@@ -346,16 +346,46 @@ public class Character : MonoBehaviour, IHealth, IMovement
             // {
             //     curr_speed *= speed_rate;
             // }
+
+            lerp_move_pos = Vector2.Lerp(lerp_move_pos, move_pos, Mathf.Max(0.5f, 0.1f + max_accel_time/(curr_accel_time+0.001f)));
             
             // movement
             anim.SetBool("Moving", true);
-            Vector2 move_toward = Vector2.MoveTowards(GetPosition(), move_pos, Time.fixedDeltaTime * curr_speed);
+            Vector2 move_toward = Vector2.MoveTowards(GetPosition(), lerp_move_pos, Time.fixedDeltaTime * curr_speed);
             entity_rb.MovePosition(move_toward);
         } 
         else if (move_dir != Vector2.zero)
         {
             StopMove();
         }
+    }
+    public void StopMove()
+    {
+        // add some drift if the player was running for too long at top speed
+        if (!is_AI_active && curr_accel_time > max_accel_time * 0.5f)
+        {
+            ForceMove(move_dir, base_speed * (curr_accel_time/(max_accel_time + 0.001f)), true);
+        }
+        curr_accel_time = 0;
+
+        // stop movement
+        destination_reached = true;
+        last_move_dir = move_dir;
+        move_dir = Vector2.zero;
+        move_pos = GetPosition();
+        anim.SetBool("Moving", false);
+    }
+    private float Accelerate(float modifier = 1f)
+    {
+        if (curr_accel_time < max_accel_time)
+        {
+            curr_accel_time += Time.fixedDeltaTime;
+        }
+        if (curr_accel_time > max_accel_time)
+        {
+            curr_accel_time = max_accel_time;
+        }
+        return move_speed * Mathf.Min(1, curr_accel_time/max_accel_time) * modifier;
     }
     public void ForceMove(Vector2 direction, float scalar, bool movement_override = false)
     {
@@ -383,23 +413,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
         yield return new WaitForSeconds(duration);
         move_speed /= amount;
     }
-
-    public void StopMove()
-    {
-        // add some drift if the player was running for too long at top speed
-        // if (curr_accel_time > max_accel_time * 2)
-        // {
-        //     ForceMove(move_dir, base_speed * (curr_accel_time/max_accel_time), true);
-        // }
-        curr_accel_time = 0;
-
-        // stop movement
-        destination_reached = true;
-        move_dir = Vector2.zero;
-        move_pos = GetPosition();
-        anim.SetBool("Moving", false);
-    }
-
     public Vector2 GetPosition()
     {
         return entity_rb.position;

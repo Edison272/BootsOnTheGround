@@ -148,9 +148,6 @@ public class PlayerController : MonoBehaviour
         canvas_pointer_pos = new Vector3(view_x, view_y, 0);
         active_character.Look(main_cam.ViewportToWorldPoint(canvas_pointer_pos));
         look_pos = (Vector2)main_cam.ViewportToWorldPoint(canvas_pointer_pos);
-
-        // adjust cursor
-        cursor.transform.position = (Vector2)look_pos;
     }
 
     void FixedUpdate()
@@ -164,6 +161,9 @@ public class PlayerController : MonoBehaviour
 
     void LateUpdate()
     {
+        // adjust cursor
+        cursor.transform.position = look_pos;
+        
         if (active_character)
         {
             Vector2 char_pos = active_character.gameObject.transform.position;
