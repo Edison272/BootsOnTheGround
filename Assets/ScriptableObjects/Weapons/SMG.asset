@@ -41,9 +41,9 @@ MonoBehaviour:
     attack_data:
       damage: 10
       pierce: 0
-      knockback_amt: 100
-      effect_time: 2.55
-      slow_amt: 2.74
+      knockback_amt: 23.9
+      effect_time: 0.2
+      slow_amt: 0.5
     attack_stats:
       stat_list:
       - key: linecast_duration

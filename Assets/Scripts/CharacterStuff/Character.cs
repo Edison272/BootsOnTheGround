@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 public class Character : MonoBehaviour, IHealth, IMovement
 {
     private CharacterSO base_data;
@@ -317,13 +319,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         if (force_move_time == 1)
         {
-            // reduced acceleration
-            curr_speed = move_speed * Mathf.Min(1, curr_accel_time/max_accel_time) * 0.6f;
-            curr_accel_time += Time.fixedDeltaTime;
-
             // move against knockback
             if (move_dir != Vector2.zero)
             {
+                curr_speed = move_speed * Mathf.Min(1, curr_accel_time/max_accel_time) * 0.6f;
+                curr_accel_time += Time.fixedDeltaTime;
                 entity_rb.AddForce(move_dir * curr_speed, ForceMode2D.Impulse);
                 anim.SetBool("Moving", true);
             }
@@ -364,9 +364,24 @@ public class Character : MonoBehaviour, IHealth, IMovement
         entity_rb.AddForce(direction * scalar, ForceMode2D.Impulse);
     }
 
-    public void ChangeSpeed(float scale_base)
+    public void ChangeSpeed(float scale_base, float duration, bool is_decaying = false)
     {
+        curr_accel_time *= scale_base;
+        if (is_decaying)
+        {
+            StartCoroutine(ChangeSpeedTimer(scale_base, duration));
+        }
+        else
+        {
+            StartCoroutine(ChangeSpeedTimer(scale_base, duration));
+        }
+    }
 
+    private IEnumerator ChangeSpeedTimer(float amount, float duration)
+    {
+        move_speed *= amount;
+        yield return new WaitForSeconds(duration);
+        move_speed /= amount;
     }
 
     public void StopMove()

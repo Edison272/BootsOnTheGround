@@ -26,5 +26,5 @@ public interface IMovement
     void SetMove(Vector2 set_move_dir); // set the move_dir
     void StopMove(); // set move_dir to zero
     void ForceMove(Vector2 direction, float scalar, bool movement_override = false); // apply knockback or dashing
-    void ChangeSpeed(float scale_base); // increase or decrease speed
+    void ChangeSpeed(float scale_base, float duration, bool is_decaying = false); // increase or decrease speed
 }

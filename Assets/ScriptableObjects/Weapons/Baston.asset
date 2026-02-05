@@ -41,9 +41,9 @@ MonoBehaviour:
     attack_data:
       damage: 15
       pierce: 0
-      knockback_amt: 19
-      effect_time: 0
-      slow_amt: 0
+      knockback_amt: 0
+      effect_time: 0.3
+      slow_amt: 0.8
     attack_stats:
       stat_list:
       - key: projectile_speed

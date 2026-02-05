@@ -8,16 +8,25 @@ public class AttackData
     // Attack on impact
     public int damage;
     public int pierce;
-    [SerializeField] float knockback_amt;
+    [SerializeField] [Range(0f, 100f)] float knockback_amt;
     
     // status effect application
     [SerializeField] float effect_time;
-    [SerializeField] float slow_amt;
+    [SerializeField] [Range(0.01f, 10.0f)] float slow_amt;
 
     public void ApplyData(Vector3 source_pos, GameObject target)
     {
         target.GetComponent<IHealth>()?.ChangeHealth(damage);
-        target.GetComponent<IMovement>()?.ForceMove((target.transform.position - source_pos).normalized, knockback_amt);
+        IMovement targ_move = target.GetComponent<IMovement>();
+        if (knockback_amt > 0)
+        {
+            targ_move?.ForceMove((target.transform.position - source_pos).normalized, knockback_amt);
+        }
+        
+        if (effect_time > 0)
+        {
+            targ_move?.ChangeSpeed(slow_amt, effect_time);
+        }
     }
 
 }
