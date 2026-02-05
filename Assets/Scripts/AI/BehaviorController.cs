@@ -18,28 +18,29 @@ Prioritize Self Preservation
 */
 public class BehaviorController
 {
-    private Dictionary<string, BehaviorModule> movement_behaviors; 
-    private Dictionary<string, BehaviorModule> action_behaviors; 
+    protected Dictionary<string, BehaviorModule> movement_behaviors; 
+    protected Dictionary<string, BehaviorModule> action_behaviors; 
 
     public CommandMode command;
     public TargetType favorite_target = TargetType.Closest;
     
-    [SerializeField] Character character;
-    [SerializeField] Character leader; // who they follow/ base their strategies around
+    [SerializeField] protected Character character;
+    [SerializeField] protected Character leader; // who they follow/ base their strategies around
 
     [Header("Actions")]
-    float aggro_time = 1; // do an attack or something
-    float rest_time = 0f; // don't attack
-    float curr_time; // time buffer
-    bool is_acting = true;
+    protected float aggro_time = 1; // do an attack or something
+    protected float rest_time = 0f; // don't attack
+    protected float curr_time; // time buffer
+    protected bool is_acting = true;
 
     [Header("Positioning")]
     public float base_engage_dist = 6f;
     public Vector2 anchor_position; // the general point which the operator hovers around
     public Vector2 move_to_pos; // the resulting position the bot aims to move to
+    private float avoidance_range = 1;
 
     // Move Command
-    Action MovementType;
+    protected Action MovementType;
 
     public BehaviorController(Character c)
     {
@@ -52,7 +53,7 @@ public class BehaviorController
         leader = new_leader;
     }
 
-    public void UpdateAI()
+    public virtual void UpdateAI()
     {   
         if (curr_time > 0)
         {
@@ -133,7 +134,7 @@ public class BehaviorController
                 break;
         }
     }
-    private void FollowCommand()
+    protected virtual void FollowCommand()
     {
         anchor_position = (character.GetPosition() - leader.GetPosition()).normalized * 2f + leader.GetPosition();
 
@@ -148,11 +149,11 @@ public class BehaviorController
         Debug.DrawLine(character.GetPosition(), move_pos);
         character.SetMovePos(anchor_position + move_pos);
     }
-    private void DisperseCommand()
+    protected virtual void DisperseCommand()
     {
         Vector2 move_dir = Vector2.zero;
     }
-    private void EngageCommand()
+    protected virtual void EngageCommand()
     {
         Vector2 move_dir = Vector2.zero;
         if (character.target)
@@ -163,43 +164,55 @@ public class BehaviorController
         move_dir = (anchor_position - character.GetPosition()).normalized;
         character.SetMove(move_dir);
     }
-    private void HoldCommand()
+    protected virtual void HoldCommand()
     {
-        Vector2 dir = (anchor_position - character.GetPosition()).normalized;
-        Vector2 projection_pos = character.GetPosition() + dir * (character.hitbox_radius + 0.05f);
-        RaycastHit2D contact = Physics2D.Linecast(projection_pos, anchor_position, GameOverseer.avoid_map_mask);
-        if (contact) // go in opposite direction if theres something in the way
+        if ((anchor_position - character.GetPosition()).sqrMagnitude > 1f)
         {
-            Vector2 net_dir = (character.GetPosition() - contact.point).normalized;
-            Debug.DrawLine(projection_pos, contact.point, Color.white);
-            character.SetMove(net_dir + ObstacleAvoidanceVector(0.1f));
-        } else
-        {
-            character.SetMovePos(anchor_position);
+            Vector2 dir = (anchor_position - character.GetPosition()).normalized;
+            Vector2 projection_pos = character.GetPosition() + dir * (character.hitbox_radius + 0.05f);
+            RaycastHit2D contact = Physics2D.Linecast(projection_pos, anchor_position, GameOverseer.avoid_map_mask);
+            if (contact) // go in opposite direction if theres something in the way
+            {
+                Vector2 net_dir = (character.GetPosition() - contact.point).normalized;
+                Debug.DrawLine(projection_pos, contact.point, Color.white);
+                character.SetMove(net_dir + ObstacleAvoidanceVector(dir));
+            } 
+            else
+            {
+                character.SetMovePos(anchor_position);
+            }
         }
-        
     }
     #endregion
     #region Helper Vector Weight Functions
-    private Vector2 ObstacleAvoidanceVector(float avoidance_range)
+    protected Vector2 ObstacleAvoidanceVector(Vector2 target_dir)
     {
         Vector2 net_dir = Vector2.zero;
         foreach(Vector2 dir in Directions2D.eight_directions)
         {   
-            Vector2 projection_pos = character.GetPosition() + dir * (character.hitbox_radius + 0.05f);
-            Vector2 check_pos = character.GetPosition() + dir * (character.hitbox_radius + avoidance_range);
+            Vector2 normal_dir = dir.normalized;
+            // project a detection raycast from edge of hitbox
+            Vector2 projection_pos = character.GetPosition() + normal_dir * (character.hitbox_radius + 0.05f);
+            Vector2 check_pos = character.GetPosition() + normal_dir * (character.hitbox_radius + avoidance_range);
+
             RaycastHit2D contact = Physics2D.Linecast(projection_pos, check_pos, GameOverseer.avoid_map_mask);
+            float contact_weight = 1;
+            float alignment_weight = Vector2.Dot(target_dir, (check_pos.normalized - projection_pos).normalized);;
+            Debug.DrawLine(projection_pos, projection_pos + normal_dir, Color.gray);
             if (contact) // go in opposite direction if theres something in the way
             {
-                Vector2 opp_vector = (character.GetPosition() - contact.point).normalized;
-                net_dir += opp_vector;
-                Debug.DrawLine(projection_pos, contact.point, Color.white);
-                //Debug.DrawLine(character.GetPosition(), net_dir, Color.red);
+                contact_weight = -((contact.point - projection_pos).magnitude - avoidance_range);
+                Debug.DrawLine(projection_pos, projection_pos + normal_dir * contact_weight * alignment_weight, Color.white);
             } else
             {
-                Debug.DrawLine(projection_pos, check_pos, Color.white);
+                Debug.DrawLine(projection_pos, projection_pos + normal_dir, Color.white);
             }
+            
+            net_dir += normal_dir * contact_weight * alignment_weight;
+
+            
         }
+        Debug.DrawLine(character.GetPosition(), character.GetPosition() + net_dir, Color.yellow);
         return net_dir;
     }
     #endregion

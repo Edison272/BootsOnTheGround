@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using System;
-public enum OpClass {Vanguard, Overwatch, Specialist, Responder}
+public enum OpClass {Vanguard, Overwatch, Specialist, Responder, Length}
 [CreateAssetMenu(fileName = "Operator", menuName = "ScriptableObjects/Entities/Operator", order = 1)]
 public class OperatorSO : CharacterSO
 {

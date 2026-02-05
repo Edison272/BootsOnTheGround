@@ -1,10 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using NUnit.Framework;
-using UnityEditor.Rendering;
 using UnityEngine;
-
 public class Character : MonoBehaviour, IHealth, IMovement
 {
     private CharacterSO base_data;
@@ -26,6 +21,8 @@ public class Character : MonoBehaviour, IHealth, IMovement
     protected (bool, bool) direction_state = (true, true);
     protected (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.6f), new Vector2 (0.5f, 0.6f));  // (main pos (left), alt pos (right))
     Vector2 single_hand_pos = new Vector2 (0, 0.6f);  // (main pos, alt pos)
+    public GameObject front_particles;
+    public GameObject back_particles;
 
     //aim & handling
     [field: Header("Aiming")]
@@ -34,13 +31,19 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public  float aim_angle = 0; // angle (deg) the character is looking in
     
     [field: Header("Movement")]
-    public float curr_speed {get; private set;} = 1; //how fast an operator can move
+    public float move_speed {get; private set;} = 1; //maximum speed an operator can move at
     public float base_speed => base_data.speed;
     public Vector2 move_dir {get; private set;} = Vector2.zero;
+    public Vector2 move_pos {get; private set;} = Vector2.zero;
     public Vector2 last_move_dir {get; private set;} = Vector2.zero;
     public Vector2 force_dir {get; private set;} = Vector2.zero;
     public Rigidbody2D entity_rb {get; private set;}
     public float force_move_time {get; private set;}
+
+    [field: Header("Acceleration")]
+    public float curr_speed {get; private set;} = 0;
+    public float curr_accel_time {get; private set;} = 0;
+    public float max_accel_time => base_data.accel_time; // amount of time operator needs to get to top move speed
 
     [field: Header("Damage")]
     public int curr_health {get; private set;}
@@ -83,7 +86,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
         // setup movement
         entity_rb = this.GetComponent<Rigidbody2D>();
-        curr_speed = base_speed;
+        move_speed = base_speed;
 
         // setup VFX
         hitbox_radius = GetComponent<CircleCollider2D>().radius;
@@ -131,7 +134,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         Look(entity_rb.position + aim_dir);
 
         // setup AI
-        behavior_controller = new BehaviorController(this);
+        CreateBehaviorController();
     }
     // make sure the operator LOOKS ready
     public void GetReady()
@@ -144,6 +147,10 @@ public class Character : MonoBehaviour, IHealth, IMovement
         Look(entity_rb.position + aim_dir);
     }
 
+    public virtual void CreateBehaviorController()
+    {
+        behavior_controller = new BehaviorController(this);
+    }
     public void ResetData()
     {
         
@@ -290,47 +297,66 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         main_body.transform.position = new_position;
     }
-    public void SetMove(Vector2 set_move_dir) // get directional movement, useful for dynamic maneuvers
+    public void SetMove(Vector2 set_move_dir) // get directional movement, useful for dynamic & sudden maneuvers
     {
-        move_dir = set_move_dir * curr_speed;
-        behavior_controller.move_to_pos = GetPosition() + move_dir * curr_speed;
+        move_dir = set_move_dir.normalized;
+        move_pos = GetPosition() + move_dir * 1000;
     }
     public void SetMovePos(Vector2 set_move_pos) // get target_position, useful for AI with discrete positioning
     {
-        Vector2 pos_change = set_move_pos - GetPosition();
-        float time = pos_change.magnitude/curr_speed;
-        move_dir = pos_change / Mathf.Max(time, Time.fixedDeltaTime);
-        move_dir = new Vector2(Mathf.Round(move_dir.x * 100) / 100, Mathf.Round(move_dir.y * 100) / 100);
+        move_dir = (set_move_pos - GetPosition()).normalized;
+        move_pos = set_move_pos;
     }
 
     public void Move() 
     {
-        entity_rb.velocity = move_dir;
-        //entity_rb.MovePosition(entity_rb.position + velocity + move_dir*Time.deltaTime*Mathf.Max(0, move_speed));
-        if (Mathf.Abs(entity_rb.velocity.x) > 0.01f || Mathf.Abs(entity_rb.velocity.y) > 0.01f)
+        if (force_move_time == 1)
         {
-            anim.SetBool("Moving", true);
-            last_move_dir = entity_rb.velocity.normalized;
-        } else
+            if (entity_rb.velocity.sqrMagnitude <= 0.001f)
+            {
+                force_move_time = 0;
+            }
+        } 
+        else
         {
-            anim.SetBool("Moving", false);
-            move_dir = Vector2.zero;
-            entity_rb.velocity = Vector2.zero;
+            if ((move_pos - GetPosition()).sqrMagnitude > 0.01f)
+            {
+                // acceleration
+                curr_speed = move_speed * Mathf.Min(1, curr_accel_time/max_accel_time);
+                curr_accel_time += Time.fixedDeltaTime;
+                
+                anim.SetBool("Moving", true);
+                Vector2 move_toward = Vector2.MoveTowards(GetPosition(), move_pos, Time.fixedDeltaTime * curr_speed);
+                entity_rb.MovePosition(move_toward);
+            } else if (anim.GetBool("Moving"))
+            {
+                StopMove();
+            }
         }
     }
-    void IMovement.ForceMove(Vector2 direction, float scalar)
+    public void ForceMove(Vector2 direction, float scalar)
     {
-
+        force_move_time = 1;
+        entity_rb.AddForce(direction * scalar, ForceMode2D.Impulse);
     }
 
-    void IMovement.ChangeSpeed(float scale_base)
+    public void ChangeSpeed(float scale_base)
     {
 
     }
 
     public void StopMove()
     {
+        // add some drift if the player was running for too long at top speed
+        if (curr_accel_time > max_accel_time)
+        {
+            ForceMove(move_dir, base_speed * (curr_accel_time/max_accel_time));
+        }
+        curr_accel_time = 0;
+
+        // stop movement
         move_dir = Vector2.zero;
+        move_pos = GetPosition();
         anim.SetBool("Moving", false);
     }
 

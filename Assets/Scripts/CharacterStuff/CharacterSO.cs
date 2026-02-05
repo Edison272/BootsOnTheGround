@@ -12,6 +12,7 @@ public class CharacterSO : ScriptableObject
     //stats
     public int health = 100;
     public float speed = 3;
+    public float accel_time = 0.5f;
     public float range = 4;
     public float close_range = 3; // entering close range forces character to retarget
 

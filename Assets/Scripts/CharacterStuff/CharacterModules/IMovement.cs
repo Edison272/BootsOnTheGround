@@ -4,11 +4,20 @@ using System.Collections.Generic;
 public interface IMovement
 {
     Rigidbody2D entity_rb {get;}
-    float curr_speed {get;} // speed of movement
+
+    // basic movement
+    float move_speed {get;} // speed of movement
     float base_speed {get;} // base speed
     Vector2 move_dir {get;} // mover's intended direction of movement
+
+    // handle knockback
     float force_move_time {get;} // prevents mover from moving while > 0
     Vector2 force_dir {get;} // where mover is being forced
+
+    // handle acceleration
+    float curr_speed {get;}
+    float curr_accel_time {get;}
+    float max_accel_time {get;} // amount of time operator needs to get to top move speed
     
     void Move(); // update rb position based on move_dir
     void SetMove(Vector2 set_move_dir); // set the move_dir

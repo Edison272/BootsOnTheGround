@@ -18,6 +18,7 @@ public class SquadManager : MonoBehaviour
     public HashSet<Character> squad;
     public HashSet<Character> helpers;
     public Operator[] operators;
+    
     public static readonly int player_char_index = 0; // PLAYER CHARACTER IS FIRST IN SQUAD ARRAY
     public Character player_character;
 
@@ -25,29 +26,28 @@ public class SquadManager : MonoBehaviour
 
     [Header("Managers")]
     public PlayerController player;
+
+    [Header("Squad Command Data")]
+    public Operator selected_operator;
+    public Vector2[] op_formation;
     
     public void InitializeAllies()
     {
         squad = new HashSet<Character>();
         helpers = new HashSet<Character>();
         operators = new Operator[operator_presets.Length];
+        op_formation = new Vector2[operator_presets.Length];
 
         CreateOperators();
+        SetSquadLeader();
 
-        // Activate the player-controlled operator
+        // reconfigure settings for player character so they don't get taken over by a bot
         player_character = operators[player_char_index];
         player_character.is_player_squad = true;
         player.SetPlayerCharacter(player_character);
-        UseOperator(player_char_index, transform.position);
+        DeployOperator(player_char_index, transform.position);
         player_character.ToggleAI(false);
         
-    }
-
-    public void CreateSquad()
-    {
-
-
-        SetSquadLeader();
     }
 
     public void SetSquadLeader() // set squad leader to player characte
@@ -64,30 +64,83 @@ public class SquadManager : MonoBehaviour
         for(int i = 0; i < operators.Length; i++)
         {
             operators[i] = operator_presets[i].GenerateOp(Vector2.zero);
-            operators[i].is_player_squad = true;
-            operators[i].ToggleAI(true);
-            operators[i].ToggleOp(false);
-            operators[i].behavior_controller.SetLeader(operators[player_char_index]);
+            Operator this_op = operators[i];
+            this_op.is_player_squad = true;
+            this_op.behavior_controller.SetLeader(operators[player_char_index]);
+            this_op.op_behavior_controller.squad_index = i;
             squad.Add(operators[i]);
+
+            DeployOperator(i, transform.position);
         }
     }
 
-    public void UseOperator(int op_index, Vector2 deploy_pos)
+    public void Update()
+    {
+        
+        UpdateFormation();
+
+    }
+
+    // set operator formation
+    public void UpdateFormation()
+    {
+        Vector2 center = player_character.GetPosition();
+        for(int i = 0; i < operators.Length; i++)
+        {
+            Operator curr_op = operators[i];
+            Vector2 offset_vec = player_character.aim_dir.normalized * 10/((int)curr_op.op_class + 1);
+            op_formation[i] = center + offset_vec;
+        }
+    }
+
+    #region Operator Control Commands
+    // setup UI and other stuff to let player know the current op is selected
+    public void SetSelectedOperator(int op_index)
+    {
+        // cancel command if it was done twice
+        if (op_index == -1) {
+            selected_operator.ToggleSelectionIndicator(false);
+            selected_operator = null;
+        } 
+        // otherwise do smth cool n shi
+        else {
+            selected_operator?.ToggleSelectionIndicator(false);
+            selected_operator = operators[Mathf.Clamp(op_index, 0, operator_presets.Length-1)];
+            selected_operator.ToggleSelectionIndicator(true);
+        }
+    }
+
+    public void DeployOperator(int op_index, Vector2 deploy_pos)
     {
         Operator select_op = operators[Mathf.Clamp(op_index, 0, operator_presets.Length-1)];
-        if (!select_op.is_deployed)
+        select_op.SetPosition(deploy_pos);
+        select_op.ToggleOp(true);
+        select_op.ToggleAI(true);
+        select_op.SetCommandBehavior(CommandMode.Follow);
+        select_op.Deploy();
+    }
+
+    // used to deploy initialized operators and redeploy falled operators
+    public void UseOpAbility(Vector2 deploy_pos)
+    {
+        if (selected_operator)
         {
-            select_op.SetPosition(deploy_pos);
-            select_op.ToggleOp(true);
-            select_op.ToggleAI(true);
-            select_op.Deploy();
-        }
-        else
-        {
-            select_op.UseAbility(deploy_pos);
+            selected_operator.UseAbility(deploy_pos);
         }
     }
 
+    public void SwitchOpBehavior()
+    {
+        if (selected_operator.behavior_controller.command == CommandMode.Follow)
+        {
+            selected_operator.op_behavior_controller.anchor_position = GameOverseer.THE_OVERSEER.player_control.look_pos;
+            selected_operator.SetCommandBehavior(CommandMode.Hold);
+        } 
+        else
+        {
+            selected_operator.SetCommandBehavior(CommandMode.Follow);
+        }
+    }
     public void RetreatOperator(int op_index)
     {
         Operator select_op = operators[Mathf.Clamp(op_index, 0, operator_presets.Length-1)];
@@ -98,6 +151,8 @@ public class SquadManager : MonoBehaviour
             select_op.is_deployed = false;
         }
     }
+
+    #endregion
 
     // public void ToggleCommandMode()
     // {

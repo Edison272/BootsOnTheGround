@@ -156,12 +156,10 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         
-        // if (active_character)
+        // if (input_dir != Vector2.zero)
         // {
-        //     Vector3 char_pos = active_character.GetPosition();
-        //     Debug.DrawLine(char_pos, look_pos);
+        //     active_character.SetMove();
         // }
-        
     }
 
     void LateUpdate()
@@ -297,11 +295,15 @@ public class PlayerController : MonoBehaviour
     {
         // cancel command if it was done twice
         if (op_select_index == deploy_index) {
-            ResolveConfirm();
+            op_select_index = -1;
+            squad.SetSelectedOperator(op_select_index);
+            ToggleCommandInput(false);
+            GameOverseer.THE_OVERSEER.canvas_control.ToggleReticleCommandUI(false);
         } 
-        // otherwise do smth cool n shi
+        // otherwise select operator and enable operator commands
         else {
             op_select_index = deploy_index;
+            squad.SetSelectedOperator(op_select_index);
             ToggleCommandInput(true);
             GameOverseer.THE_OVERSEER.canvas_control.ToggleReticleCommandUI(true);
         }
@@ -309,19 +311,10 @@ public class PlayerController : MonoBehaviour
     }
 
     void ConfirmClickM1(InputAction.CallbackContext context) {
-        squad.UseOperator(op_select_index, look_pos);
-        ResolveConfirm(); // reset
+        squad.UseOpAbility(look_pos);
     }
     void ConfirmClickM2(InputAction.CallbackContext context) {
-        squad.RetreatOperator(op_select_index);
-        ResolveConfirm(); // reset
-    }
-
-    void ResolveConfirm()
-    {
-        op_select_index = -1;
-        ToggleCommandInput(false);
-        GameOverseer.THE_OVERSEER.canvas_control.ToggleReticleCommandUI(false);
+        squad.SwitchOpBehavior();
     }
 
     #endregion
