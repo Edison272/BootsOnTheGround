@@ -39,7 +39,7 @@ public class MeleeBehavior : MonoBehaviour
     {
         if (collision.gameObject.tag != faction_tag && collision.gameObject.tag != "NoHit")
         {
-            collision.gameObject.GetComponent<IHealth>()?.ChangeHealth(atk_data.damage);
+            atk_data.ApplyData(source_pos, collision.gameObject);
         }
     }
 

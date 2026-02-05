@@ -28,11 +28,11 @@ public class ProjectileBehavior : MonoBehaviour
     string faction_tag = "Untagged";
     Character owner;
 
-    void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collision.gameObject.tag != faction_tag && collision.gameObject.tag != "NoHit")
+        if (collider.gameObject.tag != faction_tag && collider.gameObject.tag != "NoHit")
         {
-            collision.gameObject.GetComponent<IHealth>()?.ChangeHealth(atk_data.damage);
+            atk_data.ApplyData(this.main_body.transform.position, collider.gameObject);
             ProjectileEffects();
         }
     }

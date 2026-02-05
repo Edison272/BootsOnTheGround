@@ -14,4 +14,10 @@ public class AttackData
     [SerializeField] float effect_time;
     [SerializeField] float slow_amt;
 
+    public void ApplyData(Vector3 source_pos, GameObject target)
+    {
+        target.GetComponent<IHealth>()?.ChangeHealth(damage);
+        target.GetComponent<IMovement>()?.ForceMove((target.transform.position - source_pos).normalized, knockback_amt);
+    }
+
 }

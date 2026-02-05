@@ -35,6 +35,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public float base_speed => base_data.speed;
     public Vector2 move_dir {get; private set;} = Vector2.zero;
     public Vector2 move_pos {get; private set;} = Vector2.zero;
+    public bool destination_reached {get; private set;} = false;
     public Vector2 last_move_dir {get; private set;} = Vector2.zero;
     public Vector2 force_dir {get; private set;} = Vector2.zero;
     public Rigidbody2D entity_rb {get; private set;}
@@ -299,11 +300,15 @@ public class Character : MonoBehaviour, IHealth, IMovement
     }
     public void SetMove(Vector2 set_move_dir) // get directional movement, useful for dynamic & sudden maneuvers
     {
+        last_move_dir = move_dir;
+        destination_reached = false;
         move_dir = set_move_dir.normalized;
         move_pos = GetPosition() + move_dir * 1000;
     }
     public void SetMovePos(Vector2 set_move_pos) // get target_position, useful for AI with discrete positioning
     {
+        last_move_dir = move_dir;
+        destination_reached = false;
         move_dir = (set_move_pos - GetPosition()).normalized;
         move_pos = set_move_pos;
     }
@@ -312,31 +317,50 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         if (force_move_time == 1)
         {
-            if (entity_rb.velocity.sqrMagnitude <= 0.001f)
+            // reduced acceleration
+            curr_speed = move_speed * Mathf.Min(1, curr_accel_time/max_accel_time) * 0.6f;
+            curr_accel_time += Time.fixedDeltaTime;
+
+            // move against knockback
+            if (move_dir != Vector2.zero)
+            {
+                entity_rb.AddForce(move_dir * curr_speed, ForceMode2D.Impulse);
+                anim.SetBool("Moving", true);
+            }
+            // stop knockback & movement after velocity is low enough
+            if (entity_rb.velocity.sqrMagnitude - move_dir.sqrMagnitude <= 0.1f)
             {
                 force_move_time = 0;
+                entity_rb.velocity = Vector2.zero;
             }
         } 
-        else
+        else if ((move_pos - GetPosition()).sqrMagnitude > 0.01f && !destination_reached)
         {
-            if ((move_pos - GetPosition()).sqrMagnitude > 0.01f)
-            {
-                // acceleration
-                curr_speed = move_speed * Mathf.Min(1, curr_accel_time/max_accel_time);
-                curr_accel_time += Time.fixedDeltaTime;
-                
-                anim.SetBool("Moving", true);
-                Vector2 move_toward = Vector2.MoveTowards(GetPosition(), move_pos, Time.fixedDeltaTime * curr_speed);
-                entity_rb.MovePosition(move_toward);
-            } else if (anim.GetBool("Moving"))
-            {
-                StopMove();
-            }
+            // acceleration
+            curr_speed = move_speed * Mathf.Min(1, curr_accel_time/max_accel_time);
+            curr_accel_time += Time.fixedDeltaTime;
+
+            // // control speed for smooth destination arrival
+            // float speed_rate = (move_pos - GetPosition()).magnitude/curr_speed;
+            // if (speed_rate < 1)
+            // {
+            //     curr_speed *= speed_rate;
+            // }
+            
+            // movement
+            anim.SetBool("Moving", true);
+            Vector2 move_toward = Vector2.MoveTowards(GetPosition(), move_pos, Time.fixedDeltaTime * curr_speed);
+            entity_rb.MovePosition(move_toward);
+        } 
+        else if (move_dir != Vector2.zero)
+        {
+            StopMove();
         }
     }
-    public void ForceMove(Vector2 direction, float scalar)
+    public void ForceMove(Vector2 direction, float scalar, bool movement_override = false)
     {
-        force_move_time = 1;
+        // if movement override, the impulse force will be ignore while the player is moving 
+        force_move_time = movement_override ? 0 : 1;
         entity_rb.AddForce(direction * scalar, ForceMode2D.Impulse);
     }
 
@@ -348,13 +372,14 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public void StopMove()
     {
         // add some drift if the player was running for too long at top speed
-        if (curr_accel_time > max_accel_time)
-        {
-            ForceMove(move_dir, base_speed * (curr_accel_time/max_accel_time));
-        }
+        // if (curr_accel_time > max_accel_time * 2)
+        // {
+        //     ForceMove(move_dir, base_speed * (curr_accel_time/max_accel_time), true);
+        // }
         curr_accel_time = 0;
 
         // stop movement
+        destination_reached = true;
         move_dir = Vector2.zero;
         move_pos = GetPosition();
         anim.SetBool("Moving", false);

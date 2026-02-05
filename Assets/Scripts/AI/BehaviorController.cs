@@ -21,6 +21,9 @@ public class BehaviorController
     protected Dictionary<string, BehaviorModule> movement_behaviors; 
     protected Dictionary<string, BehaviorModule> action_behaviors; 
 
+    protected List<Action> movement_queue;
+    protected List<Action> action_queue;
+
     public CommandMode command;
     public TargetType favorite_target = TargetType.Closest;
     
@@ -166,21 +169,18 @@ public class BehaviorController
     }
     protected virtual void HoldCommand()
     {
-        if ((anchor_position - character.GetPosition()).sqrMagnitude > 1f)
+        Vector2 dir = (anchor_position - character.GetPosition()).normalized;
+        Vector2 projection_pos = character.GetPosition() + dir * (character.hitbox_radius + 0.05f);
+        RaycastHit2D contact = Physics2D.Linecast(projection_pos, anchor_position, GameOverseer.avoid_map_mask);
+        if (contact) // go in opposite direction if theres something in the way
         {
-            Vector2 dir = (anchor_position - character.GetPosition()).normalized;
-            Vector2 projection_pos = character.GetPosition() + dir * (character.hitbox_radius + 0.05f);
-            RaycastHit2D contact = Physics2D.Linecast(projection_pos, anchor_position, GameOverseer.avoid_map_mask);
-            if (contact) // go in opposite direction if theres something in the way
-            {
-                Vector2 net_dir = (character.GetPosition() - contact.point).normalized;
-                Debug.DrawLine(projection_pos, contact.point, Color.white);
-                character.SetMove(net_dir + ObstacleAvoidanceVector(dir));
-            } 
-            else
-            {
-                character.SetMovePos(anchor_position);
-            }
+            Vector2 net_dir = (character.GetPosition() - contact.point).normalized;
+            Debug.DrawLine(projection_pos, contact.point, Color.white);
+            character.SetMove(net_dir + ObstacleAvoidanceVector(dir));
+        } 
+        else
+        {
+            character.SetMovePos(anchor_position);
         }
     }
     #endregion

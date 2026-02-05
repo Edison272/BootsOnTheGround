@@ -5027,11 +5027,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aaecaa88835daf840932c8276c714313, type: 2}
   drop_pos: {x: 2, y: 0, z: 0}
   curr_time: 4
-  wave_time: 1
+  wave_time: 5
   wave_radius: 3
   spawn_dist: 9.67
-  min_wave_size: 0
-  max_wave_size: 0
+  min_wave_size: 1
+  max_wave_size: 1
   spawn_positions:
   - {x: -1, y: 0}
   - {x: 1, y: 0}

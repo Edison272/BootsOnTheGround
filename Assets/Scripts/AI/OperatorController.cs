@@ -28,4 +28,9 @@ public class OperatorController : BehaviorController
         //Debug.Log(anchor_position);
         character.SetMove(move_dir);
     }
+
+    protected override void HoldCommand()
+    {
+        base.HoldCommand();
+    }
 }

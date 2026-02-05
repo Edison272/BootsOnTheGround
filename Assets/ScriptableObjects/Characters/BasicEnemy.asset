@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: BasicEnemy
   m_EditorClassIdentifier: 
   character_name: Vanguard Operator
-  health: 100
+  health: 1000
   speed: 1.5
+  accel_time: 0.5
   range: 5
   close_range: 5
   char_prefab: {fileID: 3748648633196015940, guid: 551671337826080419fd5110a5f48b73,
