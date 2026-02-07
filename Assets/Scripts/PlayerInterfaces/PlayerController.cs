@@ -148,6 +148,8 @@ public class PlayerController : MonoBehaviour
         canvas_pointer_pos = new Vector3(view_x, view_y, 0);
         active_character.Look(main_cam.ViewportToWorldPoint(canvas_pointer_pos));
         look_pos = (Vector2)main_cam.ViewportToWorldPoint(canvas_pointer_pos);
+        // adjust cursor
+        cursor.transform.position = look_pos;
     }
 
     void FixedUpdate()
@@ -160,10 +162,7 @@ public class PlayerController : MonoBehaviour
     }
 
     void LateUpdate()
-    {
-        // adjust cursor
-        cursor.transform.position = look_pos;
-        
+    {   
         if (active_character)
         {
             Vector2 char_pos = active_character.gameObject.transform.position;
@@ -295,10 +294,8 @@ public class PlayerController : MonoBehaviour
     {
         // cancel command if it was done twice
         if (op_select_index == deploy_index) {
-            op_select_index = -1;
+            ResetConfirm();
             squad.SetSelectedOperator(op_select_index);
-            ToggleCommandInput(false);
-            GameOverseer.THE_OVERSEER.canvas_control.ToggleReticleCommandUI(false);
         } 
         // otherwise select operator and enable operator commands
         else {
@@ -312,9 +309,18 @@ public class PlayerController : MonoBehaviour
 
     void ConfirmClickM1(InputAction.CallbackContext context) {
         squad.UseOpAbility(look_pos);
+        ResetConfirm();
     }
     void ConfirmClickM2(InputAction.CallbackContext context) {
         squad.SwitchOpBehavior();
+        ResetConfirm();
+    }
+
+    void ResetConfirm()
+    {
+        op_select_index = -1;
+        ToggleCommandInput(false);
+        GameOverseer.THE_OVERSEER.canvas_control.ToggleReticleCommandUI(false);
     }
 
     #endregion

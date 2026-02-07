@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BasicEnemy
   m_EditorClassIdentifier: 
   character_name: Vanguard Operator
-  health: 1000
+  health: 100
   speed: 1.5
   accel_time: 0.5
   range: 5

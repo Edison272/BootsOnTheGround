@@ -14,6 +14,8 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public EnemyManager enemy_manager;
     public MapManager map_manager;
     public CanvasController canvas_control;
+    [SerializeField] private AIManager ai_manager; // a class containing all the stuff the game ai would need
+    public bool GenerateRandomMap = false;
 
     public static GameOverseer THE_OVERSEER {get; private set;}
 
@@ -31,7 +33,6 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!enemy_manager) {enemy_manager = GameObject.Find("Enemy Manager")?.GetComponent<EnemyManager>();}
         if (!map_manager) {map_manager = GameObject.Find("Map")?.GetComponent<MapManager>();}
         if (!canvas_control) {canvas_control = GameObject.Find("Canvas Controller")?.GetComponent<CanvasController>();}
-
     }
 
     void Start()
@@ -41,7 +42,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
             Debug.LogWarning("MAP MANAGER NULL");
 
         }
-        else
+        else if (GenerateRandomMap)
         {
             map_manager.GenerateMap();
             squad_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.spawn_chunk);
@@ -57,66 +58,15 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
 
         // start player controller
         player_control.StartPlayer();
-    }
-    
 
-    #region Targetting
+        // setup an AI manager after base data has been created
+        ai_manager = new AIManager(this, map_manager.Wall, map_manager.Floor);
+    }
+
+    #region AI Manager stuff
     public Character GetTargetCharacter(bool is_squad, Character curr_character, float max_range = 1000f, TargetType targ_type = TargetType.Closest)
     {
-        IEnumerable<Character> check_data = is_squad ? enemy_manager.enemies : squad_manager.squad;
-        Func<Character, Character, float> ScoringFunc = GetNearestScore;
-        switch (targ_type)
-        {
-            case TargetType.Closest:
-                ScoringFunc = GetNearestScore;
-                break;
-            case TargetType.Furthest:
-                ScoringFunc = GetFurthestScore;
-                break;
-            case TargetType.MostHP:
-                ScoringFunc = GetNearestScore;
-                break;
-            case TargetType.LeastHP:
-                ScoringFunc = GetNearestScore;
-                break;
-        }
-
-        float highest_score = -Mathf.Infinity;
-        Character prime_target = null;
-        foreach(Character target in check_data)
-        {
-            float weight = 1f;
-            if (!target || !target.IsInAction() || (curr_character.GetPosition() - target.GetPosition()).sqrMagnitude > max_range * max_range)
-            {
-                continue;
-            }
-            float score = ScoringFunc(curr_character, target) * weight;
-            if (score > highest_score)
-            {
-                prime_target = target;
-                highest_score = score;
-                
-            }
-        }
-
-        return prime_target;
+        return ai_manager.GetTargetCharacter(is_squad, curr_character, max_range, targ_type);
     }
-
-    private float GetNearestScore(Character curr_character, Character target)
-    {
-        float score = 1/(curr_character.GetPosition() - target.GetPosition()).sqrMagnitude + 0.001f;
-        return score;
-    }
-
-    private float GetFurthestScore(Character curr_character, Character target)
-    {
-        float score = (curr_character.GetPosition() - target.GetPosition()).sqrMagnitude;
-        if (score > curr_character.curr_range)
-        {
-            score = -1;
-        }
-        return score;
-    }
-
     #endregion
 }

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   character_name: Knight
   health: 1000000
-  speed: 30
-  accel_time: 1
+  speed: 10
+  accel_time: 0.5
   range: 30
   close_range: 5
   char_prefab: {fileID: 2324682301764112193, guid: 388e4c59c8e01914595d32397206eb35,

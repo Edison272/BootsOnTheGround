@@ -6,15 +6,16 @@ using UnityEngine;
 public class MapGenPreset : ScriptableObject
 {
     public enum AdjacentType {four_directions, eight_directions};
-    public int map_chunks = 40;
-    [Range(1, 8)] public int max_chunk_branching = 6;
+    [Range(10, 300)] public int map_size = 40;
+    [Range(1f, 20f)] public int map_scale = 1;
+    [Range(1, 16)] public int max_chunk_branching = 6;
     private int og_max = 6;
     [Range(1, 8)] public int min_chunk_branching = 3;
     [SerializeField] AdjacentType adj_type = AdjacentType.four_directions;
     public bool four_adj_tiles = true;
 
     public int check_points = 3;
-    public int objectives = 3;
+    [Range(1, 24)]public int objectives = 3;
     public int minor_poi = 7; // extra goodies that might appear on the map
 
     public void OnValidate()

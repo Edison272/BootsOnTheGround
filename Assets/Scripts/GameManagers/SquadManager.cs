@@ -29,14 +29,15 @@ public class SquadManager : MonoBehaviour
 
     [Header("Squad Command Data")]
     public Operator selected_operator;
-    public Vector2[] op_formation;
+    public Vector2[] combat_formation; // how the operators align themselves towards the enemy in combat
+    public Vector2[] explore_formation; // how the operators move with the player
     
     public void InitializeAllies()
     {
         squad = new HashSet<Character>();
         helpers = new HashSet<Character>();
         operators = new Operator[operator_presets.Length];
-        op_formation = new Vector2[operator_presets.Length];
+        combat_formation = new Vector2[operator_presets.Length];
 
         CreateOperators();
         SetSquadLeader();
@@ -47,6 +48,10 @@ public class SquadManager : MonoBehaviour
         player.SetPlayerCharacter(player_character);
         DeployOperator(player_char_index, transform.position);
         player_character.ToggleAI(false);
+
+        // set explore formation
+
+        // set combat formation
         
     }
 
@@ -89,7 +94,7 @@ public class SquadManager : MonoBehaviour
         {
             Operator curr_op = operators[i];
             Vector2 offset_vec = player_character.aim_dir.normalized * 10/((int)curr_op.op_class + 1);
-            op_formation[i] = center + offset_vec;
+            combat_formation[i] = center + offset_vec;
         }
     }
 

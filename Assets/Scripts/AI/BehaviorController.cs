@@ -172,9 +172,9 @@ public class BehaviorController
                 break;
         }
         movement_queue.Clear();
+        character.StopMove();
         MovementType();
         estimated_travel_time = character.GetTravelTime();
-        Debug.Log(estimated_travel_time);
         curr_travel_time = 0;
     }
     protected virtual void FollowCommand()
