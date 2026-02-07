@@ -5,7 +5,8 @@ public abstract class MapMaker
 {
     public abstract Vector2 GenerateMap(
         Dictionary<Vector2Int, MapChunk> all_chunks, 
-        Dictionary<Vector2Int, Vector2Int> adj_chunks, 
+        HashSet<Vector2Int> border_chunks, 
+        HashSet<Vector2Int> path_chunks, 
         MapChunk[] critical_locs,
         MapGenPreset gen_preset);
 

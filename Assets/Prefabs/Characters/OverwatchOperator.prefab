@@ -5006,8 +5006,8 @@ MonoBehaviour:
   main_hand: {fileID: 3839230435322074497}
   alt_hand: {fileID: 7868652503050007635}
   anim: {fileID: 5932633629762312097}
-  front_particles: {fileID: 0}
-  back_particles: {fileID: 0}
+  front_particles: {fileID: 6527813373649332939}
+  back_particles: {fileID: 2930997233418225277}
   aim_angle: 0
   inventory:
   - {fileID: 0}

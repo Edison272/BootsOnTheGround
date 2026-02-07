@@ -7,15 +7,16 @@ public class BlobMaker : MapMaker
 {
     public override Vector2 GenerateMap(
         Dictionary<Vector2Int, MapChunk> all_chunks, 
-        Dictionary<Vector2Int, Vector2Int> adj_chunks, 
+        HashSet<Vector2Int> border_chunks, 
+        HashSet<Vector2Int> path_chunks, 
         MapChunk[] critical_locs,
         MapGenPreset gen_preset
     )
     {
         HashSet<Vector2Int> in_chunk_queue = new HashSet<Vector2Int>();
         List<Vector2Int> list_buffer = new List<Vector2Int>(); // use for branching
-        Vector2Int[] adjacent_array = gen_preset.four_adj_tiles ? Directions2D.four_directions : Directions2D.eight_directions;
-        Directions2D.DirArray dir_array_type = gen_preset.four_adj_tiles ? Directions2D.DirArray.HORZ_WEIGHT_FOUR : Directions2D.DirArray.HORZ_WEIGHT_EIGHT;
+        Vector2Int[] adjacent_array = Directions2D.eight_directions;
+        Directions2D.DirArray dir_array_type = Directions2D.DirArray.HORZ_WEIGHT_EIGHT;
         
         // important chunks/positions
         Vector2Int spawn_chunk; // where the player spawns in
@@ -30,7 +31,7 @@ public class BlobMaker : MapMaker
         foreach (Vector2Int adjacent in adjacent_array) // update adjacent chunks
         {
             Vector2Int new_chunk = MapManager.START_POS + adjacent;
-            adj_chunks[new_chunk] = new_chunk;
+            border_chunks.Add(new_chunk);
         }
 
         // values for final pos and spawn pos
@@ -50,7 +51,7 @@ public class BlobMaker : MapMaker
             // see where the current chunk can branch to
             Directions2D.ValidPositionsFromPoint(list_buffer, dir_array_type, curr_chunk, all_chunks, in_chunk_queue);
             // preform semi-random branch
-            int branches = Random.Range(gen_preset.min_chunk_branching, gen_preset.max_chunk_branching + 1);
+            int branches = Random.Range(1, 4);
             for (int b = 0; b < branches; b++)
             {
                 Vector2Int new_chunk = curr_chunk;
@@ -64,13 +65,13 @@ public class BlobMaker : MapMaker
                 else
                 {
                     // if the algo still needs to branch but all adjacent spots are taken, just queue a random adjacent chunk
-                    randint = Random.Range(0, adj_chunks.Keys.Count);
-                    new_chunk = adj_chunks.Keys.ElementAt(randint);
+                    randint = Random.Range(0, border_chunks.Count);
+                    new_chunk = border_chunks.ElementAt(randint);
                 }
                 if ((i+1 + chunk_queue.Count) < gen_preset.map_size) // make sure the chunks in queue dont go outta control
                 {
                     if (in_chunk_queue.Add(new_chunk)) {
-                        adj_chunks.Remove(new_chunk);
+                        border_chunks.Remove(new_chunk);
                         chunk_queue.Enqueue(new_chunk);
                     }
 
@@ -80,7 +81,7 @@ public class BlobMaker : MapMaker
                         if (!all_chunks.ContainsKey(new_adj_chunk) && !in_chunk_queue.Contains(new_adj_chunk))
                         {
                             // add to adjacent chunks list/dict
-                            adj_chunks[new_adj_chunk] = new_adj_chunk;
+                            border_chunks.Add(new_adj_chunk);
                         }
                     }
                 }

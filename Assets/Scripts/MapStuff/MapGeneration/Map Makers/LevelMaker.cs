@@ -8,7 +8,8 @@ public class LevelMaker : MapMaker
 {
     public override Vector2 GenerateMap( // return map center
         Dictionary<Vector2Int, MapChunk> all_chunks, 
-        Dictionary<Vector2Int, Vector2Int> adj_chunks, 
+        HashSet<Vector2Int> border_chunks, 
+        HashSet<Vector2Int> path_chunks, 
         MapChunk[] critical_locs,
         MapGenPreset gen_preset)
     {
@@ -24,7 +25,7 @@ public class LevelMaker : MapMaker
         all_poi[0] = start_pos;
         critical_locs[0] = new MapChunk(all_poi[0]);
         all_chunks[start_pos] = critical_locs[0];
-
+        path_chunks.Add(start_pos);
         for (int i = 1; i < all_poi.Length; i++) 
         {
             Vector2 new_pos = start_pos + random_dir * gen_preset.map_size * poi_partition * i;
@@ -40,14 +41,16 @@ public class LevelMaker : MapMaker
             Vector2 dir_vec = all_poi[i] - all_poi[i-1];
             int dx = all_poi[i].x - all_poi[i-1].x, dy = all_poi[i].y - all_poi[i-1].y;
             float diag_dist = Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy));
-            for (int d = 1; d <= diag_dist; d++)
+            for (float d = 1; d <= diag_dist; d++)
             {
+                float t = d / (float)diag_dist;
                 dir_vec = dir_vec.normalized;
                 Vector2Int offset_vec = new Vector2Int(
-                    (int)Mathf.Round(all_poi[i-1].x + dx * (d/diag_dist)), 
-                    (int)Mathf.Round(all_poi[i-1].y + dy * (d/diag_dist))
+                    (int)Mathf.Round(all_poi[i-1].x + dx * t), 
+                    (int)Mathf.Round(all_poi[i-1].y + dy * t)
                     );
-                all_chunks[offset_vec] = new MapChunk(all_poi[i-1] + offset_vec);
+                all_chunks[offset_vec] = new MapChunk(offset_vec);
+                path_chunks.Add(offset_vec);
             }
         }
 
@@ -55,61 +58,89 @@ public class LevelMaker : MapMaker
         Queue<Vector2Int> chunk_queue = new Queue<Vector2Int>();
         HashSet<Vector2Int> in_chunk_queue = new HashSet<Vector2Int>();
         List<Vector2Int> list_buffer = new List<Vector2Int>(); // use for branching
-        Vector2Int[] adjacent_array = gen_preset.four_adj_tiles ? Directions2D.four_directions : Directions2D.eight_directions;
-        Directions2D.DirArray dir_array_type = gen_preset.four_adj_tiles ? Directions2D.DirArray.HORZ_WEIGHT_FOUR : Directions2D.DirArray.HORZ_WEIGHT_EIGHT;
         
+        // queue starting path chunks
         foreach(Vector2Int chunk in all_chunks.Keys)
         {
-            chunk_queue.Enqueue(chunk);
-        }
-
-        int chunks = gen_preset.map_size * gen_preset.map_scale;
-        for (int i = 0; i < chunks && chunk_queue.Count > 0; i++) {
-            // add chunk to the hashset
-            Vector2Int curr_chunk = chunk_queue.Dequeue();
-            in_chunk_queue.Remove(curr_chunk);
-            all_chunks[curr_chunk] = new MapChunk(curr_chunk);
-
-            // see where the current chunk can branch to
-            Directions2D.ValidPositionsFromPoint(list_buffer, dir_array_type, curr_chunk, all_chunks, in_chunk_queue);
-            // preform semi-random branch
-            int branches = Random.Range(gen_preset.min_chunk_branching, gen_preset.max_chunk_branching + 1);
-            for (int b = 0; b < branches; b++)
+            foreach (Vector2Int dir in Directions2D.eight_directions)
             {
-                Vector2Int new_chunk = curr_chunk;
-                int randint = 0;
-                if (list_buffer.Count > 0) // prevent overlapping with preexisting chunks
+                Vector2Int chunk_dir = chunk + dir;
+                if (!all_chunks.ContainsKey(chunk_dir) && !in_chunk_queue.Contains(chunk_dir))
                 {
-                    randint = Random.Range(0, list_buffer.Count);
-                    new_chunk = list_buffer[randint];
-                    list_buffer.RemoveAt(randint);
-                } 
-                else
-                {
-                    // if the algo still needs to branch but all adjacent spots are taken, just queue a random adjacent chunk
-                    randint = Random.Range(0, adj_chunks.Keys.Count);
-                    new_chunk = adj_chunks.Keys.ElementAt(randint);
+                    chunk_queue.Enqueue(chunk_dir);
+                    in_chunk_queue.Add(chunk_dir);
                 }
-                if ((i+1 + chunk_queue.Count) < chunks) // make sure the chunks in queue dont go outta control
+            }
+        }
+        // add adjacent chunks
+        foreach(Vector2Int in_queue in in_chunk_queue)
+        {
+            foreach (Vector2Int adj in Directions2D.four_directions)
+            {
+                Vector2Int chunk_dir_adj = in_queue + adj;
+                if (!all_chunks.ContainsKey(chunk_dir_adj) && !in_chunk_queue.Contains(chunk_dir_adj))
                 {
-                    if (in_chunk_queue.Add(new_chunk)) {
-                        adj_chunks.Remove(new_chunk);
-                        chunk_queue.Enqueue(new_chunk);
-                    }
-
-                    foreach (Vector2Int adjacent in adjacent_array) // update adjacent chunks
-                    {
-                        Vector2Int new_adj_chunk = new_chunk + adjacent;
-                        if (!all_chunks.ContainsKey(new_adj_chunk) && !in_chunk_queue.Contains(new_adj_chunk))
-                        {
-                            // add to adjacent chunks list/dict
-                            adj_chunks[new_adj_chunk] = new_adj_chunk;
-                        }
-                    }
+                    border_chunks.Add(chunk_dir_adj);
                 }
             }
         }
 
+        // random propagation to adjacent chunks
+        int chunks = gen_preset.map_size * gen_preset.map_scale;
+        for (int i = 0; i < chunks && chunk_queue.Count > 0; i++) {
+            // remove chunk from queue add chunk to all chunks
+            Vector2Int curr_chunk = chunk_queue.Dequeue();
+            in_chunk_queue.Remove(curr_chunk);
+            all_chunks[curr_chunk] = new MapChunk(curr_chunk);
+
+            //queue a random adjacent chunk
+            int randint = Random.Range(0, border_chunks.Count);
+            Vector2Int new_chunk = border_chunks.ElementAt(randint);
+
+            if ((i+1 + chunk_queue.Count) < chunks) // dont add anymore chunks if the queue is at the limit
+            {
+                if (in_chunk_queue.Add(new_chunk)) {
+                    border_chunks.Remove(new_chunk);
+                    chunk_queue.Enqueue(new_chunk);
+                }
+                foreach (Vector2Int adjacent in Directions2D.four_directions) // update adjacent chunks
+                {
+                    Vector2Int new_adj_chunk = new_chunk + adjacent;
+                    if (!all_chunks.ContainsKey(new_adj_chunk) && !in_chunk_queue.Contains(new_adj_chunk))
+                    {
+                        // add to adjacent chunks list/dict
+                        border_chunks.Add(new_adj_chunk);
+                    }
+                }
+            }
+        }
+        // fill map gaps
+        list_buffer.Clear(); // use list buffer to destroy all  surrounded borders
+        foreach(Vector2Int border in border_chunks)
+        {
+            bool adj_to_empty = false;
+            foreach(Vector2Int dir in Directions2D.eight_directions)
+            {
+                // convert border chunks that aren't diagonally adjacent to a completely empty area into normal chunks
+                Vector2Int border_dir = border + dir;
+                if (!border_chunks.Contains(border_dir) && !all_chunks.ContainsKey(border_dir))
+                {
+                    adj_to_empty = true;
+                    break;
+                }
+            }
+            if (!adj_to_empty)
+            {
+                list_buffer.Add(border);
+                all_chunks[border] = new MapChunk(border);
+            }
+        }
+        foreach(Vector2Int border in list_buffer)
+        {
+            border_chunks.Remove(border);
+        }
+
+        // get neighbors
         foreach (Vector2Int curr_chunk in all_chunks.Keys)
         {
             list_buffer.Clear();

@@ -325,8 +325,8 @@ MonoBehaviour:
   main_hand: {fileID: 1413471862373244730}
   alt_hand: {fileID: 967626683832254148}
   anim: {fileID: 234494506826388213}
-  front_particles: {fileID: 0}
-  back_particles: {fileID: 0}
+  front_particles: {fileID: 2609493673158355598}
+  back_particles: {fileID: 8156116054890078836}
   aim_angle: 0
   inventory:
   - {fileID: 0}

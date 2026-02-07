@@ -20,12 +20,13 @@ public class MapManager : MonoBehaviour
     [SerializeField] MapMaker map_maker;
 
     [Header("ProcGen Stuff")]
-    public static readonly int chunk_size = 8; // each chunk is 12z minimap tiles
+    public static readonly int chunk_size = 4; // each chunk is 12z minimap tiles
     public static readonly int border_width = 4; // each chunk is 12z minimap tiles
     public static readonly Vector2Int START_POS = Vector2Int.zero;
     // each chunk expands to the TOP RIGHT when it becomes a 2D area instead of a single point
     public Dictionary<Vector2Int, MapChunk> all_chunks = new Dictionary<Vector2Int, MapChunk>();
-    private Dictionary<Vector2Int, Vector2Int> adj_chunks = new Dictionary<Vector2Int, Vector2Int>();
+    private HashSet<Vector2Int> border_chunks = new HashSet<Vector2Int>(); // chunks where the map is no go
+    private HashSet<Vector2Int> path_chunks = new HashSet<Vector2Int>(); // chunks containing the paths between POI
 
     // important chunks/positions
     public Vector2Int spawn_chunk; // where the player spawns in
@@ -40,7 +41,7 @@ public class MapManager : MonoBehaviour
 
     [Header("Gizmo Stuff")]
     [SerializeField] bool show_chunks = true;
-    [SerializeField] bool show_adj_chunks = true;
+    [SerializeField] bool show_border_chunks = true;
     [SerializeField] bool show_critical_chunks = true;
     [SerializeField] bool show_quads = true;
 
@@ -70,10 +71,10 @@ public class MapManager : MonoBehaviour
     {
         // initialize data holders
         all_chunks.Clear();
-        adj_chunks.Clear();
+        border_chunks.Clear();
         critical_locs = new MapChunk[1 + gen_preset.objectives];
 
-        map_center = map_maker.GenerateMap(all_chunks, adj_chunks, critical_locs, gen_preset);
+        map_center = map_maker.GenerateMap(all_chunks, border_chunks, path_chunks, critical_locs, gen_preset);
         spawn_chunk = critical_locs[0].position;
         final_chunk = critical_locs[critical_locs.Length-1].position;
     }
@@ -102,30 +103,49 @@ public class MapManager : MonoBehaviour
 
         foreach(Vector2Int pos in all_chunks.Keys)
         {
-            foreach(Vector2Int dir in all_chunks[pos].neighbor_chunks)
+            Vector2Int chunk_vec =  pos * chunk_size;
+            int size_iter = chunk_size/2 + border_width;
+            for (int x = -size_iter; x < size_iter; x++)
             {
-                for (int i = 0; i <= chunk_size/2; i++)
+                for (int y = -size_iter; y < size_iter; y++)
                 {
-                    Vector2Int chunk_vec = pos * chunk_size + dir * i;
-                    int size_iter = chunk_size/2 + border_width;
-                    for (int x = -size_iter; x < size_iter; x++)
+                    Vector2Int draw_offset = new Vector2Int(x, y);
+                    if (Mathf.Abs(x) <= (int)chunk_size/2 && Mathf.Abs(y) <= (int)chunk_size/2)
                     {
-                        for (int y = -size_iter; y < size_iter; y++)
-                        {
-                            Vector2Int draw_offset = new Vector2Int(x, y);
-                            if (Mathf.Abs(x) <= chunk_size/2 && Mathf.Abs(y) <= chunk_size/2)
-                            {
-                                draw_ground.Add((Vector3Int)(draw_offset + chunk_vec));
-                            }
-                            else
-                            {
-                                draw_border.Add((Vector3Int)(draw_offset + chunk_vec));
-                            }
-                            
-                        }
+                        draw_ground.Add((Vector3Int)(draw_offset + chunk_vec));
                     }
+                    else
+                    {
+                        draw_border.Add((Vector3Int)(draw_offset + chunk_vec));
+                    }
+                    
                 }
-            }
+            }    
+        
+            // foreach(Vector2Int dir in all_chunks[pos].neighbor_chunks)
+            // {
+            //     for (int i = 0; i <= chunk_size/2; i++)
+            //     {
+            //         Vector2Int chunk_vec = pos * chunk_size + dir * i;
+            //         int size_iter = chunk_size/2 + border_width;
+            //         for (int x = -size_iter; x < size_iter; x++)
+            //         {
+            //             for (int y = -size_iter; y < size_iter; y++)
+            //             {
+            //                 Vector2Int draw_offset = new Vector2Int(x, y);
+            //                 if (Mathf.Abs(x) <= chunk_size/2 && Mathf.Abs(y) <= chunk_size/2)
+            //                 {
+            //                     draw_ground.Add((Vector3Int)(draw_offset + chunk_vec));
+            //                 }
+            //                 else
+            //                 {
+            //                     draw_border.Add((Vector3Int)(draw_offset + chunk_vec));
+            //                 }
+                            
+            //             }
+            //         }
+            //     }
+            // }
         }
 
         foreach(Vector3Int chunk in draw_ground)
@@ -225,11 +245,11 @@ public class MapManager : MonoBehaviour
                 DrawChunk(chunk, Color.white);
             }
         }
-        if (show_adj_chunks)
+        if (show_border_chunks)
         {
-            foreach (Vector2Int chunk in adj_chunks.Keys)
+            foreach (Vector2Int chunk in border_chunks)
             {
-                DrawChunk(chunk, Color.grey);
+                DrawChunk(chunk, Color.black);
             }
         }
         if (show_critical_chunks)
