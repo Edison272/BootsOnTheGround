@@ -10,21 +10,21 @@ public class LevelMaker : MapMaker
         Dictionary<Vector2Int, MapChunk> all_chunks, 
         HashSet<Vector2Int> border_chunks, 
         HashSet<Vector2Int> path_chunks, 
-        MapChunk[] critical_locs,
+        MajorPOI[] critical_locs,
         MapGenPreset gen_preset)
     {
-        // temporary preset information
+
         Vector2Int start_pos = MapManager.START_POS;
         Vector2 unit_circ = Random.insideUnitCircle;
         Vector2 random_dir = new Vector2(unit_circ.x + Mathf.Sign(unit_circ.x) * Random.Range(1.25f, 1.75f), unit_circ.y*0.9f).normalized;
-        
+
         float poi_partition = 1f/gen_preset.objectives;
         Vector2Int[] all_poi = new Vector2Int[critical_locs.Length];
 
         // initialize starting point
         all_poi[0] = start_pos;
-        critical_locs[0] = new MapChunk(all_poi[0]);
-        all_chunks[start_pos] = critical_locs[0];
+        critical_locs[0] = new MajorPOI(all_poi[0]);
+        all_chunks[start_pos] = critical_locs[0].main_chunk;
         path_chunks.Add(start_pos);
         for (int i = 1; i < all_poi.Length; i++) 
         {
@@ -32,7 +32,9 @@ public class LevelMaker : MapMaker
             float lat_scale = gen_preset.map_size * poi_partition;
             new_pos += new Vector2(random_dir.y, -random_dir.x).normalized * Random.Range(-lat_scale, lat_scale);
             all_poi[i] = new Vector2Int((int)new_pos.x, (int)new_pos.y);
-            critical_locs[i] = new MapChunk(all_poi[i]);
+            critical_locs[i] = new MajorPOI(all_poi[i], critical_locs[i-1]);
+            critical_locs[i-1].SetNextPOI(critical_locs[i]);
+            critical_locs[i-1].GenerateMinorPOI(2, poi_partition * gen_preset.map_size * 0.5f);
         }
 
         // Draw a path between all poi
@@ -173,7 +175,7 @@ public class LevelMaker : MapMaker
 
     public override void GeneratePOI(
         Dictionary<Vector2Int, MapChunk> all_chunks, 
-        MapChunk[] critical_locs)
+        MajorPOI[] critical_locs)
     {
 
     }

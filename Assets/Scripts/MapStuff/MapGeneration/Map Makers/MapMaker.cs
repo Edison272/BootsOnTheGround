@@ -7,11 +7,11 @@ public abstract class MapMaker
         Dictionary<Vector2Int, MapChunk> all_chunks, 
         HashSet<Vector2Int> border_chunks, 
         HashSet<Vector2Int> path_chunks, 
-        MapChunk[] critical_locs,
+        MajorPOI[] critical_locs,
         MapGenPreset gen_preset);
 
     public abstract void GeneratePOI(
         Dictionary<Vector2Int, MapChunk> all_chunks, 
-        MapChunk[] critical_locs
+        MajorPOI[] critical_locs
     );
 }

@@ -33,7 +33,7 @@ public class MapManager : MonoBehaviour
     public Vector2Int final_chunk; // chunk with the main objective
     public Vector2 map_center; // duh
 
-    public MapChunk[] critical_locs = new MapChunk[0]; // start & final + POI
+    public MajorPOI[] critical_locs = new MajorPOI[0]; // start & final + POI
 
     // format is chunk, chunk + 1,0 , chunk + 1,1 , chunk + 0,1
     HashSet<Vector3Int> draw_ground = new HashSet<Vector3Int>();
@@ -72,11 +72,11 @@ public class MapManager : MonoBehaviour
         // initialize data holders
         all_chunks.Clear();
         border_chunks.Clear();
-        critical_locs = new MapChunk[1 + gen_preset.objectives];
+        critical_locs = new MajorPOI[1 + gen_preset.objectives];
 
         map_center = map_maker.GenerateMap(all_chunks, border_chunks, path_chunks, critical_locs, gen_preset);
-        spawn_chunk = critical_locs[0].position;
-        final_chunk = critical_locs[critical_locs.Length-1].position;
+        spawn_chunk = critical_locs[0].main_chunk.position;
+        final_chunk = critical_locs[critical_locs.Length-1].main_chunk.position;
     }
     #endregion
 
@@ -259,14 +259,19 @@ public class MapManager : MonoBehaviour
             DrawChunk(spawn_chunk, Color.green);
             for (int i = 0; i < critical_locs.Length; i++)
             {
-                MapChunk chunk = critical_locs[i];
+                MapChunk chunk = critical_locs[i].main_chunk;
                 if (chunk.position != spawn_chunk && chunk.position != final_chunk)
                 {
                     DrawChunk(chunk.position, Color.yellow);
+                    foreach(Vector2Int minor_poi in critical_locs[i].minor_poi)
+                    {
+                        Debug.DrawLine((Vector2)chunk.position * chunk_size, (Vector2)minor_poi * chunk_size);
+                        DrawChunk(minor_poi, Color.cyan);
+                    }
                 }
                 if (i < critical_locs.Length-1)
                 {
-                    Debug.DrawLine((Vector2)chunk.position * chunk_size, (Vector2)critical_locs[i+1].position * chunk_size);
+                    Debug.DrawLine((Vector2)chunk.position * chunk_size, (Vector2)critical_locs[i+1].main_chunk.position * chunk_size);
                 }
                 // foreach(MapChunk other_chunk in critical_locs)
                 // {
