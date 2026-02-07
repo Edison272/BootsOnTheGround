@@ -38,15 +38,21 @@ public class MajorPOI
 
     public void GenerateMinorPOI(int amount, float size)
     {
+        if (amount <= 0)
+        {
+            return;
+        }
+        
         if (!(next_poi == null) && !(prev == null))
         {
-            Vector2 splinter_dir = -1f * ((Vector2)prev.main_chunk.position + next_poi.main_chunk.position - 2*main_chunk.position).normalized;
+            Vector2 splinter_dir = ((Vector2)prev.main_chunk.position + next_poi.main_chunk.position - 2*main_chunk.position).normalized;
             Debug.Log(splinter_dir);
             minor_poi = new Vector2Int[amount];
             float poi_partition = 1/amount;
             for (int i = 0; i < amount; i++)
             {
-                Vector2 new_pos = main_chunk.position + splinter_dir * size;
+                splinter_dir *= -1;
+                Vector2 new_pos = main_chunk.position + splinter_dir * (size + size * poi_partition);
                 float lat_scale = size;
                 new_pos += new Vector2(splinter_dir.y, -splinter_dir.x).normalized * Random.Range(-lat_scale, lat_scale);
                 minor_poi[i] = new Vector2Int((int)new_pos.x, (int)new_pos.y);

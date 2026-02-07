@@ -14,6 +14,7 @@ public class MapManager : MonoBehaviour
 
     [SerializeField] TileBase floor_tile;
     [SerializeField] TileBase wall_tile;
+    [SerializeField] TileBase path_tile;
 
     [Header("ProcGen Stuff")]
     [SerializeField] MapMakerType map_maker_type;
@@ -37,12 +38,14 @@ public class MapManager : MonoBehaviour
 
     // format is chunk, chunk + 1,0 , chunk + 1,1 , chunk + 0,1
     HashSet<Vector3Int> draw_ground = new HashSet<Vector3Int>();
+    HashSet<Vector3Int> draw_path = new HashSet<Vector3Int>();
     HashSet<Vector3Int> draw_border = new HashSet<Vector3Int>();
 
     [Header("Gizmo Stuff")]
     [SerializeField] bool show_chunks = true;
     [SerializeField] bool show_border_chunks = true;
     [SerializeField] bool show_critical_chunks = true;
+    [SerializeField] bool show_minor_poi = true;
     [SerializeField] bool show_quads = true;
 
     public void GenerateMap()
@@ -72,6 +75,7 @@ public class MapManager : MonoBehaviour
         // initialize data holders
         all_chunks.Clear();
         border_chunks.Clear();
+        path_chunks.Clear();
         critical_locs = new MajorPOI[1 + gen_preset.objectives];
 
         map_center = map_maker.GenerateMap(all_chunks, border_chunks, path_chunks, critical_locs, gen_preset);
@@ -100,23 +104,24 @@ public class MapManager : MonoBehaviour
 
         draw_ground.Clear();
         draw_border.Clear();
+        draw_path.Clear();
 
         foreach(Vector2Int pos in all_chunks.Keys)
         {
             Vector2Int chunk_vec =  pos * chunk_size;
-            int size_iter = chunk_size/2 + border_width;
+            int size_iter = chunk_size/2;
             for (int x = -size_iter; x < size_iter; x++)
             {
                 for (int y = -size_iter; y < size_iter; y++)
                 {
                     Vector2Int draw_offset = new Vector2Int(x, y);
-                    if (Mathf.Abs(x) <= (int)chunk_size/2 && Mathf.Abs(y) <= (int)chunk_size/2)
+                    if (path_chunks.Contains(pos))
                     {
-                        draw_ground.Add((Vector3Int)(draw_offset + chunk_vec));
+                        draw_path.Add((Vector3Int)(draw_offset + chunk_vec));
                     }
                     else
                     {
-                        draw_border.Add((Vector3Int)(draw_offset + chunk_vec));
+                        draw_ground.Add((Vector3Int)(draw_offset + chunk_vec));
                     }
                     
                 }
@@ -148,16 +153,36 @@ public class MapManager : MonoBehaviour
             // }
         }
 
+        foreach (Vector2Int border_chunk in border_chunks)
+        {
+            Vector2Int chunk_vec =  border_chunk * chunk_size;
+            int size_iter = chunk_size/2;
+            for (int x = -size_iter; x < size_iter; x++)
+            {
+                for (int y = -size_iter; y < size_iter; y++)
+                {
+                    Vector2Int draw_offset = new Vector2Int(x, y);
+                    draw_border.Add((Vector3Int)(draw_offset + chunk_vec));
+                    
+                }
+            }    
+        }
+
         foreach(Vector3Int chunk in draw_ground)
         {
             Floor.SetTile(chunk, floor_tile);
         }
+        foreach(Vector3Int chunk in draw_path)
+        {
+            Floor.SetTile(chunk, path_tile);
+        }
         foreach(Vector3Int chunk in draw_border)
         {
-            if (!Floor.GetTile(chunk))
-            {
-                Wall.SetTile(chunk, wall_tile);
-            }
+            Wall.SetTile(chunk, wall_tile);
+            // if (!Floor.GetTile(chunk))
+            // {
+            //     Wall.SetTile(chunk, wall_tile);
+            // }
             
         }
     }
@@ -235,7 +260,8 @@ public class MapManager : MonoBehaviour
             Debug.DrawLine(point * chunk_size, point * chunk_size + dir * chunk_size/4, line_color, duration);
         }
     }
-
+    #endregion
+    #region Gizmos Drawer
     void OnDrawGizmos()
     {
         if (show_chunks)
@@ -263,10 +289,13 @@ public class MapManager : MonoBehaviour
                 if (chunk.position != spawn_chunk && chunk.position != final_chunk)
                 {
                     DrawChunk(chunk.position, Color.yellow);
-                    foreach(Vector2Int minor_poi in critical_locs[i].minor_poi)
+                    if (show_minor_poi)
                     {
-                        Debug.DrawLine((Vector2)chunk.position * chunk_size, (Vector2)minor_poi * chunk_size);
-                        DrawChunk(minor_poi, Color.cyan);
+                        foreach(Vector2Int minor_poi in critical_locs[i].minor_poi)
+                        {
+                            Debug.DrawLine((Vector2)chunk.position * chunk_size, (Vector2)minor_poi * chunk_size);
+                            DrawChunk(minor_poi, Color.cyan);
+                        }
                     }
                 }
                 if (i < critical_locs.Length-1)

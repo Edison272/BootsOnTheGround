@@ -13,7 +13,7 @@ public class LevelMaker : MapMaker
         MajorPOI[] critical_locs,
         MapGenPreset gen_preset)
     {
-
+        #region GenMap - Spine
         Vector2Int start_pos = MapManager.START_POS;
         Vector2 unit_circ = Random.insideUnitCircle;
         Vector2 random_dir = new Vector2(unit_circ.x + Mathf.Sign(unit_circ.x) * Random.Range(1.25f, 1.75f), unit_circ.y*0.9f).normalized;
@@ -26,6 +26,7 @@ public class LevelMaker : MapMaker
         critical_locs[0] = new MajorPOI(all_poi[0]);
         all_chunks[start_pos] = critical_locs[0].main_chunk;
         path_chunks.Add(start_pos);
+        int total_minor_poi = 0;
         for (int i = 1; i < all_poi.Length; i++) 
         {
             Vector2 new_pos = start_pos + random_dir * gen_preset.map_size * poi_partition * i;
@@ -34,19 +35,20 @@ public class LevelMaker : MapMaker
             all_poi[i] = new Vector2Int((int)new_pos.x, (int)new_pos.y);
             critical_locs[i] = new MajorPOI(all_poi[i], critical_locs[i-1]);
             critical_locs[i-1].SetNextPOI(critical_locs[i]);
-            critical_locs[i-1].GenerateMinorPOI(2, poi_partition * gen_preset.map_size * 0.5f);
+            
+            int generate_poi = Random.Range(0, gen_preset.minor_poi);
+            critical_locs[i-1].GenerateMinorPOI(generate_poi, poi_partition * gen_preset.map_size * 0.5f);
+            total_minor_poi += generate_poi;
         }
 
         // Draw a path between all poi
         for (int i = 1; i < all_poi.Length; i++)
         {
-            Vector2 dir_vec = all_poi[i] - all_poi[i-1];
             int dx = all_poi[i].x - all_poi[i-1].x, dy = all_poi[i].y - all_poi[i-1].y;
             float diag_dist = Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy));
             for (float d = 1; d <= diag_dist; d++)
             {
                 float t = d / (float)diag_dist;
-                dir_vec = dir_vec.normalized;
                 Vector2Int offset_vec = new Vector2Int(
                     (int)Mathf.Round(all_poi[i-1].x + dx * t), 
                     (int)Mathf.Round(all_poi[i-1].y + dy * t)
@@ -54,8 +56,26 @@ public class LevelMaker : MapMaker
                 all_chunks[offset_vec] = new MapChunk(offset_vec);
                 path_chunks.Add(offset_vec);
             }
-        }
 
+            foreach (Vector2Int m_poi in critical_locs[i].minor_poi)
+            {
+                int poi_dx = m_poi.x - all_poi[i].x, poi_dy = m_poi.y - all_poi[i].y;
+                float poi_diag_dist = Mathf.Max(Mathf.Abs(poi_dx), Mathf.Abs(poi_dy));
+                for (float d = 1; d <= poi_diag_dist; d++)
+                {
+                    float t = d / (float)poi_diag_dist;
+                    Vector2Int offset_vec = new Vector2Int(
+                        (int)Mathf.Round(all_poi[i].x + poi_dx * t), 
+                        (int)Mathf.Round(all_poi[i].y + poi_dy * t)
+                        );
+                    all_chunks[offset_vec] = new MapChunk(offset_vec);
+                    path_chunks.Add(offset_vec);
+                }
+            }
+        }
+        #endregion
+
+        #region GenMap - Body
         // set up more chunks around poi path
         Queue<Vector2Int> chunk_queue = new Queue<Vector2Int>();
         HashSet<Vector2Int> in_chunk_queue = new HashSet<Vector2Int>();
@@ -88,7 +108,7 @@ public class LevelMaker : MapMaker
         }
 
         // random propagation to adjacent chunks
-        int chunks = gen_preset.map_size * gen_preset.map_scale;
+        int chunks = gen_preset.map_size * gen_preset.map_scale + total_minor_poi * gen_preset.map_scale;
         for (int i = 0; i < chunks && chunk_queue.Count > 0; i++) {
             // remove chunk from queue add chunk to all chunks
             Vector2Int curr_chunk = chunk_queue.Dequeue();
@@ -116,7 +136,10 @@ public class LevelMaker : MapMaker
                 }
             }
         }
-        // fill map gaps
+        #endregion
+
+        #region GenMap - Post
+        // fill isolated border chunks
         list_buffer.Clear(); // use list buffer to destroy all  surrounded borders
         foreach(Vector2Int border in border_chunks)
         {
@@ -171,6 +194,7 @@ public class LevelMaker : MapMaker
         }
 
         return Vector2.zero;
+        #endregion
     }
 
     public override void GeneratePOI(
