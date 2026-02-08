@@ -12,31 +12,84 @@ public class Objective : MonoBehaviour
     [Header("VFX")]
     public Transform capture_point_mask;
     public SpriteRenderer[] color_components;
+
+    [Header("Capture Data")]
+    private float curr_capture_time = 0;
+    private float max_capture_time = 5f;
+    private int owner = -1;
+    [SerializeField] private int squad_weight = 0;
+    [SerializeField] private int enemy_weight = 0;
+    private Color og_color;
+    private Color target_color;
     public void Setup(MajorPOI poi)
     {
         objective_poi = poi;
-        SetCompletion(1);
     }
 
-    public void SetCompletion(float progress)
+    public void SetColor(Color color)
     {
-        Debug.Log(GameOverseer.squad_color);
-        Color enemy_color = GameOverseer.enemy_color;
+        foreach(SpriteRenderer color_component in color_components)
+        {
+            color.a = color_component.color.a;
+            color_component.color = color;
+        }
+    }
+
+    public void AddOccupier(Character character)
+    {
+        if (character.faction_tag == GameOverseer.squad_tag) {squad_weight++;}
+        else {enemy_weight++;}
+    }
+
+    public void RemoveOccupier(Character character)
+    {
+        if (character.faction_tag == GameOverseer.squad_tag) {squad_weight--;}
+        else {enemy_weight--;}
+    }
+
+    public void Update()
+    {
+        if (squad_weight != enemy_weight)
+        {
+            GrowObjective();
+        } 
         
-        foreach(SpriteRenderer color_component in color_components)
-        {
-            enemy_color.a = color_component.color.a;
-            color_component.color = enemy_color;
-        }
     }
 
-    public void PointCaptured()
+    public void GrowObjective()
     {
-        Color squad_color = GameOverseer.squad_color;
-        foreach(SpriteRenderer color_component in color_components)
+        float capture_delta = Time.deltaTime * (squad_weight > enemy_weight ? 1 : -1);
+        if (owner != -1)
         {
-            squad_color.a = color_component.color.a;
-            color_component.color = squad_color;
-        }
+            if (Mathf.Sign(curr_capture_time + capture_delta) != Math.Sign(curr_capture_time))
+            {
+                owner = -1;
+                SetColor(GameOverseer.empty_color);
+            }
+        } 
+        
+        
+        curr_capture_time += capture_delta;
+        curr_capture_time = Mathf.Clamp(curr_capture_time, -max_capture_time, max_capture_time);
+
+        float abs_curr_capture_time = Mathf.Abs(curr_capture_time);
+        float scale = (1 - abs_curr_capture_time / max_capture_time) * 0.875f;
+        capture_point_mask.localScale = new Vector3(scale, scale, 1);
+        
+        if (abs_curr_capture_time >= max_capture_time)
+        {
+            // assign victor based on point captured
+            if (curr_capture_time > 0)
+            {
+                SetColor(GameOverseer.squad_color);
+                owner = GameOverseer.squad_tag;
+            } 
+            else
+            {
+                SetColor(GameOverseer.enemy_color);
+                owner = GameOverseer.enemy_tag;
+            }
+;
+        } 
     }
 }

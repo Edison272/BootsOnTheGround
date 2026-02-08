@@ -34,9 +34,9 @@ public class AIManager
     #endregion
 
     #region Targetting
-    public Character GetTargetCharacter(bool is_squad, Character curr_character, float max_range = 1000f, TargetType targ_type = TargetType.Closest)
+    public Character GetTargetCharacter(int faction_tag, Character curr_character, float max_range = 1000f, TargetType targ_type = TargetType.Closest)
     {
-        IEnumerable<Character> check_data = is_squad ? game_overseer.enemy_manager.enemies : game_overseer.squad_manager.squad;
+        IEnumerable<Character> check_data = faction_tag == GameOverseer.squad_tag ? game_overseer.enemy_manager.enemies : game_overseer.squad_manager.squad;
         Func<Character, Character, float> ScoringFunc = GetNearestScore;
         switch (targ_type)
         {

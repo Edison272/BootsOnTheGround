@@ -36,6 +36,8 @@ public class MapManager : MonoBehaviour
     public Vector2 map_center; // duh
 
     public MajorPOI[] critical_locs = new MajorPOI[0]; // start & final + POI
+    public Dictionary<Character, int> chars_in_poi = new Dictionary<Character, int>();
+    private List<Character> removal_buffer = new List<Character>();
 
     // format is chunk, chunk + 1,0 , chunk + 1,1 , chunk + 0,1
     HashSet<Vector3Int> draw_ground = new HashSet<Vector3Int>();
@@ -206,25 +208,66 @@ public class MapManager : MonoBehaviour
     }
 #endregion
 
-#region Get Info
-    public void SetNewPosition(Character character)
+#region Update
+
+    void Update()
     {
-        Vector2Int tile_pos = new Vector2Int(
-            (int)Mathf.Round(character.GetPosition().x),
-            (int)Mathf.Round(character.GetPosition().y)
+        if (chars_in_poi.Count > 0) {
+            foreach (Character character in chars_in_poi.Keys)
+            {
+                MajorPOI poi = critical_locs[chars_in_poi[character]];
+                if (!character.IsInAction())
+                {
+                    poi.objective_point.RemoveOccupier(character);
+                    removal_buffer.Add(character);
+                }
+                else if (GetTileToChunkSpace(GetWorldToTileSpace(character.GetPosition())) != poi.main_chunk.position)
+                {
+                    poi.objective_point.RemoveOccupier(character);
+                    removal_buffer.Add(character);
+                }
+            };
+            foreach(Character character in removal_buffer)
+            {
+                chars_in_poi.Remove(character);
+            }
+            removal_buffer.Clear();
+        }
+    }
+
+
+#endregion
+
+#region Set/Get Loc Info
+    public Vector2Int GetWorldToTileSpace(Vector2 world_pos)
+    {
+        return new Vector2Int(
+            (int)Mathf.Round(world_pos.x),
+            (int)Mathf.Round(world_pos.y)
         );
-        Vector2Int chunk_location = new Vector2Int(
+    }
+    public Vector2Int GetTileToChunkSpace(Vector2Int tile_pos)
+    {
+        return new Vector2Int(
             Mathf.FloorToInt((float)tile_pos.x/chunk_size),
             Mathf.FloorToInt((float)tile_pos.y/chunk_size)
         );
+    }
+    public void SetNewPosition(Character character)
+    {
+        Vector2Int tile_pos = GetWorldToTileSpace(character.GetPosition());
+        Vector2Int chunk_location = GetTileToChunkSpace(tile_pos);
         DrawTile(tile_pos, Color.white);
         DrawChunk(chunk_location, Color.cyan);
 
-        foreach(MajorPOI poi in critical_locs)
+        // check for chunk interactions
+        for(int i = 0; i< critical_locs.Length; i++)
         {
-            if (chunk_location == poi.main_chunk.position)
+            MajorPOI poi = critical_locs[i];
+            if (chunk_location == poi.main_chunk.position && !chars_in_poi.ContainsKey(character))
             {
-                poi.objective_point.PointCaptured();
+                poi.objective_point.AddOccupier(character);
+                chars_in_poi[character] = i;
             }
         }
     }

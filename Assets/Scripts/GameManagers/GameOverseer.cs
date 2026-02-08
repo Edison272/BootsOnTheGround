@@ -29,6 +29,9 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     [SerializeField] private Color serialize_enemy_color;
     public static Color squad_color;
     public static Color enemy_color;
+    public static Color empty_color = Color.white;
+    public static readonly int squad_tag = 0;
+    public static readonly int enemy_tag = 1;
 
     void Awake()
     {
@@ -73,9 +76,9 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     }
 
     #region AI Manager stuff
-    public static Character GetTargetCharacter(bool is_squad, Character curr_character, float max_range = 1000f, TargetType targ_type = TargetType.Closest)
+    public static Character GetTargetCharacter(int faction_tag, Character curr_character, float max_range = 1000f, TargetType targ_type = TargetType.Closest)
     {
-        return THE_OVERSEER.ai_manager.GetTargetCharacter(is_squad, curr_character, max_range, targ_type);
+        return THE_OVERSEER.ai_manager.GetTargetCharacter(faction_tag, curr_character, max_range, targ_type);
     }
     #endregion
 

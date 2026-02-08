@@ -25,12 +25,13 @@ public class ProjectileBehavior : MonoBehaviour
     float curr_travel_time = 0;
 
     [field: Header("Ownership")]
-    string faction_tag = "Untagged";
+    string object_tag = "Untagged";
+    int faction_tag = 1;
     Character owner;
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag != faction_tag && collider.gameObject.tag != "NoHit")
+        if (collider.gameObject.tag != object_tag && collider.gameObject.tag != "NoHit")
         {
             atk_data.ApplyData(this.main_body.transform.position, collider.gameObject);
             ProjectileEffects();
@@ -66,7 +67,8 @@ public class ProjectileBehavior : MonoBehaviour
         owner = sender;
         if (owner)
         {
-            faction_tag = owner.gameObject.tag;
+            object_tag = owner.gameObject.tag;
+            faction_tag = owner.faction_tag;
         }
 
         // adjust vfx rotation

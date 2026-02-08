@@ -33,6 +33,7 @@ public class EnemyManager : MonoBehaviour
         // setup the enemy character file
         Character new_enemy = enemy_presets[index].GenerateChar(position);
         new_enemy.gameObject.tag = this.gameObject.tag;
+        new_enemy.faction_tag = GameOverseer.enemy_tag;
         new_enemy.ConnectToEventBus(EnemyLost);
 
         // set up enemy behaviors
@@ -54,6 +55,17 @@ public class EnemyManager : MonoBehaviour
         else
         {
             curr_time -= Time.deltaTime;
+        }
+    }
+
+    public void FixedUpdate()
+    {
+        foreach(Character enemy in enemies)
+        {
+            if (enemy != null && enemy.IsInAction())
+            {
+                GameOverseer.THE_OVERSEER.map_manager.SetNewPosition(enemy);
+            }
         }
     }
 

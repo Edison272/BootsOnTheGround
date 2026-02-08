@@ -90,7 +90,7 @@ public class BehaviorController
             }
             
             // only switch targets if the target is in close quarters range
-            Character targ = GameOverseer.GetTargetCharacter(character.is_player_squad, character, character.curr_range, TargetType.Closest);
+            Character targ = GameOverseer.GetTargetCharacter(character.faction_tag, character, character.curr_range, TargetType.Closest);
             float sqr_close_range = character.close_range * character.close_range;
             if ((character.GetPosition() - targ.GetPosition()).sqrMagnitude <= sqr_close_range)
             {
@@ -111,7 +111,7 @@ public class BehaviorController
         } 
         else
         {
-            Character targ = GameOverseer.GetTargetCharacter(character.is_player_squad, character, character.curr_range, favorite_target);
+            Character targ = GameOverseer.GetTargetCharacter(character.faction_tag, character, character.curr_range, favorite_target);
             character.Look(character.GetPosition() + character.last_move_dir);
             Debug.DrawLine(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, Color.black);
             if (targ)

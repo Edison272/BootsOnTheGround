@@ -29,7 +29,8 @@ public class LinecastBehavior : MonoBehaviour
 
 
     [field: Header("Ownership")]
-    string faction_tag = "Untagged";
+    string object_tag = "Untagged";
+    int faction_tag = 1;
     Character owner;
 
     void GenerateLinecast()
@@ -38,7 +39,7 @@ public class LinecastBehavior : MonoBehaviour
         contacts = Physics2D.LinecastAll(source_pos, target_pos);
         foreach(RaycastHit2D contact in contacts)
         {
-            if (contact.transform.gameObject.tag != faction_tag && contact.transform.gameObject.tag != "NoHit")
+            if (contact.transform.gameObject.tag != object_tag && contact.transform.gameObject.tag != "NoHit")
             {
                 contact.transform.gameObject.GetComponent<IHealth>()?.ChangeHealth(atk_data.damage);
                 atk_data.ApplyData(source_pos, contact.transform.gameObject);
@@ -90,7 +91,8 @@ public class LinecastBehavior : MonoBehaviour
         owner = sender;
         if (owner)
         {
-            faction_tag = owner.gameObject.tag;
+            object_tag = owner.gameObject.tag;
+            faction_tag = owner.faction_tag;
         }
         // set origin position of line render
         SetLRPositions(0, src_pos, output_pos);

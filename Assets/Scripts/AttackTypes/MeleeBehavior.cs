@@ -32,12 +32,13 @@ public class MeleeBehavior : MonoBehaviour
 
 
     [field: Header("Ownership")]
-    string faction_tag = "Untagged";
+    string object_tag = "Untagged";
+    int faction_tag = 1;
     Character owner;
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag != faction_tag && collision.gameObject.tag != "NoHit")
+        if (collision.gameObject.tag != object_tag && collision.gameObject.tag != "NoHit")
         {
             atk_data.ApplyData(source_pos, collision.gameObject);
         }
@@ -70,7 +71,8 @@ public class MeleeBehavior : MonoBehaviour
         owner = sender;
         if (owner)
         {
-            faction_tag = owner.gameObject.tag;
+            object_tag = owner.gameObject.tag;
+            faction_tag = owner.faction_tag;
         }
         // adjust size & position based on new size
         main_body.transform.localScale = main_body.transform.localScale * mele_data.melee_size;

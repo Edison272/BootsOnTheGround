@@ -73,7 +73,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public float close_range => base_data.close_range;
 
     [field: Header("AI")]
-    public bool is_player_squad = false;
+    public int faction_tag = 1;
     protected bool is_AI_active = false;
     public BehaviorController behavior_controller;
     [field: Header("Character State")]
@@ -172,6 +172,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
     // Update is called once per frame
     void Update()
     {
+        if (!IsInAction())
+        {
+            return;
+        }
+        
         // constantly adjust aim position, since aim doesn't snap
         Aim();
 
@@ -188,12 +193,24 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
     void FixedUpdate()
     {
+        if (!IsInAction())
+        {
+            return;
+        }
         // movement
         Move();
         // Update AI
         if (is_AI_active)
         {
             behavior_controller.UpdateAI();
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (!is_alive)
+        {
+            Destroy(this.gameObject);
         }
     }
     #endregion
@@ -438,7 +455,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         {
             if (curr_health <= 0)
             {
-                Destroy(this.gameObject);
+                is_alive = false;
             }
         } else // negative damage is healing
         {
