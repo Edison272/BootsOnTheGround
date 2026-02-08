@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -41,6 +42,9 @@ public class MapManager : MonoBehaviour
     HashSet<Vector3Int> draw_path = new HashSet<Vector3Int>();
     HashSet<Vector3Int> draw_border = new HashSet<Vector3Int>();
 
+    [Header("Objective Point")]
+    public Objective objective_point_prefab;
+
     [Header("Gizmo Stuff")]
     [SerializeField] bool show_chunks = true;
     [SerializeField] bool show_border_chunks = true;
@@ -48,6 +52,14 @@ public class MapManager : MonoBehaviour
     [SerializeField] bool show_minor_poi = true;
     [SerializeField] bool show_quads = true;
 
+    public void Awake()
+    {
+        // Destroy POI made by map in editor. When editor destroys, it uses EditorDestroyMapObjects
+        foreach(MajorPOI objective in critical_locs)
+        {
+            Destroy(objective.objective_point.gameObject);
+        }
+    }
     public void GenerateMap()
     {
         switch(map_maker_type)
@@ -110,10 +122,9 @@ public class MapManager : MonoBehaviour
         foreach(Vector2Int pos in all_chunks.Keys)
         {
             Vector2Int chunk_vec =  pos * chunk_size;
-            int size_iter = chunk_size/2;
-            for (int x = -size_iter; x < size_iter; x++)
+            for (int x = 0; x < chunk_size; x++)
             {
-                for (int y = -size_iter; y < size_iter; y++)
+                for (int y = 0; y < chunk_size; y++)
                 {
                     Vector2Int draw_offset = new Vector2Int(x, y);
                     if (path_chunks.Contains(pos))
@@ -157,10 +168,9 @@ public class MapManager : MonoBehaviour
         foreach (Vector2Int border_chunk in border_chunks)
         {
             Vector2Int chunk_vec =  border_chunk * chunk_size;
-            int size_iter = chunk_size/2;
-            for (int x = -size_iter; x < size_iter; x++)
+            for (int x = 0; x < chunk_size; x++)
             {
-                for (int y = -size_iter; y < size_iter; y++)
+                for (int y = 0; y < chunk_size; y++)
                 {
                     Vector2Int draw_offset = new Vector2Int(x, y);
                     draw_border.Add((Vector3Int)(draw_offset + chunk_vec));
@@ -186,7 +196,39 @@ public class MapManager : MonoBehaviour
             // }
             
         }
+
+        // place Objective prefabs
+        // for(int i = 1; i < critical_locs.Length; i++)
+        // {
+        //     MajorPOI maj_poi = critical_locs[i];
+        //     Instantiate(objective_point_prefab, (Vector3)(Vector2)maj_poi.main_chunk.position * chunk_size, Quaternion.identity);
+        // }
     }
+#endregion
+
+#region Get Info
+    public void SetNewPosition(Character character)
+    {
+        Vector2Int tile_pos = new Vector2Int(
+            (int)Mathf.Round(character.GetPosition().x),
+            (int)Mathf.Round(character.GetPosition().y)
+        );
+        Vector2Int chunk_location = new Vector2Int(
+            Mathf.FloorToInt((float)tile_pos.x/chunk_size),
+            Mathf.FloorToInt((float)tile_pos.y/chunk_size)
+        );
+        DrawTile(tile_pos, Color.white);
+        DrawChunk(chunk_location, Color.cyan);
+
+        foreach(MajorPOI poi in critical_locs)
+        {
+            if (chunk_location == poi.main_chunk.position)
+            {
+                poi.objective_point.PointCaptured();
+            }
+        }
+    }
+
 #endregion
 
 #region Tools 
@@ -199,38 +241,73 @@ public class MapManager : MonoBehaviour
         }
         return pos;
     }
-    private void DrawChunk(Vector2Int chunk_pos, Color line_color)
+
+    private void DrawTile(Vector2Int pos, Color line_color)
     {
-        // Square Shape
         Debug.DrawLine(
-            (chunk_pos + Vector2.up*0.5f + Vector2.right*0.5f) * chunk_size, 
-            (chunk_pos + Vector2.up*0.5f + Vector2.left*0.5f) * chunk_size, 
+            (Vector2)pos, 
+            (Vector2)(pos + Directions2D.four_directions[1]), 
             line_color
             );
         Debug.DrawLine(
-            (chunk_pos + Vector2.up*0.5f + Vector2.left*0.5f) * chunk_size, 
-            (chunk_pos + Vector2.down*0.5f + Vector2.left*0.5f) * chunk_size, 
+            (Vector2)(pos + Directions2D.four_directions[1]), 
+            (Vector2)(pos + Directions2D.four_directions[1] + Directions2D.four_directions[0]), 
             line_color 
             );
         Debug.DrawLine(
-            (chunk_pos + Vector2.down*0.5f + Vector2.left*0.5f) * chunk_size, 
-            (chunk_pos + Vector2.down*0.5f + Vector2.right*0.5f) * chunk_size, 
+            (Vector2)pos, 
+            (Vector2)(pos + Directions2D.four_directions[0]), 
             line_color
             );
         Debug.DrawLine(
-            (chunk_pos + Vector2.down*0.5f + Vector2.right*0.5f) * chunk_size, 
-            (chunk_pos + Vector2.up*0.5f + Vector2.right*0.5f) * chunk_size, 
+            (Vector2)(pos + Directions2D.four_directions[0]), 
+            (Vector2)(pos + Directions2D.four_directions[0] + Directions2D.four_directions[1]), 
             line_color
             );
         // Crosses
         Debug.DrawLine(
-            (chunk_pos + Vector2.up*0.5f + Vector2.right*0.5f) * chunk_size, 
-            (chunk_pos + Vector2.down*0.5f + Vector2.left*0.5f) * chunk_size, 
+            (Vector2)(pos), 
+            (Vector2)(pos + Directions2D.four_directions[0] + Directions2D.four_directions[1]), 
             line_color
             );
         Debug.DrawLine(
-            (chunk_pos + Vector2.up*0.5f + Vector2.left*0.5f) * chunk_size, 
-            (chunk_pos + Vector2.down*0.5f + Vector2.right*0.5f) * chunk_size, 
+            (Vector2)(pos + Directions2D.four_directions[0]), 
+            (Vector2)(pos + Directions2D.four_directions[1]), 
+            line_color
+            );
+    }
+    private void DrawChunk(Vector2Int chunk_pos, Color line_color)
+    {
+        // Square Shape
+        Debug.DrawLine(
+            (Vector2)chunk_pos * chunk_size, 
+            (Vector2)(chunk_pos + Directions2D.four_directions[1]) * chunk_size, 
+            line_color
+            );
+        Debug.DrawLine(
+            (Vector2)(chunk_pos + Directions2D.four_directions[1]) * chunk_size, 
+            (Vector2)(chunk_pos + Directions2D.four_directions[1] + Directions2D.four_directions[0]) * chunk_size, 
+            line_color 
+            );
+        Debug.DrawLine(
+            (Vector2)chunk_pos * chunk_size, 
+            (Vector2)(chunk_pos + Directions2D.four_directions[0]) * chunk_size, 
+            line_color
+            );
+        Debug.DrawLine(
+            (Vector2)(chunk_pos + Directions2D.four_directions[0]) * chunk_size, 
+            (Vector2)(chunk_pos + Directions2D.four_directions[0] + Directions2D.four_directions[1]) * chunk_size, 
+            line_color
+            );
+        // Crosses
+        Debug.DrawLine(
+            (Vector2)(chunk_pos) * chunk_size, 
+            (Vector2)(chunk_pos + Directions2D.four_directions[0] + Directions2D.four_directions[1]) * chunk_size, 
+            line_color
+            );
+        Debug.DrawLine(
+            (Vector2)(chunk_pos + Directions2D.four_directions[0]) * chunk_size, 
+            (Vector2)(chunk_pos + Directions2D.four_directions[1]) * chunk_size, 
             line_color
             );
     }
@@ -259,6 +336,15 @@ public class MapManager : MonoBehaviour
         foreach (Vector2Int dir in Directions2D.eight_directions)
         {
             Debug.DrawLine(point * chunk_size, point * chunk_size + dir * chunk_size/4, line_color, duration);
+        }
+    }
+
+    // Destroy 
+    public void EditorDestroyMapObjects()
+    {
+        foreach(MajorPOI objective in critical_locs)
+        {
+            DestroyImmediate(objective.objective_point.gameObject);
         }
     }
     #endregion

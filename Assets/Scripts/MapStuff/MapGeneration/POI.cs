@@ -1,12 +1,16 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
+[System.Serializable]
 public class MajorPOI
 {
     public MapChunk main_chunk;
     public MajorPOI prev = null;
     public MajorPOI next_poi = null;
     public Vector2Int[] minor_poi = new Vector2Int[0];
+
+    [Header("Objective Point")]
+    public Objective objective_point;
 
     public MajorPOI(Vector2Int position, MajorPOI prev = null)
     {
@@ -29,6 +33,13 @@ public class MajorPOI
         {
             this.prev = this;
         }
+
+        GameObject objective_resource = Resources.Load<GameObject>("MapObjects/Objective");
+        objective_point = MonoBehaviour.Instantiate(
+            objective_resource, 
+            main_chunk.center_position * MapManager.chunk_size, 
+            Quaternion.identity).GetComponent<Objective>();
+        objective_point.Setup(this);
     }
 
     public void SetNextPOI(MajorPOI next)
@@ -46,7 +57,6 @@ public class MajorPOI
         if (!(next_poi == null) && !(prev == null))
         {
             Vector2 splinter_dir = ((Vector2)prev.main_chunk.position + next_poi.main_chunk.position - 2*main_chunk.position).normalized;
-            Debug.Log(splinter_dir);
             minor_poi = new Vector2Int[amount];
             float poi_partition = 1/amount;
             for (int i = 0; i < amount; i++)

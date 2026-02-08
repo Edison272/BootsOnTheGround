@@ -23,7 +23,12 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     // Layermask stuff
     public static readonly LayerMask avoid_map_mask = 1 << 7; // check if map is in the way of this raycast
     public static readonly LayerMask avoid_obstacles_mask = (1 << 6) | (1 << 7); // check if map and entities are in the way of this raycast
-
+    
+    // Faction stuff
+    [SerializeField] private Color serialize_squad_color;
+    [SerializeField] private Color serialize_enemy_color;
+    public static Color squad_color;
+    public static Color enemy_color;
 
     void Awake()
     {
@@ -34,6 +39,9 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!enemy_manager) {enemy_manager = GameObject.Find("Enemy Manager")?.GetComponent<EnemyManager>();}
         if (!map_manager) {map_manager = GameObject.Find("Map")?.GetComponent<MapManager>();}
         if (!canvas_control) {canvas_control = GameObject.Find("Canvas Controller")?.GetComponent<CanvasController>();}
+
+        squad_color = serialize_squad_color;
+        enemy_color = serialize_enemy_color;
     }
 
     void Start()

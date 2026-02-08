@@ -12,6 +12,7 @@ public class MapGenGUI : Editor
         if (GUILayout.Button(" Generate the Map! "))
         {
             Repaint();
+            map_gui.EditorDestroyMapObjects();
             map_gui.GenerateMap();
         }
     }

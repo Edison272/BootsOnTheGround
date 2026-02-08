@@ -86,6 +86,17 @@ public class SquadManager : MonoBehaviour
 
     }
 
+    public void FixedUpdate()
+    {
+        foreach(Operator op in operators)
+        {
+            if (op.IsInAction())
+            {
+                GameOverseer.THE_OVERSEER.map_manager.SetNewPosition(op);
+            }
+        }
+    }
+
     // set operator formation
     public void UpdateFormation()
     {

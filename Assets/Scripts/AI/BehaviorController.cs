@@ -141,7 +141,7 @@ public class BehaviorController
         {
             // character couldn't reach path on time. something went wrong
             curr_travel_time += Time.fixedDeltaTime;
-            if (curr_travel_time >= estimated_travel_time)
+            if (curr_travel_time >= estimated_travel_time *2)
             {
                 character.StopMove();
                 Debug.Log("I'm lost...");

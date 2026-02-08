@@ -108,6 +108,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         // setup health
         curr_health = max_health;
         health_ratio = 1;
+        is_alive = true;
         
         // setup inventory
         inventory = new Item[base_data.inventory.Length];
