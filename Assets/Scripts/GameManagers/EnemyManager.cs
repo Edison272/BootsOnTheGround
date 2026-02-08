@@ -7,6 +7,7 @@ public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private CharacterSO[] enemy_presets;
     public HashSet<Character> enemies = new HashSet<Character>();
+    private Dictionary<Character, int> enemy_group = new Dictionary<Character, int>();
 
     public Vector3 drop_pos;
     
@@ -64,6 +65,12 @@ public class EnemyManager : MonoBehaviour
             Vector3 spawn_pos = position + Random.insideUnitCircle * Random.Range(0, radius);
             CreateEnemy(Random.Range(0, enemy_presets.Length), spawn_pos);
         }
+    }
+
+    // summon an enemy group at target position. Use this for POI
+    public void SummonEnemyGroup(Vector2 group_pos)
+    {
+        
     }
 
     public void EnemyLost(Character character)

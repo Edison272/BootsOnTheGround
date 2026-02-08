@@ -91,10 +91,11 @@ public class MapManager : MonoBehaviour
     }
 #endregion
 
-    private void Pathfind() // declare pathway chunks between all POI
+    private void HeatMap() // declare pathway chunks between all POI
     {
         
     }
+
 
 #region Draw Map
     private void DrawMap() // put tiles on the map ts

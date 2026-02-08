@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 
@@ -64,9 +65,16 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     }
 
     #region AI Manager stuff
-    public Character GetTargetCharacter(bool is_squad, Character curr_character, float max_range = 1000f, TargetType targ_type = TargetType.Closest)
+    public static Character GetTargetCharacter(bool is_squad, Character curr_character, float max_range = 1000f, TargetType targ_type = TargetType.Closest)
     {
-        return ai_manager.GetTargetCharacter(is_squad, curr_character, max_range, targ_type);
+        return THE_OVERSEER.ai_manager.GetTargetCharacter(is_squad, curr_character, max_range, targ_type);
+    }
+    #endregion
+
+    #region Positioning
+    public static Vector2Int GetValidTilePosition(Vector2 pos)
+    {
+        return Vector2Int.zero;
     }
     #endregion
 }

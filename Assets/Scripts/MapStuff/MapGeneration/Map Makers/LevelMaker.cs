@@ -69,7 +69,6 @@ public class LevelMaker : MapMaker
                         (int)Mathf.Round(all_poi[i].y + poi_dy * t)
                         );
                     all_chunks[offset_vec] = new MapChunk(offset_vec);
-                    path_chunks.Add(offset_vec);
                 }
             }
         }
@@ -108,7 +107,8 @@ public class LevelMaker : MapMaker
         }
 
         // random propagation to adjacent chunks
-        int chunks = gen_preset.map_size * gen_preset.map_scale + total_minor_poi * gen_preset.map_scale;
+        int chunks = gen_preset.map_size * gen_preset.objectives * gen_preset.map_scale + 
+                    (int)(total_minor_poi * gen_preset.map_size * gen_preset.map_scale * poi_partition);
         for (int i = 0; i < chunks && chunk_queue.Count > 0; i++) {
             // remove chunk from queue add chunk to all chunks
             Vector2Int curr_chunk = chunk_queue.Dequeue();

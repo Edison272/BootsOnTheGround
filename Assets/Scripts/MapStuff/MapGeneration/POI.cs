@@ -52,7 +52,7 @@ public class MajorPOI
             for (int i = 0; i < amount; i++)
             {
                 splinter_dir *= -1;
-                Vector2 new_pos = main_chunk.position + splinter_dir * (size + size * poi_partition);
+                Vector2 new_pos = main_chunk.position + splinter_dir * (size * 0.5f + Random.Range(size * poi_partition, size * 0.5f));
                 float lat_scale = size;
                 new_pos += new Vector2(splinter_dir.y, -splinter_dir.x).normalized * Random.Range(-lat_scale, lat_scale);
                 minor_poi[i] = new Vector2Int((int)new_pos.x, (int)new_pos.y);
