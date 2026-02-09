@@ -957,6 +957,9 @@ MonoBehaviour:
   - {fileID: 287633302}
   - {fileID: 104109521}
   - {fileID: 1068265760}
+  objective_animator: {fileID: 0}
+  squad_weight: 0
+  enemy_weight: 0
 --- !u!210 &269050714
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -2237,6 +2240,9 @@ MonoBehaviour:
   - {fileID: 944446305}
   - {fileID: 1572924121}
   - {fileID: 699834548}
+  objective_animator: {fileID: 0}
+  squad_weight: 0
+  enemy_weight: 0
 --- !u!210 &457951845
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -4782,6 +4788,9 @@ MonoBehaviour:
   - {fileID: 1407502947}
   - {fileID: 718076240}
   - {fileID: 840561390}
+  objective_animator: {fileID: 0}
+  squad_weight: 0
+  enemy_weight: 0
 --- !u!210 &792202549
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -5256,6 +5265,9 @@ MonoBehaviour:
   - {fileID: 738225687}
   - {fileID: 2106201727}
   - {fileID: 272075595}
+  objective_animator: {fileID: 0}
+  squad_weight: 0
+  enemy_weight: 0
 --- !u!210 &842043087
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -68146,6 +68158,9 @@ MonoBehaviour:
   - {fileID: 639626483}
   - {fileID: 514202892}
   - {fileID: 597680827}
+  objective_animator: {fileID: 0}
+  squad_weight: 0
+  enemy_weight: 0
 --- !u!210 &1584107911
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -86580,6 +86595,9 @@ MonoBehaviour:
   - {fileID: 531968697}
   - {fileID: 257357775}
   - {fileID: 794957976}
+  objective_animator: {fileID: 0}
+  squad_weight: 0
+  enemy_weight: 0
 --- !u!210 &1889526932
 SortingGroup:
   m_ObjectHideFlags: 0

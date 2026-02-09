@@ -74,6 +74,25 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         // setup an AI manager after base data has been created
         ai_manager = new AIManager(this, map_manager.Wall, map_manager.Floor);
     }
+    #region Game Objective Events
+    // when an objective is captured, send enemies to recature it
+    public static void ObjectiveCaptured(Objective objective)
+    {
+        
+    }
+
+    // when an objective is lost, enemies will reinforce it again
+    public static void ObjectiveLost(Objective objective)
+    {
+        
+    }
+
+    // when all enemies are defeated, the objective is secured
+    public static void ObjectiveSecured()
+    {
+        
+    }
+    #endregion
 
     #region AI Manager stuff
     public static Character GetTargetCharacter(int faction_tag, Character curr_character, float max_range = 1000f, TargetType targ_type = TargetType.Closest)

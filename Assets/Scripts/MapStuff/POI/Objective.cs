@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
+using NUnit.Framework.Constraints;
 using UnityEngine;
 
 public enum CaptureState {Squad, Enemy, Contested}
@@ -12,6 +13,7 @@ public class Objective : MonoBehaviour
     [Header("VFX")]
     public Transform capture_point_mask;
     public SpriteRenderer[] color_components;
+    public Animator objective_animator;
 
     [Header("Capture Data")]
     private float curr_capture_time = 0;
@@ -19,11 +21,11 @@ public class Objective : MonoBehaviour
     private int owner = -1;
     [SerializeField] private int squad_weight = 0;
     [SerializeField] private int enemy_weight = 0;
-    private Color og_color;
-    private Color target_color;
     public void Setup(MajorPOI poi)
     {
         objective_poi = poi;
+        float scale = 0f;
+        capture_point_mask.localScale = new Vector3(scale, scale, 1);
     }
 
     public void SetColor(Color color)
@@ -58,38 +60,29 @@ public class Objective : MonoBehaviour
 
     public void GrowObjective()
     {
-        float capture_delta = Time.deltaTime * (squad_weight > enemy_weight ? 1 : -1);
-        if (owner != -1)
-        {
-            if (Mathf.Sign(curr_capture_time + capture_delta) != Math.Sign(curr_capture_time))
-            {
-                owner = -1;
-                SetColor(GameOverseer.empty_color);
-            }
-        } 
-        
-        
+        float capture_delta = Time.deltaTime * (squad_weight > enemy_weight ? 1 : -1);        
         curr_capture_time += capture_delta;
-        curr_capture_time = Mathf.Clamp(curr_capture_time, -max_capture_time, max_capture_time);
+        curr_capture_time = Mathf.Clamp(curr_capture_time, 0, max_capture_time);
 
-        float abs_curr_capture_time = Mathf.Abs(curr_capture_time);
-        float scale = (1 - abs_curr_capture_time / max_capture_time) * 0.875f;
+        float scale = (curr_capture_time / max_capture_time) * 0.875f;
         capture_point_mask.localScale = new Vector3(scale, scale, 1);
         
-        if (abs_curr_capture_time >= max_capture_time)
+        // assign victor based on point captured
+        if (owner != -1)
         {
-            // assign victor based on point captured
-            if (curr_capture_time > 0)
+            if (curr_capture_time <= 0)
             {
-                SetColor(GameOverseer.squad_color);
-                owner = GameOverseer.squad_tag;
-            } 
-            else
-            {
-                SetColor(GameOverseer.enemy_color);
-                owner = GameOverseer.enemy_tag;
+                owner = -1;
+                objective_animator.Play("Lost");
+                curr_capture_time = 0;
+                SetColor(GameOverseer.empty_color);
             }
-;
+        }
+        else if (curr_capture_time >= max_capture_time && owner == -1)
+        {
+            SetColor(GameOverseer.squad_color);
+            objective_animator.Play("Captured");
+            owner = GameOverseer.squad_tag;
         } 
     }
 }
