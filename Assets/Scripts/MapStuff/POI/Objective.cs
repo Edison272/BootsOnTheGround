@@ -39,15 +39,16 @@ public class Objective : MonoBehaviour
 
     public void AddOccupier(Character character)
     {
-        if (character.faction_tag == GameOverseer.squad_tag) {squad_weight++;}
+        if (character.faction_tag == GameOverseer.SQUAD_TAG) {squad_weight++;}
         else {enemy_weight++;}
     }
 
     public void RemoveOccupier(Character character)
     {
-        if (character.faction_tag == GameOverseer.squad_tag) {squad_weight--;}
+        if (character.faction_tag == GameOverseer.SQUAD_TAG) {squad_weight--;}
         else {enemy_weight--;}
     }
+
 
     public void Update()
     {
@@ -75,14 +76,15 @@ public class Objective : MonoBehaviour
                 owner = -1;
                 objective_animator.Play("Lost");
                 curr_capture_time = 0;
-                SetColor(GameOverseer.empty_color);
+                SetColor(GameOverseer.EMPTY_COLOR);
             }
         }
         else if (curr_capture_time >= max_capture_time && owner == -1)
         {
-            SetColor(GameOverseer.squad_color);
+            SetColor(GameOverseer.SQUAD_COLOR);
             objective_animator.Play("Captured");
-            owner = GameOverseer.squad_tag;
+            owner = GameOverseer.SQUAD_TAG;
+            GameOverseer.ObjectiveCaptured(objective_poi);
         } 
     }
 }

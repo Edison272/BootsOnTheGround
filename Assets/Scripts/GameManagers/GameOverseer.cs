@@ -27,11 +27,11 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     // Faction stuff
     [SerializeField] private Color serialize_squad_color;
     [SerializeField] private Color serialize_enemy_color;
-    public static Color squad_color;
-    public static Color enemy_color;
-    public static Color empty_color = Color.white;
-    public static readonly int squad_tag = 0;
-    public static readonly int enemy_tag = 1;
+    public static Color SQUAD_COLOR;
+    public static Color ENEMY_COLOR;
+    public static Color EMPTY_COLOR = Color.white;
+    public static readonly int SQUAD_TAG = 0;
+    public static readonly int ENEMY_TAG = 1;
 
     void Awake()
     {
@@ -43,8 +43,8 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!map_manager) {map_manager = GameObject.Find("Map")?.GetComponent<MapManager>();}
         if (!canvas_control) {canvas_control = GameObject.Find("Canvas Controller")?.GetComponent<CanvasController>();}
 
-        squad_color = serialize_squad_color;
-        enemy_color = serialize_enemy_color;
+        SQUAD_COLOR = serialize_squad_color;
+        ENEMY_COLOR = serialize_enemy_color;
     }
 
     void Start()
@@ -76,9 +76,10 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     }
     #region Game Objective Events
     // when an objective is captured, send enemies to recature it
-    public static void ObjectiveCaptured(Objective objective)
+    public static void ObjectiveCaptured(MajorPOI maj_poi)
     {
-        
+        Debug.Log("CAP");
+        THE_OVERSEER.enemy_manager.SummonEnemyGroup(maj_poi.next_poi.main_chunk.world_position);
     }
 
     // when an objective is lost, enemies will reinforce it again

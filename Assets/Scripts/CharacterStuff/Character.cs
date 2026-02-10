@@ -15,7 +15,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public Transform alt_hand; //always set to off hand object
 
     [field: Header("VFX")]
-    public Animator anim;
+    public Animator animator;
     protected Vector2 sprite_center; // center of mass of this srpite
     public float hitbox_radius {get; private set;}
     // character has 4 VFX states based on aim direciton, stored as two booleans, X and Y
@@ -76,6 +76,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public int faction_tag = 1;
     protected bool is_AI_active = false;
     public BehaviorController behavior_controller;
+    
     [field: Header("Character State")]
     public bool is_alive;
     
@@ -98,7 +99,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         single_hand_pos = new Vector2(0, main_hand.localPosition.y);
 
         // set basic sibling order of entity VFX (operator faces BOTTOM RIGHT by default)
-        anim.SetBool("FaceFront", true);
+        animator.SetBool("FaceFront", true);
         main_hand.SetSiblingIndex(4);
         front.SetSiblingIndex(3);
         vfx_body.transform.SetSiblingIndex(2);
@@ -292,7 +293,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
             main_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
             alt_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
 
-            anim.SetBool("FaceFront", direction_state.Item2); // face front
+            animator.SetBool("FaceFront", direction_state.Item2); // face front
         }
     }
 
@@ -308,7 +309,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
             front.SetSiblingIndex(back.GetSiblingIndex());
             back.SetSiblingIndex(front.GetSiblingIndex() == 3 ? 1 : 3);
 
-            anim.SetBool("FaceFront", direction_state.Item2); // face front
+            animator.SetBool("FaceFront", direction_state.Item2); // face front
         }
     }
 
@@ -348,7 +349,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
             {
                 curr_speed = Accelerate();
                 entity_rb.AddForce(move_dir * curr_speed, ForceMode2D.Impulse);
-                anim.SetBool("Moving", true);
+                animator.SetBool("Moving", true);
             }
             // stop knockback & movement after velocity is low enough
             if (entity_rb.velocity.sqrMagnitude - move_dir.sqrMagnitude <= 0.1f)
@@ -371,7 +372,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
             lerp_move_pos = Vector2.Lerp(lerp_move_pos, move_pos, Mathf.Max(0.5f, 0.1f + max_accel_time/(curr_accel_time+0.001f)));
             
             // movement
-            anim.SetBool("Moving", true);
+            animator.SetBool("Moving", true);
             Vector2 move_toward = Vector2.MoveTowards(GetPosition(), lerp_move_pos, Time.fixedDeltaTime * curr_speed);
             entity_rb.MovePosition(move_toward);
         } 
@@ -394,7 +395,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         last_move_dir = move_dir;
         move_dir = Vector2.zero;
         move_pos = GetPosition();
-        anim.SetBool("Moving", false);
+        animator.SetBool("Moving", false);
     }
     public float GetTravelTime() // return how long it is expected to take for the operator to reach their position
     {

@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01d6ed72db80d54439e76ec450c54420, type: 3}
   m_Name: Technosapien
   m_EditorClassIdentifier: 
-  character_name: Entity
+  character_name: Technosapien
   health: 100000
   speed: 5
+  accel_time: 0.5
   range: 10
   close_range: 3
-  char_prefab: {fileID: 3748648633196015940, guid: 6f0193247fccd844e8466e66f99063aa,
+  char_prefab: {fileID: 2800882145197712852, guid: 6f5a63b103571c74b883518457a06475,
     type: 3}
   detection_mask:
     serializedVersion: 2

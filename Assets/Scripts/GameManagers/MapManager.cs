@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEditor;
 
 using Random = UnityEngine.Random; // LEAVE ME ALONE DAMNIT
 public class MapManager : MonoBehaviour
@@ -52,7 +51,9 @@ public class MapManager : MonoBehaviour
     [SerializeField] bool show_border_chunks = true;
     [SerializeField] bool show_critical_chunks = true;
     [SerializeField] bool show_minor_poi = true;
-    [SerializeField] bool show_quads = true;
+    [SerializeField] bool show_start_dist_heatmap = true;
+    [SerializeField] bool show_path_dist_heatmap = true;
+    [SerializeField] bool show_poi_territories = true;
 
     public void Awake()
     {
@@ -319,7 +320,7 @@ public class MapManager : MonoBehaviour
             line_color
             );
     }
-    private void DrawChunk(Vector2Int chunk_pos, Color line_color)
+    private void DrawChunk(Vector2Int chunk_pos, Color line_color, bool draw_cross = true)
     {
         // Square Shape
         Debug.DrawLine(
@@ -343,16 +344,19 @@ public class MapManager : MonoBehaviour
             line_color
             );
         // Crosses
-        Debug.DrawLine(
-            (Vector2)(chunk_pos) * chunk_size, 
-            (Vector2)(chunk_pos + Directions2D.four_directions[0] + Directions2D.four_directions[1]) * chunk_size, 
-            line_color
-            );
-        Debug.DrawLine(
-            (Vector2)(chunk_pos + Directions2D.four_directions[0]) * chunk_size, 
-            (Vector2)(chunk_pos + Directions2D.four_directions[1]) * chunk_size, 
-            line_color
-            );
+        if (draw_cross)
+        {
+            Debug.DrawLine(
+                (Vector2)(chunk_pos) * chunk_size, 
+                (Vector2)(chunk_pos + Directions2D.four_directions[0] + Directions2D.four_directions[1]) * chunk_size, 
+                line_color
+                );
+            Debug.DrawLine(
+                (Vector2)(chunk_pos + Directions2D.four_directions[0]) * chunk_size, 
+                (Vector2)(chunk_pos + Directions2D.four_directions[1]) * chunk_size, 
+                line_color
+                );
+        }
     }
 
     public void DrawQuad((Vector2Int, Vector2Int, Vector2Int, Vector2Int) quad, Color line_color)
@@ -391,7 +395,7 @@ public class MapManager : MonoBehaviour
         }
     }
     #endregion
-    #region Gizmos Drawer
+#region Gizmos Drawer
     void OnDrawGizmos()
     {
         if (show_chunks)
@@ -436,6 +440,33 @@ public class MapManager : MonoBehaviour
                 // {
                 //     Debug.DrawLine((Vector2)chunk.position * chunk_size, (Vector2)other_chunk.position * chunk_size);
                 // }
+            }
+        }
+        if (show_start_dist_heatmap)
+        {
+            foreach (MapChunk chunk in all_chunks.Values)
+            {
+                DrawChunk(chunk.position,Color.blue, false);
+                Handles.Label(chunk.world_center_position + new Vector2(0, chunk_size*0.2f), "from start: "+chunk.dist_from_start);
+            }
+        }
+        if (show_path_dist_heatmap)
+        {
+            foreach (MapChunk chunk in all_chunks.Values)
+            {
+                DrawChunk(chunk.position,Color.clear, false);
+                Handles.Label(chunk.world_center_position + new Vector2(0, -chunk_size*0.2f), "from path: "+chunk.path_relevancy);
+            }
+        }
+        if (show_poi_territories)
+        {
+            for (int i = 0; i < critical_locs.Length; i++)
+            {
+                Color color = i % 2 == 0 ? Color.black : Color.white;
+                foreach(MapChunk chunk in critical_locs[i].territory_chunks)
+                {
+                    DrawChunk(chunk.position,color);
+                }
             }
         }
     }

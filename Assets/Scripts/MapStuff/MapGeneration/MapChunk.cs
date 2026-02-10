@@ -5,9 +5,14 @@ using UnityEngine;
 public class MapChunk
 {
     public Vector2Int position;
+    public Vector2 world_position => position * MapManager.chunk_size;
     public Vector2 center_position;
     public Vector2 world_center_position;
+
+    public Vector2Int domain_center_chunk = Vector2Int.zero;
     public int dist_from_final = -1;
+    public int dist_from_start = -1;
+    public int path_relevancy = -1; // how far away the chunk is from the main path. 0 is on the path
 
     public Vector2Int[] neighbor_chunks {get; private set;} // get initialized in map manager
 

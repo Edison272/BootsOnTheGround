@@ -44,7 +44,7 @@ public class SquadManager : MonoBehaviour
 
         // reconfigure settings for player character so they don't get taken over by a bot
         player_character = operators[player_char_index];
-        player_character.faction_tag = GameOverseer.squad_tag;
+        player_character.faction_tag = GameOverseer.SQUAD_TAG;
         player.SetPlayerCharacter(player_character);
         DeployOperator(player_char_index, transform.position);
         player_character.ToggleAI(false);
@@ -70,7 +70,7 @@ public class SquadManager : MonoBehaviour
         {
             operators[i] = operator_presets[i].GenerateOp(Vector2.zero);
             Operator this_op = operators[i];
-            this_op.faction_tag = GameOverseer.squad_tag;
+            this_op.faction_tag = GameOverseer.SQUAD_TAG;
             this_op.behavior_controller.SetLeader(operators[player_char_index]);
             this_op.op_behavior_controller.squad_index = i;
             squad.Add(operators[i]);

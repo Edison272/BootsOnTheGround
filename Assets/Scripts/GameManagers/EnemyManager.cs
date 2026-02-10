@@ -8,6 +8,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private CharacterSO[] enemy_presets;
     public HashSet<Character> enemies = new HashSet<Character>();
     private Dictionary<Character, int> enemy_group = new Dictionary<Character, int>();
+    private Queue<int[]> wave_queue = new Queue<int[]>();
 
     public Vector3 drop_pos;
     
@@ -19,6 +20,8 @@ public class EnemyManager : MonoBehaviour
     public float spawn_dist = 14;
     public int min_wave_size;
     public int max_wave_size;
+    public int min_wave_iterations;
+    public int max_wave_iterations;
     public Vector2[] spawn_positions = {
         new Vector2(-1, 0), 
         new Vector2(1, 0), 
@@ -33,7 +36,7 @@ public class EnemyManager : MonoBehaviour
         // setup the enemy character file
         Character new_enemy = enemy_presets[index].GenerateChar(position);
         new_enemy.gameObject.tag = this.gameObject.tag;
-        new_enemy.faction_tag = GameOverseer.enemy_tag;
+        new_enemy.faction_tag = GameOverseer.ENEMY_TAG;
         new_enemy.ConnectToEventBus(EnemyLost);
 
         // set up enemy behaviors
@@ -48,11 +51,13 @@ public class EnemyManager : MonoBehaviour
     {
         if (curr_time <= 0)
         {
-            Vector2 position = GameOverseer.THE_OVERSEER.squad_manager.player_character.GetPosition() + spawn_positions[Random.Range(0, spawn_positions.Length)] * spawn_dist;
+            wave_queue.Dequeue();
+            Debug.Log("Wave Inc");
+            Vector2 position = (Vector2)transform.position + Random.insideUnitCircle * Random.Range(-wave_radius, wave_radius);
             SummonEnemyWave(position, wave_radius, min_wave_size, max_wave_size);
             curr_time += wave_time;
         }
-        else
+        else if (wave_queue.Count > 0)
         {
             curr_time -= Time.deltaTime;
         }
@@ -82,7 +87,13 @@ public class EnemyManager : MonoBehaviour
     // summon an enemy group at target position. Use this for POI
     public void SummonEnemyGroup(Vector2 group_pos)
     {
-        
+        Debug.Log("ATTACK THE POINT");
+        transform.position = group_pos;
+        int waves = Random.Range(min_wave_iterations, max_wave_iterations+1);
+        for (int w = 0; w < waves; w++)
+        {
+            wave_queue.Enqueue(new int[0] {});
+        }
     }
 
     public void EnemyLost(Character character)

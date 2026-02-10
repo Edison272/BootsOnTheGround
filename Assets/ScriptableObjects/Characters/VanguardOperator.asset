@@ -15,9 +15,10 @@ MonoBehaviour:
   character_name: Vanguard Operator
   health: 107500
   speed: 5
+  accel_time: 0.5
   range: 10
   close_range: 3
-  char_prefab: {fileID: 451806311013494924, guid: 57eac7a4f6188db4fb446881b72b0710,
+  char_prefab: {fileID: 2800882145197712852, guid: 6f5a63b103571c74b883518457a06475,
     type: 3}
   detection_mask:
     serializedVersion: 2

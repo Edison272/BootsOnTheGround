@@ -10,5 +10,6 @@ public class MapGenPreset : ScriptableObject
     [Range(1f, 20f)] public int map_scale = 1;
     public int check_points = 3;
     [Range(1, 24)]public int objectives = 3;
+    
     public int minor_poi = 7; // extra goodies that might appear on the map
 }

@@ -15,9 +15,10 @@ MonoBehaviour:
   character_name: Entity
   health: 10000
   speed: 5
+  accel_time: 0.5
   range: 10
   close_range: 3
-  char_prefab: {fileID: 2589057906099434769, guid: 852337d3087a78c459ce5ccd025a9628,
+  char_prefab: {fileID: 2800882145197712852, guid: 6f5a63b103571c74b883518457a06475,
     type: 3}
   detection_mask:
     serializedVersion: 2

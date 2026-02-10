@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class MajorPOI
     public MajorPOI prev = null;
     public MajorPOI next_poi = null;
     public Vector2Int[] minor_poi = new Vector2Int[0];
+    public List<MapChunk> territory_chunks = new List<MapChunk>();
 
     [Header("Objective Point")]
     public Objective objective_point;

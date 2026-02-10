@@ -136,11 +136,9 @@ public class LevelMaker : MapMaker
                 }
             }
         }
-        #endregion
 
-        #region GenMap - Post
         // fill isolated border chunks
-        list_buffer.Clear(); // use list buffer to destroy all  surrounded borders
+        list_buffer.Clear();  // use list buffer to destroy all  surrounded borders
         foreach(Vector2Int border in border_chunks)
         {
             bool adj_to_empty = false;
@@ -163,6 +161,94 @@ public class LevelMaker : MapMaker
         foreach(Vector2Int border in list_buffer)
         {
             border_chunks.Remove(border);
+        }
+        #endregion
+
+        #region GenMap - Chunks
+
+        // assign relevancy values to chunks starting from
+        chunk_queue.Clear();
+        in_chunk_queue.Clear();
+        chunk_queue.Enqueue(start_pos);
+
+        MapChunk start_chunk = all_chunks[start_pos];
+        start_chunk.dist_from_start = 0;
+        start_chunk.path_relevancy = 0;
+
+        for (int i = 0; i < all_chunks.Keys.Count; i++)
+        {
+            Vector2Int chunk_pos = chunk_queue.Dequeue();
+            MapChunk chunk = all_chunks[chunk_pos];
+
+            // get closest POI and be part of that poi's "territory"
+            float lowest_mag = Mathf.Infinity;
+            MajorPOI closest_poi = critical_locs[0];
+            foreach(MajorPOI poi in critical_locs)
+            {
+                float vec_mag = (chunk_pos - poi.main_chunk.position).magnitude;
+                if (vec_mag < lowest_mag)
+                {
+                    lowest_mag = vec_mag;
+                    closest_poi = poi;
+                }
+            }
+            chunk.domain_center_chunk = closest_poi.main_chunk.position;
+            closest_poi.territory_chunks.Add(chunk);
+
+            // get chunk & path distance from the starting pos
+            foreach (Vector2Int dir in Directions2D.eight_directions)
+            {
+                Vector2Int next_chunk_pos = chunk_pos + dir;
+                if (all_chunks.ContainsKey(next_chunk_pos))
+                {
+                    MapChunk next_chunk = all_chunks[next_chunk_pos];
+                    // set surrounding dist values. If it exists, see if you can make a lower dist value
+                    int dist_value = 2 + (dir.x == 0 || dir.y == 0 ? 0 : 1);
+                    int dist_start_value = chunk.dist_from_start + dist_value;
+                    if (all_chunks[next_chunk_pos].dist_from_start == -1)
+                    {
+                        chunk_queue.Enqueue(next_chunk_pos);
+                        next_chunk.dist_from_start = dist_start_value;
+                    } 
+                    else if (all_chunks[next_chunk_pos].dist_from_start > dist_start_value)
+                    {
+                        next_chunk.dist_from_start = dist_start_value;
+                    }
+
+                    // set path relevancy. Path chunks automatically have path relevancy 0
+                    int dist_path_value = chunk.path_relevancy + dist_value;
+                    if (next_chunk.path_relevancy == -1)
+                    {
+                        if (path_chunks.Contains(next_chunk_pos))
+                        {
+                            next_chunk.path_relevancy = 0;
+                        }
+                        else
+                        {
+                            next_chunk.path_relevancy = dist_path_value;
+                        }
+                    }
+                    else if (next_chunk.path_relevancy > dist_path_value)
+                    {
+                        next_chunk.path_relevancy = dist_path_value;
+                        foreach (Vector2Int path_dir in Directions2D.eight_directions)
+                        {
+                            int re_dist_value = 2 + (dir.x == 0 || dir.y == 0 ? 0 : 1);
+                            int re_dist_path_value = next_chunk.path_relevancy + re_dist_value;
+                            Vector2Int re_path_dir = next_chunk_pos + dir;
+                            if (all_chunks.ContainsKey(re_path_dir))
+                            {
+                                MapChunk re_next_chunk = all_chunks[re_path_dir];
+                                if (re_next_chunk.path_relevancy > re_dist_path_value)
+                                {
+                                    re_next_chunk.path_relevancy = re_dist_path_value;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
         }
 
         // get neighbors
