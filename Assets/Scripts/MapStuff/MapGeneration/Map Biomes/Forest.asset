@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BiomeTiles:
   - {fileID: 11400000, guid: a1d80d697178e934f9f77b0e3eb96249, type: 2}
-  - {fileID: 11400000, guid: 2afd56d524fec094bba8ebfb81cd8fe2, type: 2}
-  - {fileID: 11400000, guid: 23d61fe29e4865c4b8d052ad36fee116, type: 2}
-  PathTiles: []
+  - {fileID: 11400000, guid: 20023250912a16243b2e42920a1186e7, type: 2}
+  PathTiles:
+  - {fileID: 11400000, guid: ddce312ded78aab4caff323301731b18, type: 2}
   SpawnableObjects: []

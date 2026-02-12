@@ -11,10 +11,9 @@ public class MapManager : MonoBehaviour
     public Tilemap Floor;
     public Tilemap Wall;
     public MapGenPreset gen_preset;
-
-    [SerializeField] TileBase floor_tile;
     [SerializeField] TileBase wall_tile;
-    [SerializeField] TileBase path_tile;
+    [SerializeField] MapBiomePreset[] map_biome_pool = new MapBiomePreset[0];
+    
 
     [Header("ProcGen Stuff")]
     [SerializeField] MapMakerType map_maker_type;
@@ -33,7 +32,6 @@ public class MapManager : MonoBehaviour
     public Vector2Int spawn_chunk; // where the player spawns in
     public Vector2Int final_chunk; // chunk with the main objective
     public Vector2 map_center; // duh
-
     public MajorObjective[] critical_locs = new MajorObjective[0]; // start & final + POI
     public Dictionary<Character, int> chars_in_poi = new Dictionary<Character, int>();
     private List<Character> removal_buffer = new List<Character>();
@@ -116,91 +114,74 @@ public class MapManager : MonoBehaviour
 
 
 #region Draw Map
+
     private void DrawMap() // put tiles on the map ts
     {
         Floor.ClearAllTiles();
         Wall.ClearAllTiles();
 
-        draw_ground.Clear();
-        draw_border.Clear();
-        draw_path.Clear();
-
-        foreach(Vector2Int pos in all_chunks.Keys)
+        foreach(MajorObjective major_objective in critical_locs)
         {
-            Vector2Int chunk_vec =  pos * chunk_size;
-            for (int x = 0; x < chunk_size; x++)
-            {
-                for (int y = 0; y < chunk_size; y++)
-                {
-                    Vector2Int draw_offset = new Vector2Int(x, y);
-                    if (path_chunks.Contains(pos))
-                    {
-                        draw_path.Add((Vector3Int)(draw_offset + chunk_vec));
-                    }
-                    else
-                    {
-                        draw_ground.Add((Vector3Int)(draw_offset + chunk_vec));
-                    }
-                    
-                }
-            }    
-        
-            // foreach(Vector2Int dir in all_chunks[pos].neighbor_chunks)
-            // {
-            //     for (int i = 0; i <= chunk_size/2; i++)
-            //     {
-            //         Vector2Int chunk_vec = pos * chunk_size + dir * i;
-            //         int size_iter = chunk_size/2 + border_width;
-            //         for (int x = -size_iter; x < size_iter; x++)
-            //         {
-            //             for (int y = -size_iter; y < size_iter; y++)
-            //             {
-            //                 Vector2Int draw_offset = new Vector2Int(x, y);
-            //                 if (Mathf.Abs(x) <= chunk_size/2 && Mathf.Abs(y) <= chunk_size/2)
-            //                 {
-            //                     draw_ground.Add((Vector3Int)(draw_offset + chunk_vec));
-            //                 }
-            //                 else
-            //                 {
-            //                     draw_border.Add((Vector3Int)(draw_offset + chunk_vec));
-            //                 }
-                            
-            //             }
-            //         }
-            //     }
-            // }
-        }
-
-        foreach (Vector2Int border_chunk in border_chunks)
-        {
-            Vector2Int chunk_vec =  border_chunk * chunk_size;
-            for (int x = 0; x < chunk_size; x++)
-            {
-                for (int y = 0; y < chunk_size; y++)
-                {
-                    Vector2Int draw_offset = new Vector2Int(x, y);
-                    draw_border.Add((Vector3Int)(draw_offset + chunk_vec));
-                    
-                }
-            }    
-        }
-
-        foreach(Vector3Int chunk in draw_ground)
-        {
-            Floor.SetTile(chunk, floor_tile);
-        }
-        foreach(Vector3Int chunk in draw_path)
-        {
-            Floor.SetTile(chunk, path_tile);
-        }
-        foreach(Vector3Int chunk in draw_border)
-        {
-            Wall.SetTile(chunk, wall_tile);
-            // if (!Floor.GetTile(chunk))
-            // {
-            //     Wall.SetTile(chunk, wall_tile);
-            // }
+            draw_ground.Clear();
+            draw_border.Clear();
+            draw_path.Clear();
             
+            MapBiomePreset rand_biome = map_biome_pool[Random.Range(0, map_biome_pool.Length)];
+
+            foreach(MapChunk chunk in major_objective.territory_chunks)
+            {
+                Vector2Int pos = chunk.position;
+                Vector2Int chunk_vec =  pos * chunk_size;
+                for (int x = 0; x < chunk_size; x++)
+                {
+                    for (int y = 0; y < chunk_size; y++)
+                    {
+                        Vector2Int draw_offset = new Vector2Int(x, y);
+                        if (path_chunks.Contains(pos))
+                        {
+                            draw_path.Add((Vector3Int)(draw_offset + chunk_vec));
+                        }
+                        else
+                        {
+                            draw_ground.Add((Vector3Int)(draw_offset + chunk_vec));
+                        }
+                        
+                    }
+                }    
+            }
+
+            foreach(Vector3Int chunk in draw_ground)
+            {
+                Floor.SetTile(chunk, rand_biome.BiomeTiles[Random.Range(0, rand_biome.BiomeTiles.Length)]);
+            }
+            foreach(Vector3Int chunk in draw_path)
+            {
+                Floor.SetTile(chunk, rand_biome.PathTiles[Random.Range(0, rand_biome.PathTiles.Length)]);
+            }
+
+            foreach (Vector2Int border_chunk in border_chunks)
+            {
+                Vector2Int chunk_vec =  border_chunk * chunk_size;
+                for (int x = 0; x < chunk_size; x++)
+                {
+                    for (int y = 0; y < chunk_size; y++)
+                    {
+                        Vector2Int draw_offset = new Vector2Int(x, y);
+                        draw_border.Add((Vector3Int)(draw_offset + chunk_vec));
+                        
+                    }
+                }    
+            }
+            foreach(Vector3Int chunk in draw_border)
+            {
+                Wall.SetTile(chunk, wall_tile);
+                // if (!Floor.GetTile(chunk))
+                // {
+                //     Wall.SetTile(chunk, wall_tile);
+                // }
+                
+            }
+
         }
 
         // place Objective prefabs
