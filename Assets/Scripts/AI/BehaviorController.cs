@@ -47,6 +47,7 @@ public class BehaviorController
     public float base_engage_dist = 6f;
     public Vector2 anchor_position; // the general point which the operator hovers around
     public Vector2 move_to_pos; // the resulting position the bot aims to move to
+    private Vector2Int prev_tile_pos;
     private float avoidance_range = 1;
 
     // Move Command
@@ -112,15 +113,12 @@ public class BehaviorController
         else
         {
             Character targ = GameOverseer.GetTargetCharacter(character.faction_tag, character, character.curr_range, favorite_target);
-            character.Look(character.GetPosition() + character.last_move_dir);
             Debug.DrawLine(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, Color.black);
             if (targ)
             {
                 character.target = targ;
             }
         }
-        
-        //MovementType();
 
         // orders & context will add a bunch of stuff to the queue which the AI will handle 1 by 1
         if (character.destination_reached)
@@ -131,6 +129,7 @@ public class BehaviorController
                 move();
                 estimated_travel_time = character.GetTravelTime();
                 curr_travel_time = 0;
+                prev_tile_pos = character.current_tile_pos;
                 Debug.Log("movement queue in use");
             }
 
@@ -140,14 +139,14 @@ public class BehaviorController
         else
         {
             // character couldn't reach path on time. something went wrong
-            curr_travel_time += Time.fixedDeltaTime;
-            if (curr_travel_time >= estimated_travel_time *2)
-            {
-                character.StopMove();
-                Debug.Log("I'm lost...");
-                movement_queue.Clear();
-                curr_travel_time = 0;
-            }
+            // curr_travel_time += Time.fixedDeltaTime;
+            // if (curr_travel_time >= estimated_travel_time * 1.5f && prev_tile_pos == character.current_tile_pos)
+            // {
+            //     character.StopMove();
+            //     Debug.Log("I'm lost...");
+            //     movement_queue.Clear();
+            //     curr_travel_time = 0;
+            // }
         }
     }
 
@@ -179,19 +178,21 @@ public class BehaviorController
     }
     protected virtual void FollowCommand()
     {        
-        anchor_position = (character.GetPosition() - leader.GetPosition()).normalized * 2f + leader.GetPosition();
-
-        Vector2 obj_pos = anchor_position + leader.move_dir * 3;
-        if (character.target)
+        if ((character.GetPosition() - leader.GetPosition()).sqrMagnitude > 4f * 4f)
         {
-            obj_pos = character.target.GetPosition();
+            anchor_position = (character.GetPosition() - leader.GetPosition()).normalized * 4f + leader.GetPosition();
+            Debug.Log("Following");
+            Vector2 obj_pos = anchor_position + leader.move_dir * 3;
+            if (character.target)
+            {
+                obj_pos = character.target.GetPosition();
 
+            }
+            Vector2 move_pos = (obj_pos - anchor_position).normalized * Mathf.Clamp((anchor_position - obj_pos).magnitude, 2, base_engage_dist);
+
+            Debug.DrawLine(character.GetPosition(), move_pos);
+            character.SetMovePos(anchor_position + move_pos);
         }
-        Vector2 move_pos = (obj_pos - anchor_position).normalized * Mathf.Clamp((anchor_position - obj_pos).magnitude, 2, base_engage_dist);
-
-        Debug.DrawLine(character.GetPosition(), move_pos);
-        character.SetMovePos(anchor_position + move_pos);
-
         // constantly follow that player
         movement_queue.Enqueue(FollowCommand);
     }

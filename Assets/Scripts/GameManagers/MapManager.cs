@@ -241,6 +241,7 @@ public class MapManager : MonoBehaviour
     public void SetNewPosition(Character character)
     {
         Vector2Int tile_pos = GetWorldToTileSpace(character.GetPosition());
+        character.current_tile_pos = tile_pos;
         Vector2Int chunk_location = GetTileToChunkSpace(tile_pos);
         DrawTile(tile_pos, Color.white);
         DrawChunk(chunk_location, Color.cyan);

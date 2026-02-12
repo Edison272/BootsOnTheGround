@@ -31,6 +31,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public Vector2 aim_dir {get; private set;} = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
     protected Action AimStyle; // single-item or akimbo aiming?
     public  float aim_angle = 0; // angle (deg) the character is looking in
+    readonly Vector2 SingleWeaponRestPosition = new Vector2(1, -1);
     
     [field: Header("Movement")]
     public float move_speed {get; private set;} = 1; //maximum speed an operator can move at
@@ -43,6 +44,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public Vector2 force_dir {get; private set;} = Vector2.zero;
     public Rigidbody2D entity_rb {get; private set;}
     public float force_move_time {get; private set;}
+    public Vector2Int current_tile_pos = Vector2Int.zero;
 
     [field: Header("Acceleration")]
     public float curr_speed {get; private set;} = 0;
@@ -136,7 +138,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         SetAimStyle(alt_item);
 
         // initialize default look position
-        aim_dir = new Vector2(1, -1);
+        aim_dir = SingleWeaponRestPosition;
         Look(entity_rb.position + aim_dir);
 
         // setup AI
@@ -149,7 +151,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         SetSwitchItem();
         SetAimStyle(alt_item);
         // initialize default look position
-        aim_dir = new Vector2(1, -1);
+        aim_dir = SingleWeaponRestPosition;
         Look(entity_rb.position + aim_dir);
     }
 
@@ -189,6 +191,19 @@ public class Character : MonoBehaviour, IHealth, IMovement
             {
                 SetSwitchItem();
             }
+        }
+
+        if (!target)
+        {
+            if (!destination_reached)
+            {
+                Look(move_pos);
+            }
+            // else
+            // {
+            //     Look(GetPosition() + SingleWeaponRestPosition);
+            // }
+            
         }
     }
 

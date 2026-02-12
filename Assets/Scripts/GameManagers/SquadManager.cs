@@ -40,7 +40,6 @@ public class SquadManager : MonoBehaviour
         combat_formation = new Vector2[operator_presets.Length];
 
         CreateOperators();
-        SetSquadLeader();
 
         // reconfigure settings for player character so they don't get taken over by a bot
         player_character = operators[player_char_index];
@@ -48,6 +47,8 @@ public class SquadManager : MonoBehaviour
         player.SetPlayerCharacter(player_character);
         DeployOperator(player_char_index, transform.position);
         player_character.ToggleAI(false);
+
+        SetSquadLeader();
 
         // set explore formation
 
@@ -57,9 +58,17 @@ public class SquadManager : MonoBehaviour
 
     public void SetSquadLeader() // set squad leader to player characte
     {
+        int i = 0;
         foreach(Character squadmate in squad)
         {
-            squadmate.behavior_controller.SetLeader(operators[player_char_index]);
+            squadmate.behavior_controller.SetLeader(player_character);
+
+            if (squadmate != player_character)
+            {
+                squadmate.SetPosition(player_character.GetPosition() + (Vector2)Directions2D.four_directions[i] * 3);
+                i++;
+                i = Mathf.Clamp(i, 0, 3);
+            }
         }
     }
 

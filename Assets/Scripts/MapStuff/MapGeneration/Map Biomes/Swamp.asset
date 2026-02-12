@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff4d4ef34a7e24340ab7c7e24cc28d8b, type: 3}
-  m_Name: Ocean
+  m_Name: Swamp
   m_EditorClassIdentifier: 
   BiomeTiles:
   - {fileID: 11400000, guid: 03894ac6129b9234eb60e81bc0c394c3, type: 2}
+  - {fileID: 11400000, guid: 20023250912a16243b2e42920a1186e7, type: 2}
   PathTiles:
   - {fileID: 11400000, guid: 2afd56d524fec094bba8ebfb81cd8fe2, type: 2}
   SpawnableObjects: []
