@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Vanguard Knight
   m_EditorClassIdentifier: 
   character_name: Knight
-  health: 1000000
+  health: 30000
   speed: 10
   accel_time: 0.5
-  range: 30
+  range: 10
   close_range: 5
   char_prefab: {fileID: 2324682301764112193, guid: 388e4c59c8e01914595d32397206eb35,
     type: 3}
@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Bits: 0
   max_space: 5
   inventory:
-  - {fileID: 11400000, guid: 2d1f52d9f7d9dbf40a235b8fa7414e45, type: 2}
+  - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
   - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
   item_indexes:
   - {x: 0, y: -1}

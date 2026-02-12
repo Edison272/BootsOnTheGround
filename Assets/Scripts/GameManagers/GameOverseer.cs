@@ -10,12 +10,15 @@ using UnityEngine.InputSystem.EnhancedTouch;
 public enum TargetType {Closest, Furthest, MostHP, LeastHP}
 public class GameOverseer : MonoBehaviour // this thing starts up everything else and keeps track of the game
 {
+    [Header("Monobehaviour Managers")]
     public PlayerController player_control;
     public SquadManager squad_manager;
     public EnemyManager enemy_manager;
     public MapManager map_manager;
     public CanvasController canvas_control;
+    [Header("Private Managers")]
     [SerializeField] private AIManager ai_manager; // a class containing all the stuff the game ai would need
+    [SerializeField] private ObjectiveManager objective_manager;
     public bool GenerateRandomMap = false;
 
     public static GameOverseer THE_OVERSEER {get; private set;}
@@ -33,6 +36,8 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public static readonly int SQUAD_TAG = 0;
     public static readonly int ENEMY_TAG = 1;
 
+    // Objective Management
+
     void Awake()
     {
         THE_OVERSEER = this;
@@ -42,6 +47,8 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!enemy_manager) {enemy_manager = GameObject.Find("Enemy Manager")?.GetComponent<EnemyManager>();}
         if (!map_manager) {map_manager = GameObject.Find("Map")?.GetComponent<MapManager>();}
         if (!canvas_control) {canvas_control = GameObject.Find("Canvas Controller")?.GetComponent<CanvasController>();}
+
+        objective_manager = new ObjectiveManager(this);
 
         SQUAD_COLOR = serialize_squad_color;
         ENEMY_COLOR = serialize_enemy_color;
@@ -74,24 +81,23 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         // setup an AI manager after base data has been created
         ai_manager = new AIManager(this, map_manager.Wall, map_manager.Floor);
     }
-    #region Game Objective Events
+    #region Objective Manager Stuff
     // when an objective is captured, send enemies to recature it
-    public static void ObjectiveCaptured(MajorPOI maj_poi)
+    public static void ObjectiveCaptured(MajorObjective maj_poi)
     {
-        Debug.Log("CAP");
-        THE_OVERSEER.enemy_manager.SummonEnemyGroup(maj_poi.next_poi.main_chunk.world_position);
+        THE_OVERSEER.objective_manager.ObjectiveCaptured(maj_poi);
     }
 
     // when an objective is lost, enemies will reinforce it again
-    public static void ObjectiveLost(Objective objective)
+    public static void ObjectiveLost(MajorObjective maj_poi)
     {
-        
+        THE_OVERSEER.objective_manager.ObjectiveLost(maj_poi);
     }
 
     // when all enemies are defeated, the objective is secured
     public static void ObjectiveSecured()
     {
-        
+        THE_OVERSEER.objective_manager.ObjectiveSecured();
     }
     #endregion
 

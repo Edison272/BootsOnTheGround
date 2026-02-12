@@ -17,6 +17,10 @@ public class CanvasController : MonoBehaviour
     [SerializeField] GameObject op_layout_group;
     [SerializeField] GameObject op_status_instance;
     [SerializeField] OperatorStatusUI[] op_statuses;
+    [Header("Enemy Wavebar")]
+    [SerializeField] GameObject wave_bar;
+    [SerializeField] RectTransform enemy_bar; // represent the amount of waves
+
     [Header("Command UI")]
     [SerializeField] Button[] available_commands;
     [SerializeField] TextMeshProUGUI player_mode_text;

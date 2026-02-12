@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MapPreset", menuName = "ScriptableObjects/MapGeneration", order = 1)]
+[CreateAssetMenu(fileName = "MapPreset", menuName = "ScriptableObjects/Map Generation/Generation Preset", order = 1)]
 public class MapGenPreset : ScriptableObject
 {
     public enum AdjacentType {four_directions, eight_directions};

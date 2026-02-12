@@ -9,7 +9,7 @@ public class BlobMaker : MapMaker
         Dictionary<Vector2Int, MapChunk> all_chunks, 
         HashSet<Vector2Int> border_chunks, 
         HashSet<Vector2Int> path_chunks, 
-        MajorPOI[] critical_locs,
+        MajorObjective[] critical_locs,
         MapGenPreset gen_preset
     )
     {
@@ -139,13 +139,13 @@ public class BlobMaker : MapMaker
         map_center /= all_chunks.Keys.Count;
 
         // declare first and last pos of critical locs
-        critical_locs[0] = new MajorPOI(all_chunks[spawn_chunk]);
-        critical_locs[1] = new MajorPOI(all_chunks[final_chunk]);
+        critical_locs[0] = new MajorObjective(all_chunks[spawn_chunk]);
+        critical_locs[1] = new MajorObjective(all_chunks[final_chunk]);
 
         return map_center;
     }
 
-    public override void GeneratePOI(Dictionary<Vector2Int, MapChunk> all_chunks, MajorPOI[] critical_locs)
+    public override void GeneratePOI(Dictionary<Vector2Int, MapChunk> all_chunks, MajorObjective[] critical_locs)
     {
         for (int i = 2; i < critical_locs.Length; i++) // fill in betweens of the list
         {
@@ -173,7 +173,7 @@ public class BlobMaker : MapMaker
 
                 if (shortest_dist > highest_short)
                 {
-                    critical_locs[i] = new MajorPOI(mc);
+                    critical_locs[i] = new MajorObjective(mc);
                     highest_short = shortest_dist;
                 }
             }

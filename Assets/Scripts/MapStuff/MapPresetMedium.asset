@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 331033b9448caf844a9a0b81e2c1c401, type: 3}
   m_Name: MapPresetMedium
   m_EditorClassIdentifier: 
-  map_size: 41
+  map_size: 52
   map_scale: 2
   check_points: 3
   objectives: 4

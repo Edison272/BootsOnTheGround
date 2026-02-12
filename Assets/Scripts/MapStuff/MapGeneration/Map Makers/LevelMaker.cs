@@ -10,7 +10,7 @@ public class LevelMaker : MapMaker
         Dictionary<Vector2Int, MapChunk> all_chunks, 
         HashSet<Vector2Int> border_chunks, 
         HashSet<Vector2Int> path_chunks, 
-        MajorPOI[] critical_locs,
+        MajorObjective[] critical_locs,
         MapGenPreset gen_preset)
     {
         #region GenMap - Spine
@@ -23,17 +23,19 @@ public class LevelMaker : MapMaker
 
         // initialize starting point
         all_poi[0] = start_pos;
-        critical_locs[0] = new MajorPOI(all_poi[0]);
+        critical_locs[0] = new MajorObjective(all_poi[0], null, true);
         all_chunks[start_pos] = critical_locs[0].main_chunk;
         path_chunks.Add(start_pos);
         int total_minor_poi = 0;
+        
+        // create major poi at all points in all_poi except for the start
         for (int i = 1; i < all_poi.Length; i++) 
         {
             Vector2 new_pos = start_pos + random_dir * gen_preset.map_size * poi_partition * i;
             float lat_scale = gen_preset.map_size * poi_partition;
             new_pos += new Vector2(random_dir.y, -random_dir.x).normalized * Random.Range(-lat_scale, lat_scale);
             all_poi[i] = new Vector2Int((int)new_pos.x, (int)new_pos.y);
-            critical_locs[i] = new MajorPOI(all_poi[i], critical_locs[i-1]);
+            critical_locs[i] = new MajorObjective(all_poi[i], critical_locs[i-1]);
             critical_locs[i-1].SetNextPOI(critical_locs[i]);
             
             int generate_poi = Random.Range(0, gen_preset.minor_poi);
@@ -108,7 +110,7 @@ public class LevelMaker : MapMaker
 
         // random propagation to adjacent chunks
         int chunks = gen_preset.map_size * gen_preset.objectives * gen_preset.map_scale + 
-                    (int)(total_minor_poi * gen_preset.map_size * gen_preset.map_scale * poi_partition);
+                    (int)(total_minor_poi * gen_preset.map_size * 0.5f * poi_partition);
         for (int i = 0; i < chunks && chunk_queue.Count > 0; i++) {
             // remove chunk from queue add chunk to all chunks
             Vector2Int curr_chunk = chunk_queue.Dequeue();
@@ -182,8 +184,8 @@ public class LevelMaker : MapMaker
 
             // get closest POI and be part of that poi's "territory"
             float lowest_mag = Mathf.Infinity;
-            MajorPOI closest_poi = critical_locs[0];
-            foreach(MajorPOI poi in critical_locs)
+            MajorObjective closest_poi = critical_locs[0];
+            foreach(MajorObjective poi in critical_locs)
             {
                 float vec_mag = (chunk_pos - poi.main_chunk.position).magnitude;
                 if (vec_mag < lowest_mag)
@@ -285,7 +287,7 @@ public class LevelMaker : MapMaker
 
     public override void GeneratePOI(
         Dictionary<Vector2Int, MapChunk> all_chunks, 
-        MajorPOI[] critical_locs)
+        MajorObjective[] critical_locs)
     {
 
     }

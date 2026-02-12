@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97cdf939f1c972e4d922640cd38e06b2, type: 3}
+  m_Name: Vanguard Knight 1
+  m_EditorClassIdentifier: 
+  character_name: Knight
+  health: 80000
+  speed: 8
+  accel_time: 1.08
+  range: 10
+  close_range: 5
+  char_prefab: {fileID: 2428321643129466446, guid: 5e913ed6cace0fb4b8c4fcf8227fde94,
+    type: 3}
+  detection_mask:
+    serializedVersion: 2
+    m_Bits: 0
+  max_space: 5
+  inventory:
+  - {fileID: 11400000, guid: 8f509684d152d6d4d9baeacc717da5d2, type: 2}
+  - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
+  item_indexes:
+  - {x: 0, y: -1}
+  - {x: 1, y: -1}
+  op_class: 0
+  command_cost: 3
+  deployment_speed: 1
+  field_time: -1

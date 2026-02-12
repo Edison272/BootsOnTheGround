@@ -5,11 +5,10 @@ using System.Data.Common;
 using NUnit.Framework.Constraints;
 using UnityEngine;
 
-public enum CaptureState {Squad, Enemy, Contested}
-public class Objective : MonoBehaviour
+public class CaptureArea : MonoBehaviour
 {
     [Header("id")]
-    private MajorPOI objective_poi;
+    private MajorObjective objective_poi;
     [Header("VFX")]
     public Transform capture_point_mask;
     public SpriteRenderer[] color_components;
@@ -21,11 +20,10 @@ public class Objective : MonoBehaviour
     private int owner = -1;
     [SerializeField] private int squad_weight = 0;
     [SerializeField] private int enemy_weight = 0;
-    public void Setup(MajorPOI poi)
+    public void Setup(MajorObjective poi, bool is_captured)
     {
         objective_poi = poi;
-        float scale = 0f;
-        capture_point_mask.localScale = new Vector3(scale, scale, 1);
+        curr_capture_time = max_capture_time * (is_captured ? 1f : 0f);
     }
 
     public void SetColor(Color color)
@@ -50,6 +48,7 @@ public class Objective : MonoBehaviour
     }
 
 
+
     public void Update()
     {
         if (squad_weight != enemy_weight)
@@ -59,12 +58,18 @@ public class Objective : MonoBehaviour
         
     }
 
-    public void GrowObjective()
+    // called to change the objective's capture progress and the relevant VFX
+    private  void GrowObjective()
     {
         float capture_delta = Time.deltaTime * (squad_weight > enemy_weight ? 1 : -1);        
         curr_capture_time += capture_delta;
         curr_capture_time = Mathf.Clamp(curr_capture_time, 0, max_capture_time);
+        SetObjectiveState();
+    }
 
+    // set VFX and variables based on the current capture time
+    private void SetObjectiveState()
+    {
         float scale = (curr_capture_time / max_capture_time) * 0.875f;
         capture_point_mask.localScale = new Vector3(scale, scale, 1);
         
@@ -75,6 +80,7 @@ public class Objective : MonoBehaviour
             {
                 owner = -1;
                 objective_animator.Play("Lost");
+                GameOverseer.ObjectiveLost(objective_poi);
                 curr_capture_time = 0;
                 SetColor(GameOverseer.EMPTY_COLOR);
             }

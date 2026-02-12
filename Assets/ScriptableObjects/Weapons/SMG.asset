@@ -49,7 +49,7 @@ MonoBehaviour:
       - key: linecast_duration
         value: 0.3
       - key: linecast_count
-        value: 1
+        value: 3
       - key: linecast_spread
         value: 30
       - key: even_spread

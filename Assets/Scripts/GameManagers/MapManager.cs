@@ -34,7 +34,7 @@ public class MapManager : MonoBehaviour
     public Vector2Int final_chunk; // chunk with the main objective
     public Vector2 map_center; // duh
 
-    public MajorPOI[] critical_locs = new MajorPOI[0]; // start & final + POI
+    public MajorObjective[] critical_locs = new MajorObjective[0]; // start & final + POI
     public Dictionary<Character, int> chars_in_poi = new Dictionary<Character, int>();
     private List<Character> removal_buffer = new List<Character>();
 
@@ -44,7 +44,7 @@ public class MapManager : MonoBehaviour
     HashSet<Vector3Int> draw_border = new HashSet<Vector3Int>();
 
     [Header("Objective Point")]
-    public Objective objective_point_prefab;
+    public CaptureArea objective_point_prefab;
 
     [Header("Gizmo Stuff")]
     [SerializeField] bool show_chunks = true;
@@ -58,9 +58,12 @@ public class MapManager : MonoBehaviour
     public void Awake()
     {
         // Destroy POI made by map in editor. When editor destroys, it uses EditorDestroyMapObjects
-        foreach(MajorPOI objective in critical_locs)
+        foreach(MajorObjective objective in critical_locs)
         {
-            Destroy(objective.objective_point.gameObject);
+            if (objective.objective_point)
+            {
+                Destroy(objective.objective_point.gameObject);
+            }   
         }
     }
     public void GenerateMap()
@@ -91,7 +94,7 @@ public class MapManager : MonoBehaviour
         all_chunks.Clear();
         border_chunks.Clear();
         path_chunks.Clear();
-        critical_locs = new MajorPOI[1 + gen_preset.objectives];
+        critical_locs = new MajorObjective[1 + gen_preset.objectives];
 
         map_center = map_maker.GenerateMap(all_chunks, border_chunks, path_chunks, critical_locs, gen_preset);
         spawn_chunk = critical_locs[0].main_chunk.position;
@@ -203,7 +206,7 @@ public class MapManager : MonoBehaviour
         // place Objective prefabs
         // for(int i = 1; i < critical_locs.Length; i++)
         // {
-        //     MajorPOI maj_poi = critical_locs[i];
+        //     MajorObjective maj_poi = critical_locs[i];
         //     Instantiate(objective_point_prefab, (Vector3)(Vector2)maj_poi.main_chunk.position * chunk_size, Quaternion.identity);
         // }
     }
@@ -216,7 +219,7 @@ public class MapManager : MonoBehaviour
         if (chars_in_poi.Count > 0) {
             foreach (Character character in chars_in_poi.Keys)
             {
-                MajorPOI poi = critical_locs[chars_in_poi[character]];
+                MajorObjective poi = critical_locs[chars_in_poi[character]];
                 if (!character.IsInAction())
                 {
                     poi.objective_point.RemoveOccupier(character);
@@ -264,7 +267,7 @@ public class MapManager : MonoBehaviour
         // check for chunk interactions
         for(int i = 0; i< critical_locs.Length; i++)
         {
-            MajorPOI poi = critical_locs[i];
+            MajorObjective poi = critical_locs[i];
             if (chunk_location == poi.main_chunk.position && !chars_in_poi.ContainsKey(character))
             {
                 poi.objective_point.AddOccupier(character);
@@ -389,9 +392,13 @@ public class MapManager : MonoBehaviour
     // Destroy 
     public void EditorDestroyMapObjects()
     {
-        foreach(MajorPOI objective in critical_locs)
+        foreach(MajorObjective objective in critical_locs)
         {
-            DestroyImmediate(objective.objective_point.gameObject);
+            if (objective.objective_point)
+            {
+                DestroyImmediate(objective.objective_point.gameObject);
+            }
+            
         }
     }
     #endregion

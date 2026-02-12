@@ -15,6 +15,8 @@ public class EnemyManager : MonoBehaviour
     public float curr_time = 0;
 
     [Header("Wave Spawning")]
+
+    [Header("Wave Spawning")]
     public float wave_time = 3;
     public float wave_radius = 3;
     public float spawn_dist = 14;
@@ -22,14 +24,6 @@ public class EnemyManager : MonoBehaviour
     public int max_wave_size;
     public int min_wave_iterations;
     public int max_wave_iterations;
-    public Vector2[] spawn_positions = {
-        new Vector2(-1, 0), 
-        new Vector2(1, 0), 
-        new Vector2(-0.8660254f, 0.5f), 
-        new Vector2(-0.8660254f, -0.5f), 
-        new Vector2(0.8660254f, 0.5f),
-        new Vector2(0.8660254f, -0.5f)
-    }; // TEMPORARY
 
     public void CreateEnemy(int index, Vector3 position)
     {
@@ -42,7 +36,7 @@ public class EnemyManager : MonoBehaviour
         // set up enemy behaviors
         new_enemy.ToggleAI(true);
         new_enemy.behavior_controller.anchor_position = GameOverseer.THE_OVERSEER.squad_manager.player_character.GetPosition();
-        new_enemy.SetCommandBehavior(CommandMode.Engage);
+        new_enemy.SetCommandBehavior(CommandMode.Hold);
         new_enemy.behavior_controller.SetActionTime(1, 2);
         enemies.Add(new_enemy);
     }
