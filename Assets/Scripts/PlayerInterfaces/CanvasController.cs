@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,6 +34,10 @@ public class CanvasController : MonoBehaviour
     [Header("Pointer UI")]
     bool pointer_requested = false;
     [SerializeField] GameObject[] movement_indicators;
+
+    [Header("Action Seelctor UI")]
+    public RectTransform action_selector;
+    public RectTransform action_indicator;
     
     // Start is called before the first frame update
     void Awake()
@@ -41,6 +46,7 @@ public class CanvasController : MonoBehaviour
         {
             stat_ui.gameObject.SetActive(false);
             command_reticle.SetActive(false);
+            action_selector.gameObject.SetActive(false);
         }
     }
 
@@ -61,10 +67,31 @@ public class CanvasController : MonoBehaviour
             }
         }
 
-        if (command_reticle.activeSelf)
+        if (action_selector.gameObject.activeSelf)
         {
-            command_reticle.transform.position = GameOverseer.THE_OVERSEER.player_control.look_pos;
+            action_selector.anchoredPosition = GameOverseer.THE_OVERSEER.player_control.viewport_pos;
+            Vector2 center_vec = GameOverseer.THE_OVERSEER.player_control.player_view_controller.hold_viewport_pos;
+            Vector2 curr_vec = GameOverseer.THE_OVERSEER.player_control.screen_pos;
+            Vector2 selection_vector =  (curr_vec - center_vec);
+            float abs_x = Mathf.Abs(selection_vector.x);
+            float abs_y = Mathf.Abs(selection_vector.y);
+            float manhat_distance = abs_x + abs_y;
+            
+            float radius = 100f;
+            if (manhat_distance > radius)
+            {
+                float scale = radius / manhat_distance;
+
+                selection_vector = new Vector2(selection_vector.x * scale, selection_vector.y * scale);
+            }
+
+            action_indicator.anchoredPosition = action_selector.anchoredPosition + selection_vector;
         }
+
+        // if (command_reticle.activeSelf)
+        // {
+        //     command_reticle.transform.position = GameOverseer.THE_OVERSEER.player_control.look_pos;
+        // }
     }
     //  set up UI for all operators after they've been initialized. Called by Game Overseer
     public void SetOperatorProfiles()
@@ -159,16 +186,12 @@ public class CanvasController : MonoBehaviour
     #region Player-Canvas Input
     public void PlayerStartInput()
     {
-        if (pointer_requested)
-        {
-            Debug.Log("Mouse down");
-            ConfirmCommand();
-        }
+        action_selector.gameObject.SetActive(true);
         
     }
     public void PlayerEndInput()
     {
-        // Debug.Log("Mouse Up");
+        action_selector.gameObject.SetActive(false);
     }
     
     #endregion
