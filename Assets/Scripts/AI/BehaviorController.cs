@@ -130,7 +130,7 @@ public class BehaviorController
                 estimated_travel_time = character.GetTravelTime();
                 curr_travel_time = 0;
                 prev_tile_pos = character.current_tile_pos;
-                Debug.Log("movement queue in use");
+                //Debug.Log("movement queue in use");
             }
 
             estimated_travel_time = 0;
@@ -181,7 +181,7 @@ public class BehaviorController
         if ((character.GetPosition() - leader.GetPosition()).sqrMagnitude > 4f * 4f)
         {
             anchor_position = (character.GetPosition() - leader.GetPosition()).normalized * 4f + leader.GetPosition();
-            Debug.Log("Following");
+            //Debug.Log("Following");
             Vector2 obj_pos = anchor_position + leader.move_dir * 3;
             if (character.target)
             {

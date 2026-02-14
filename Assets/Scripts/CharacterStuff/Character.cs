@@ -193,7 +193,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
             }
         }
 
-        if (!target)
+        if (is_AI_active && !target)
         {
             if (!destination_reached)
             {

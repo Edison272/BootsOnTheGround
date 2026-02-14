@@ -1,10 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+
+public enum PlayerViewEnum {Primary, Order, Command}
 public class PlayerController : MonoBehaviour
 {
     [Header("Input")]
@@ -26,20 +26,30 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] Vector2 input_dir;
     public Vector3 canvas_pointer_pos {get; private set;}
-    public Vector2 look_pos {get; private set;}
-    private Vector2 raw_look_pos;
+    public Vector2 look_pos {get; private set;} = Vector2.zero;
+    private Vector2 raw_look_pos = Vector2.zero;
+
+    // used to save/hold a look position
+    private Vector2 save_look_pos;
+    private Vector2 save_raw_look_pos;
     [SerializeField] Character active_character;
     bool in_command_mode = false; // can only move while in command mode
 
-    [Header("Camera Stuff")]
+    [Header("Player View Type")]
+    PlayerViewEnum curr_view_enum = PlayerViewEnum.Primary;
+    PlayerViewEnum prev_view_enum = PlayerViewEnum.Primary;
+    Action LookAction;
+    
+
+    [Header("Camera Control")]
     [SerializeField] float camera_zoom_time = 0.5f;
     public float base_zoom_level = 1;
     public float zoom_factor = 0.5f;
+    float lerp_amount = 1;
     float zoom_diff; // set current zoom
     float curr_zoom; // set current zoom
     float target_zoom; // set current zoom
     float curr_zoom_time;
-    Vector2 save_mouse_pos = Vector2.zero;
 
     [Header("UI Stuff")]
     [SerializeField] GameObject cursor;
@@ -70,8 +80,15 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     public void StartPlayer()
     {
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        if (active_character)
+        {
+            look_pos = active_character.GetPosition();
+            raw_look_pos = new Vector2(main_cam.pixelWidth/2, main_cam.pixelHeight/2);
+        }
+        
+        SetViewType(curr_view_enum);
         EnableControl();
     }
 
@@ -90,7 +107,7 @@ public class PlayerController : MonoBehaviour
         // switch the item
         controls.GroundActions.SwitchItem.performed += SwitchItem;
         // Toggle Command Mode
-        controls.GroundActions.ToggleCommandMode.performed += CmdMode;
+        controls.GroundActions.ToggleCommandMode.performed += CommandView;
         // Deploy Op with num keys
         controls.GroundActions.OpDeploy1.performed += OpDeploy1;
         controls.GroundActions.OpDeploy2.performed += OpDeploy2;
@@ -139,15 +156,19 @@ public class PlayerController : MonoBehaviour
         }
 
         // constantly read looking value
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(player_view.rectTransform, looking.ReadValue<Vector2>(), play_cam, out raw_look_pos);
-        Rect rect = player_view.rectTransform.rect;
+        Vector2 pointer_delta = looking.ReadValue<Vector2>();
+        raw_look_pos += pointer_delta;
+        raw_look_pos = new Vector2(
+            Mathf.Clamp(raw_look_pos.x, 0, main_cam.pixelWidth),
+            Mathf.Clamp(raw_look_pos.y, 0, main_cam.pixelHeight)
+        );
         // get viewport coordinates
-        float view_x = (raw_look_pos.x - rect.xMin) / rect.width;
-        float view_y = (raw_look_pos.y - rect.yMin) / rect.height;
+        float view_x = raw_look_pos.x / main_cam.pixelWidth;
+        float view_y = raw_look_pos.y / main_cam.pixelHeight;
         // set look pos
         canvas_pointer_pos = new Vector3(view_x, view_y, 0);
-        active_character.Look(main_cam.ViewportToWorldPoint(canvas_pointer_pos));
-        look_pos = (Vector2)main_cam.ViewportToWorldPoint(canvas_pointer_pos);
+        look_pos = (Vector2)main_cam.ScreenToWorldPoint(raw_look_pos);
+        active_character.Look(look_pos);
         // adjust cursor
         cursor.transform.position = look_pos;
     }
@@ -165,23 +186,7 @@ public class PlayerController : MonoBehaviour
     {   
         if (active_character)
         {
-            Vector2 char_pos = active_character.gameObject.transform.position;
-            // update cam position to move to look position within circular bounds
-            float cam_range = 5 + 1.5f * active_character.GetRangeScalar();
-            Vector2 offset = (look_pos - char_pos) * 0.5f;
-            if (offset.magnitude > cam_range)
-            {
-                offset = offset.normalized * cam_range;
-            }
-
-            Vector3 cam_pos = char_pos + offset;
-            cam_pos.z = -10;
-
-            // Vector3 cam_pos = (look_pos + char_pos) * 0.5f;
-            // cam_pos.x = Mathf.Clamp(cam_pos.x, -cam_range + char_pos.x, cam_range + char_pos.x);
-            // cam_pos.y = Mathf.Clamp(cam_pos.y, -cam_range + char_pos.y, cam_range + char_pos.y);
-            // cam_pos.z = -10;
-            main_cam.transform.position = cam_pos;
+            LookAction();
         }
         if (curr_zoom_time > 0)
         {
@@ -190,6 +195,109 @@ public class PlayerController : MonoBehaviour
         }
     }
     #endregion
+    #region Look Pos Functions
+
+    void SetViewType(PlayerViewEnum view_type) // order view can override primary or command, but primary and command can only override each other
+    {
+        if (curr_view_enum == PlayerViewEnum.Order)
+        {
+            return;
+        } 
+        switch(view_type)
+        {
+            case PlayerViewEnum.Primary:
+                LookAction = PrimaryView;
+                break;
+            case PlayerViewEnum.Order:
+                save_raw_look_pos = raw_look_pos;
+                save_look_pos = look_pos;
+                LookAction = OrderView;
+                break;
+            case PlayerViewEnum.Command:
+                LookAction = CommandView;
+                break;
+        }
+        
+        prev_view_enum = curr_view_enum;
+        curr_view_enum = view_type;
+        Debug.Log(view_type);
+    }
+    void ResetViewType() // order resets to previous state. primary and command reset to each other
+    {
+        
+        switch(curr_view_enum)
+        {
+            case PlayerViewEnum.Primary:
+                curr_view_enum = PlayerViewEnum.Command;
+                break;
+            case PlayerViewEnum.Order:
+                raw_look_pos = save_raw_look_pos;
+                curr_view_enum = prev_view_enum;
+                break;
+            case PlayerViewEnum.Command:
+                curr_view_enum = PlayerViewEnum.Primary;
+                break;
+        }
+        prev_view_enum = curr_view_enum;
+        SetViewType(curr_view_enum);
+    }
+
+    void PrimaryView() // follow where the player's looking
+    {
+        Vector2 char_pos = active_character.GetPosition();
+        // update cam position to move to look position within circular bounds
+        float cam_range = 5 + 1.5f * active_character.GetRangeScalar();
+        Vector2 offset = (look_pos - char_pos) * 0.5f;
+        if (offset.magnitude > cam_range)
+        {
+            offset = offset.normalized * cam_range;
+        }
+
+        Vector3 cam_pos = char_pos + offset;
+        cam_pos.z = -10;
+
+        // Vector3 cam_pos = (look_pos + char_pos) * 0.5f;
+        // cam_pos.x = Mathf.Clamp(cam_pos.x, -cam_range + char_pos.x, cam_range + char_pos.x);
+        // cam_pos.y = Mathf.Clamp(cam_pos.y, -cam_range + char_pos.y, cam_range + char_pos.y);
+        // cam_pos.z = -10;
+        main_cam.transform.position = Vector3.Lerp(main_cam.transform.position, cam_pos, lerp_amount);
+    }
+    void OrderView() // lock camera while player is using an action wheel to order an operator
+    {
+        Vector2 char_pos = active_character.GetPosition();
+        // update cam position to move to look position within circular bounds
+        float cam_range = 5 + 1.5f * active_character.GetRangeScalar();
+        Vector2 offset = (save_look_pos - char_pos) * 0.5f;
+        if (offset.magnitude > cam_range)
+        {
+            offset = offset.normalized * cam_range;
+        }
+
+        Vector3 cam_pos = char_pos + offset;
+        cam_pos.z = -10;
+
+        raw_look_pos = save_raw_look_pos;
+
+        // Vector3 cam_pos = (look_pos + char_pos) * 0.5f;
+        // cam_pos.x = Mathf.Clamp(cam_pos.x, -cam_range + char_pos.x, cam_range + char_pos.x);
+        // cam_pos.y = Mathf.Clamp(cam_pos.y, -cam_range + char_pos.y, cam_range + char_pos.y);
+        // cam_pos.z = -10;
+        main_cam.transform.position = Vector3.Lerp(main_cam.transform.position, cam_pos, 0.1f);
+    }
+    void CommandView() // camera directly on player
+    {
+        Vector3 cam_pos = active_character.GetPosition();
+        cam_pos.z = -10;
+
+        // Vector3 cam_pos = (look_pos + char_pos) * 0.5f;
+        // cam_pos.x = Mathf.Clamp(cam_pos.x, -cam_range + char_pos.x, cam_range + char_pos.x);
+        // cam_pos.y = Mathf.Clamp(cam_pos.y, -cam_range + char_pos.y, cam_range + char_pos.y);
+        // cam_pos.z = -10;
+        main_cam.transform.position = Vector3.Lerp(main_cam.transform.position, cam_pos, 0.5f);
+    }
+
+    #endregion
+
     #region Input Functions
     void Move(InputAction.CallbackContext context) {
         input_dir = context.ReadValue<Vector2>();
@@ -243,8 +351,8 @@ public class PlayerController : MonoBehaviour
         SetCameraZoom(active_character.GetRangeScalar());
     }
     #endregion
-    #region Command Input Functions
-    void CmdMode(InputAction.CallbackContext context) // used to see the whole map ts
+    #region Command View
+    void CommandView(InputAction.CallbackContext context) // used to see the whole map ts
     {
         in_command_mode = !in_command_mode; // switch command mode type
         if (in_command_mode)
@@ -259,11 +367,9 @@ public class PlayerController : MonoBehaviour
             // ToggleCommandInput(true);
 
             // change UI
-            cursor.SetActive(false);
+            //cursor.SetActive(false);
             SetCameraZoom(5);
-
-            // save mouse pos
-            save_mouse_pos = look_pos;
+            SetViewType(PlayerViewEnum.Command);
         } else
         {
             // // disable click detection on canvas
@@ -276,15 +382,18 @@ public class PlayerController : MonoBehaviour
             // controls.GroundActions.SwitchItem.performed += SwitchItem;
 
             // change UI
-            cursor.SetActive(true);
+            //cursor.SetActive(true);
             SetCameraZoom(active_character.GetRangeScalar());
+            ResetViewType();
 
-            //Mouse.current.WarpCursorPosition(new Vector2(Screen.width * canvas_pointer_pos.x, Screen.height * canvas_pointer_pos.y));
+            //Mouse.current.WarpCursorPosition(new Vector2(main_cam.pixelWidth * canvas_pointer_pos.x, main_cam.pixelHeight * canvas_pointer_pos.y));
         }
-        Cursor.visible = in_command_mode;
+        //Cursor.visible = in_command_mode;
         GameOverseer.THE_OVERSEER.canvas_control.SetCommandUI(in_command_mode);
     }
+    #endregion
 
+    #region Operator Orders
     void OpDeploy1(InputAction.CallbackContext context) {GetOperator(1);} // start at 1 bc og player char is in index 0
     void OpDeploy2(InputAction.CallbackContext context) {GetOperator(2);}
     void OpDeploy3(InputAction.CallbackContext context) {GetOperator(3);}
@@ -307,12 +416,13 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    void ConfirmClickM1(InputAction.CallbackContext context) {
-        squad.UseOpAbility(look_pos);
-        ResetConfirm();
+    void StartOrderState(InputAction.CallbackContext context)
+    {
+        SetViewType(PlayerViewEnum.Order);
     }
-    void ConfirmClickM2(InputAction.CallbackContext context) {
-        squad.SwitchOpBehavior();
+    void CancelOrderState(InputAction.CallbackContext context)
+    {
+        ResetViewType();
         ResetConfirm();
     }
 
@@ -331,15 +441,15 @@ public class PlayerController : MonoBehaviour
     {
         if (cmd_on)
         {
-            main_action.started += ConfirmClickM1;
-            alt_action.started += ConfirmClickM2;
+            alt_action.started += StartOrderState;
+            alt_action.canceled += CancelOrderState;
             SetMainAction(false);
             SetAltAction(false);
         } 
         else
         {
-            main_action.started -= ConfirmClickM1;
-            alt_action.started -= ConfirmClickM2;
+            alt_action.started -= StartOrderState;
+            alt_action.canceled -= CancelOrderState;
             SetMainAction(true);
             SetAltAction(active_character.HasAltAction());
 
