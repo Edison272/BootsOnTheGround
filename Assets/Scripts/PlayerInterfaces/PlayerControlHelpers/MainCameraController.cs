@@ -95,11 +95,7 @@ public class MainCameraController
         Vector3 cam_pos = source_position + offset;
         cam_pos.z = -10;
 
-        // Vector3 cam_pos = (look_pos + char_pos) * 0.5f;
-        // cam_pos.x = Mathf.Clamp(cam_pos.x, -cam_range + char_pos.x, cam_range + char_pos.x);
-        // cam_pos.y = Mathf.Clamp(cam_pos.y, -cam_range + char_pos.y, cam_range + char_pos.y);
-        // cam_pos.z = -10;
-        main_cam.transform.position = cam_pos;
+        main_cam.transform.position = Vector3.Lerp(main_cam.transform.position, cam_pos, 0.5f);
     }
 
     public void SetCameraAtPosition()

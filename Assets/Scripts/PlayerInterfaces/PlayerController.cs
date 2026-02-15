@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
         }    
 
         // add pointer delta to look position data
-        screen_pos += pointer_delta;
+        screen_pos += pointer_delta * 0.5f;
         pointer_delta = Vector2.zero;
         Rect rect = player_screen.rectTransform.rect;
         screen_pos = new Vector2(
@@ -158,10 +158,10 @@ public class PlayerController : MonoBehaviour
     void LateUpdate()
     {   
         // adjust cursor
-
+        cursor.transform.position = look_pos;
         // update controllers
         main_cam_controller.UpdateCamRender();
-        cursor.transform.position = look_pos;
+        
     }
     #endregion
 
@@ -283,6 +283,7 @@ public class PlayerController : MonoBehaviour
     void CancelOrderState(InputAction.CallbackContext context)
     {
         player_view_controller.ResetViewType();
+        pointer_delta = Vector2.zero;
         ResetConfirm();
         GameOverseer.THE_OVERSEER.canvas_control.PlayerEndInput();
     }
