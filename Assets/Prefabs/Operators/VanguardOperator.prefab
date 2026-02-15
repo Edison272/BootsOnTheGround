@@ -5290,7 +5290,6 @@ MonoBehaviour:
   front_particles: {fileID: 5469619299323008608}
   back_particles: {fileID: 5168089293521435692}
   aim_angle: 0
-  current_tile_pos: {x: 0, y: 0}
   inventory: []
   item_indexes: []
   main_item: {fileID: 0}

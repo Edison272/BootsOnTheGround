@@ -23,7 +23,7 @@ public class LevelMaker : MapMaker
 
         // initialize starting point
         all_poi[0] = start_pos;
-        critical_locs[0] = new MajorObjective(all_poi[0], null, false);
+        critical_locs[0] = new MajorObjective(all_poi[0], null, true);
         all_chunks[start_pos] = critical_locs[0].main_chunk;
         path_chunks.Add(start_pos);
         int total_minor_poi = 0;
