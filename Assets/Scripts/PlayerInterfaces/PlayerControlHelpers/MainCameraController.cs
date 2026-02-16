@@ -95,7 +95,7 @@ public class MainCameraController
         Vector3 cam_pos = source_position + offset;
         cam_pos.z = -10;
 
-        main_cam.transform.position = Vector3.Lerp(main_cam.transform.position, cam_pos, 0.5f);
+        main_cam.transform.position = Vector3.Lerp(main_cam.transform.position, cam_pos, 0.25f);
     }
 
     public void SetCameraAtPosition()

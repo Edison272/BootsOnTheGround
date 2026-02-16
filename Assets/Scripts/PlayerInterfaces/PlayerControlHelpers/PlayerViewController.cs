@@ -7,14 +7,12 @@ public enum PlayerViewEnum {Primary, Order, Command}
 public class PlayerViewController
 {
     [Header("Look Data")]
-    private Vector2 viewport_pos;
-    private Vector2 look_pos;
+    public Vector2 screen_pos {get; private set;}
+    public Vector2 viewport_pos {get; private set;}
+    public Vector2 look_pos {get; private set;}
     // used to save/hold a look position
-    
-    public Vector2 hold_viewport_pos;
-    private Vector2 hold_look_pos;
-
-    private Vector2 player_pos;
+    public Vector2 hold_screen_pos {get; private set;}
+    public Vector2 hold_viewport_pos {get; private set;}
 
     [Header("Player View Type")]
     public PlayerViewEnum curr_view_enum = PlayerViewEnum.Primary;
@@ -22,18 +20,36 @@ public class PlayerViewController
     Action ViewAction;
     Action LookPosUpdateAction;
 
-    [Header("Camera")]
+    [Header("Camera & Rect")]
     private Camera main_cam;
+    private Rect player_screen;
 
-    public PlayerViewController(Camera main_cam)
+    public PlayerViewController(Camera main_cam, Rect player_screen)
     {
         this.main_cam = main_cam;
+        this.player_screen = player_screen;
         SetViewType(curr_view_enum);
     }
 
-    public Vector2 UpdateView(Vector2 viewport_pos)
+    public void ResetView(Vector2 character_position)
     {
-        this.viewport_pos = viewport_pos;
+        look_pos = character_position;
+        screen_pos = new Vector2(main_cam.pixelWidth/2, main_cam.pixelHeight/2);
+    }
+
+    public Vector2 UpdateView(Vector2 pointer_delta)
+    {
+        // add pointer delta to look position data
+        screen_pos += pointer_delta;
+        
+        screen_pos = new Vector2(
+            Mathf.Clamp(screen_pos.x, player_screen.xMin, player_screen.xMax),
+            Mathf.Clamp(screen_pos.y, player_screen.yMin, player_screen.yMax)
+        );
+        // convert to viewport coordinates (anchored to render texture)
+        float view_x = (screen_pos.x - player_screen.xMin) / player_screen.width;
+        float view_y = (screen_pos.y - player_screen.yMin) / player_screen.height;
+        viewport_pos = new Vector3(view_x, view_y, 0);
         //this.player_pos = player_pos;
         LookPosUpdateAction();
 
@@ -58,8 +74,8 @@ public class PlayerViewController
                 LookPosUpdateAction = LookRawPos;
                 break;
             case PlayerViewEnum.Order:
+                hold_screen_pos = screen_pos;
                 hold_viewport_pos = viewport_pos;
-                hold_look_pos = look_pos;
                 LookPosUpdateAction = LookHoldPos;
                 ViewAction = OrderView;
                 break;
@@ -82,6 +98,7 @@ public class PlayerViewController
                 curr_view_enum = PlayerViewEnum.Command;
                 break;
             case PlayerViewEnum.Order:
+                screen_pos = hold_screen_pos;
                 viewport_pos = hold_viewport_pos;
                 curr_view_enum = prev_view_enum;
                 break;
@@ -95,6 +112,7 @@ public class PlayerViewController
 
     void PrimaryView() // follow where the player's looking
     {
+        
     }
     void OrderView() // lock camera while player is using an action wheel to order an operator
     {
@@ -115,6 +133,5 @@ public class PlayerViewController
     {
         look_pos = (Vector2)main_cam.ViewportToWorldPoint(hold_viewport_pos);
     }
-
     #endregion
 }

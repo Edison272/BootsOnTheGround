@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     bool alt_continuous; // checked on update to see if the alt action should be called
     public bool alt_hold_input = false;  // if true, mouse will alt action function will constantly be called
     
-    [Header("Character Control")]
+    [Header("Player Cams & Screen")]
     // move BOTH cameras to the player positon cuz they're both important. make play cam a child object of main cam tho
     [SerializeField] private Camera main_cam; // used to get the FULL area around the player and render that for player view
     [SerializeField] private Camera play_cam; // the area the player sees and interacts with
@@ -25,9 +25,9 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] Vector2 input_dir;
     private Vector2 pointer_delta;
-    public Vector3 viewport_pos {get; private set;}
-    public Vector2 look_pos {get; private set;} = Vector2.zero;
-    public Vector2 screen_pos = Vector2.zero;
+    public Vector3 viewport_pos => player_view_controller.viewport_pos;
+    public Vector2 look_pos => player_view_controller.look_pos;
+    public Vector2 screen_pos => player_view_controller.screen_pos;
     [SerializeField] Character active_character;
     bool in_command_mode = false; // can only move while in command mode
 
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
         alt_action = controls.GroundActions.AltAction;
 
         // set helper classes
-        player_view_controller = new PlayerViewController(main_cam);
+        player_view_controller = new PlayerViewController(main_cam, player_screen.rectTransform.rect);
         main_cam_controller = new MainCameraController(main_cam, player_screen.rectTransform);
     }
 
@@ -67,8 +67,7 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
         if (active_character)
         {
-            look_pos = active_character.GetPosition();
-            screen_pos = new Vector2(main_cam.pixelWidth/2, main_cam.pixelHeight/2);
+            player_view_controller.ResetView(active_character.GetPosition());
         }
         EnableControl();
     }
@@ -120,23 +119,11 @@ public class PlayerController : MonoBehaviour
             if (alt_continuous) {AltAction();}
         }    
 
-        // add pointer delta to look position data
-        screen_pos += pointer_delta * 0.5f;
-        pointer_delta = Vector2.zero;
-        Rect rect = player_screen.rectTransform.rect;
-        screen_pos = new Vector2(
-            Mathf.Clamp(screen_pos.x, rect.xMin, rect.xMax),
-            Mathf.Clamp(screen_pos.y, rect.yMin, rect.yMax)
-        );
-        // convert to viewport coordinates (anchored to render texture)
-        float view_x = (screen_pos.x - rect.xMin) / rect.width;
-        float view_y = (screen_pos.y - rect.yMin) / rect.height;
-        viewport_pos = new Vector3(view_x, view_y, 0); 
-
         // set look pos
         if (active_character)
         {
-            look_pos = player_view_controller.UpdateView(viewport_pos);
+            player_view_controller.UpdateView(pointer_delta*0.5f);
+            pointer_delta = Vector2.zero;
             active_character.Look(look_pos);
             main_cam_controller.UpdateCamData(active_character.GetPosition(), look_pos);
             
@@ -179,7 +166,6 @@ public class PlayerController : MonoBehaviour
     }
     void StopMove(InputAction.CallbackContext context) {active_character.StopMove();}
     void Look(InputAction.CallbackContext context) {
-        // set screen_pos (screen position)
         pointer_delta += looking.ReadValue<Vector2>();
     }
     void MainStart(InputAction.CallbackContext context) {
