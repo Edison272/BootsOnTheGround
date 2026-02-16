@@ -154,9 +154,9 @@ public class SquadManager : MonoBehaviour
         }
     }
 
-    public void SwitchOpBehavior()
+    public void SwitchOpBehavior(bool hold_or_follow = true)
     {
-        if (selected_operator.behavior_controller.command == CommandMode.Follow)
+        if (hold_or_follow)
         {
             selected_operator.op_behavior_controller.anchor_position = GameOverseer.THE_OVERSEER.player_control.look_pos;
             selected_operator.SetCommandBehavior(CommandMode.Hold);

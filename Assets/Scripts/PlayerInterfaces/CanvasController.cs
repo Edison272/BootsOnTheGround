@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,6 +43,7 @@ public class CanvasController : MonoBehaviour
     public RectTransform selector_base;
     public RectTransform action_indicator;
     private Vector2 selection_vector = Vector2.zero;
+    public Vector2 converted_selection_vector = Vector2.zero;
     [SerializeField]private float indicator_range = 0;
     
     // Start is called before the first frame update
@@ -102,8 +100,20 @@ public class CanvasController : MonoBehaviour
 
                 selection_vector = new Vector2(selection_vector.x * scale, selection_vector.y * scale);
             }
-
-            action_indicator.anchoredPosition = selection_vector;
+            
+            if (selection_vector.magnitude > indicator_range * 0.9f)
+            {
+                Vector2 center_to_select = selection_vector.normalized;
+                bool x_over_y = Mathf.Abs(center_to_select.x) > Mathf.Abs(center_to_select.y);
+                float convert_X = x_over_y ? (float)Math.Round(center_to_select.x) : (int)center_to_select.x;
+                float convert_y = !x_over_y ? (float)Math.Round(center_to_select.y) : (int)center_to_select.y;
+                converted_selection_vector = new Vector2(convert_X, convert_y);
+                action_indicator.anchoredPosition = converted_selection_vector * indicator_range * 0.8f;
+            }
+            else
+            {
+                action_indicator.anchoredPosition = selection_vector;
+            }
         }
 
         // if (command_reticle.activeSelf)
@@ -213,6 +223,23 @@ public class CanvasController : MonoBehaviour
     {
         action_selector.gameObject.SetActive(false);
         canvas_cursor.gameObject.SetActive(true);
+
+        switch ((converted_selection_vector.x, converted_selection_vector.y))
+        {
+            case (-1f,0): // follow
+                GameOverseer.THE_OVERSEER.squad_manager.SwitchOpBehavior(false);
+                break;
+            case (1f,0): // hold
+                GameOverseer.THE_OVERSEER.squad_manager.SwitchOpBehavior(true);
+                break;
+            case (0,1f): // ability
+                GameOverseer.THE_OVERSEER.squad_manager.UseOpAbility(player_controller.player_view_controller.look_pos);
+                break;
+            case (0,-1f): // interact
+                GameOverseer.THE_OVERSEER.squad_manager.SwitchOpBehavior(true);
+                break;
+        }
+
     }
     
     #endregion

@@ -13,6 +13,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public Transform body_sprite;
     public Transform main_hand; //always set to main hand object
     public Transform alt_hand; //always set to off hand object
+    public Transform head;
 
     [field: Header("VFX")]
     public Animator animator;
@@ -509,7 +510,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
     }
 
     #endregion
-
     #region  Inventory Management
     
     public bool HasAltAction() // returns true if the operator is currently wielding two items or an multi-state items
@@ -591,6 +591,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         return inventory[current_indexes.Item1].GetRange();
     }
+
+    #region Body
+
+
+    #endregion
 
     #region Debug Gizmos
     void OnDrawGizmosSelected()
