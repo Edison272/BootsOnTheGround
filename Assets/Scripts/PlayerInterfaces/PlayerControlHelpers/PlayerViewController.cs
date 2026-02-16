@@ -10,9 +10,14 @@ public class PlayerViewController
     public Vector2 screen_pos {get; private set;}
     public Vector2 viewport_pos {get; private set;}
     public Vector2 look_pos {get; private set;}
+    public Vector2 clamped_look_pos {get; private set;}
+    private Vector2 source_pos;
+
     // used to save/hold a look position
     public Vector2 hold_screen_pos {get; private set;}
     public Vector2 hold_viewport_pos {get; private set;}
+    public Vector2 last_pointer_delta {get; private set;}
+    private float range_scalar;
 
     [Header("Player View Type")]
     public PlayerViewEnum curr_view_enum = PlayerViewEnum.Primary;
@@ -22,38 +27,59 @@ public class PlayerViewController
 
     [Header("Camera & Rect")]
     private Camera main_cam;
-    private Rect player_screen;
+    private RectTransform player_screen;
+    [Header("Classmates")]
+    public MainCameraController main_camera_controller;
 
-    public PlayerViewController(Camera main_cam, Rect player_screen)
+    #region Setup & Reset
+    public PlayerViewController(Camera main_cam, RectTransform player_screen)
     {
         this.main_cam = main_cam;
         this.player_screen = player_screen;
         SetViewType(curr_view_enum);
     }
-
     public void ResetView(Vector2 character_position)
     {
         look_pos = character_position;
-        screen_pos = new Vector2(main_cam.pixelWidth/2, main_cam.pixelHeight/2);
+        screen_pos = new Vector2(Screen.width/2, Screen.height/2);
+        last_pointer_delta = Vector2.zero;
     }
-
-    public Vector2 UpdateView(Vector2 pointer_delta)
+    public void SetRange(float range_scalar)
     {
-        // add pointer delta to look position data
-        screen_pos += pointer_delta;
+        this.range_scalar = range_scalar;
+    }
+    public void SetMCController(MainCameraController mcc)
+    {
+        this.main_camera_controller = mcc;
+    }
+    #endregion
+
+    public void UpdateView(Vector2 pointer_delta, Vector2 source_pos)
+    {
+        // source pos is a character position
+        this.source_pos = source_pos;
         
-        screen_pos = new Vector2(
-            Mathf.Clamp(screen_pos.x, player_screen.xMin, player_screen.xMax),
-            Mathf.Clamp(screen_pos.y, player_screen.yMin, player_screen.yMax)
-        );
+        // add pointer delta to look position data
+        last_pointer_delta = pointer_delta;
+        screen_pos += last_pointer_delta;
+        
+        Rect rect = player_screen.rect;
+        // screen_pos = new Vector2(
+        //     Mathf.Clamp(screen_pos.x, rect.xMin, rect.xMax),
+        //     Mathf.Clamp(screen_pos.y, rect.yMin, rect.yMax)
+        // );
+        float lowest_dimension = rect.xMax;
+        if (lowest_dimension > rect.yMax)
+        {
+            lowest_dimension = rect.yMax;
+        }
+        screen_pos = CircularClamp(screen_pos, rect.center, lowest_dimension * 0.75f);
         // convert to viewport coordinates (anchored to render texture)
-        float view_x = (screen_pos.x - player_screen.xMin) / player_screen.width;
-        float view_y = (screen_pos.y - player_screen.yMin) / player_screen.height;
+        float view_x = (screen_pos.x - rect.xMin) / rect.width;
+        float view_y = (screen_pos.y - rect.yMin) / rect.height;
         viewport_pos = new Vector3(view_x, view_y, 0);
         //this.player_pos = player_pos;
         LookPosUpdateAction();
-
-        return look_pos;
     }
     public void UpdateLookPos()
     {
@@ -127,11 +153,27 @@ public class PlayerViewController
     public void LookRawPos() // look at viewport_pos
     {
         look_pos = (Vector2)main_cam.ViewportToWorldPoint(viewport_pos);
+        clamped_look_pos = CircularClamp(look_pos, source_pos, 5 + 1.5f * range_scalar);
     }
 
     public void LookHoldPos()
     {
         look_pos = (Vector2)main_cam.ViewportToWorldPoint(hold_viewport_pos);
+        clamped_look_pos = CircularClamp(look_pos, source_pos, 5 + 1.5f * range_scalar);
     }
+    
+    #endregion
+
+    #region Helpers
+    public Vector2 CircularClamp(Vector2 clamp_pos, Vector2 clamp_src, float range)
+    {
+        Vector2 look_vec = clamp_pos - clamp_src;
+        if (look_vec.magnitude > range)
+        {
+            look_vec = look_vec.normalized * range;
+        }
+        return look_vec + clamp_src;
+    }
+
     #endregion
 }

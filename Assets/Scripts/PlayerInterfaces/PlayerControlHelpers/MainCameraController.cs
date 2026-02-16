@@ -21,10 +21,11 @@ public class MainCameraController
     [Header("Camera Positioning")]
     Vector2 source_position;
     Vector2 target_position;
-
     Action CamMovement;
+    [Header("Classmates")]
+    public PlayerViewController player_view_controller;
 
-    #region Constructor
+    #region Setup & Reset
     public MainCameraController(Camera main_cam, RectTransform player_screen)
     {
         this.main_cam = main_cam;
@@ -37,6 +38,10 @@ public class MainCameraController
         target_zoom = base_zoom_level;
 
         CamMovement = SetCameraBetweenPositions;
+    }
+    public void SetPVController(PlayerViewController pvc)
+    {
+        this.player_view_controller = pvc;
     }
     #endregion
 
@@ -76,6 +81,7 @@ public class MainCameraController
     public void SetCameraZoom(int zoom_scalar)
     {
         player_range = zoom_scalar;
+        player_view_controller.SetRange(zoom_scalar);
         curr_zoom = player_screen.localScale.x;
         curr_zoom_time = 0;
         target_zoom = base_zoom_level + (5 - zoom_scalar) * zoom_factor;
@@ -87,7 +93,7 @@ public class MainCameraController
         // update cam position to move to look position within circular bounds
         float cam_range = 5 + 1.5f * player_range;
         Vector2 offset = (target_position - source_position) * 0.5f;
-        if (offset.magnitude > cam_range)
+        if (offset.sqrMagnitude > cam_range * cam_range)
         {
             offset = offset.normalized * cam_range;
         }

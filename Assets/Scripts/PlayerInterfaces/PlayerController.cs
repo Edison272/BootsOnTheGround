@@ -56,8 +56,10 @@ public class PlayerController : MonoBehaviour
         alt_action = controls.GroundActions.AltAction;
 
         // set helper classes
-        player_view_controller = new PlayerViewController(main_cam, player_screen.rectTransform.rect);
+        player_view_controller = new PlayerViewController(main_cam, player_screen.rectTransform);
         main_cam_controller = new MainCameraController(main_cam, player_screen.rectTransform);
+        player_view_controller.SetMCController(main_cam_controller);
+        main_cam_controller.SetPVController(player_view_controller);
     }
 
     // Start is called before the first frame update
@@ -68,6 +70,7 @@ public class PlayerController : MonoBehaviour
         if (active_character)
         {
             player_view_controller.ResetView(active_character.GetPosition());
+            pointer_delta = Vector2.zero;
         }
         EnableControl();
     }
@@ -122,7 +125,7 @@ public class PlayerController : MonoBehaviour
         // set look pos
         if (active_character)
         {
-            player_view_controller.UpdateView(pointer_delta*0.5f);
+            player_view_controller.UpdateView(pointer_delta*0.5f, active_character.GetPosition());
             pointer_delta = Vector2.zero;
             active_character.Look(look_pos);
             main_cam_controller.UpdateCamData(active_character.GetPosition(), look_pos);
@@ -131,17 +134,6 @@ public class PlayerController : MonoBehaviour
         // prepare camera data
         player_view_controller.UpdateLookPos();
     }
-
-    void FixedUpdate()
-    {
-        // if (input_dir != Vector2.zero)
-        // {
-        //     active_character.SetMove();
-        // }
-
-        
-    }
-
     void LateUpdate()
     {   
         // adjust cursor
@@ -189,11 +181,14 @@ public class PlayerController : MonoBehaviour
     void AltAction() {active_character.UseAltItem();}
     void ResetItem(InputAction.CallbackContext context) {active_character.ResetItems();}
     void SwitchItem(InputAction.CallbackContext context) {
-        active_character.SwitchItem();
         // set new input functionality
-        SetMainAction(true);
-        SetAltAction(active_character.HasAltAction());
-        main_cam_controller.SetCameraZoom(active_character.GetRangeScalar());
+        if (!in_command_mode && op_select_index == -1)
+        {
+            active_character.SwitchItem();
+            SetMainAction(true);
+            SetAltAction(active_character.HasAltAction());
+            main_cam_controller.SetCameraZoom(active_character.GetRangeScalar());
+        }
     }
     #endregion
     #region Command View
@@ -289,15 +284,15 @@ public class PlayerController : MonoBehaviour
     {
         if (cmd_on)
         {
-            alt_action.started += StartOrderState;
-            alt_action.canceled += CancelOrderState;
+            main_action.started += StartOrderState;
+            main_action.canceled += CancelOrderState;
             SetMainAction(false);
             SetAltAction(false);
         } 
         else
         {
-            alt_action.started -= StartOrderState;
-            alt_action.canceled -= CancelOrderState;
+            main_action.started -= StartOrderState;
+            main_action.canceled -= CancelOrderState;
             SetMainAction(true);
             SetAltAction(active_character.HasAltAction());
 
