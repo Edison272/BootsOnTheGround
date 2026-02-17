@@ -275,12 +275,12 @@ PrefabInstance:
     - target: {fileID: 311324697635735612, guid: 852337d3087a78c459ce5ccd025a9628,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.5882353
+      value: 0.76626647
       objectReference: {fileID: 0}
     - target: {fileID: 311324697635735612, guid: 852337d3087a78c459ce5ccd025a9628,
         type: 3}
       propertyPath: m_Color.r
-      value: 0
+      value: 0.41320753
       objectReference: {fileID: 0}
     - target: {fileID: 734295219127960824, guid: 852337d3087a78c459ce5ccd025a9628,
         type: 3}
@@ -466,13 +466,23 @@ MonoBehaviour:
   back_particles: {fileID: 6927547253782937043}
   aim_angle: 0
   current_tile_pos: {x: 0, y: 0}
+  <health_component>k__BackingField:
+    <curr_health>k__BackingField: 0
+    <max_health>k__BackingField: 0
+    <shield>k__BackingField: 0
+    <health_ratio>k__BackingField: 0
+    <is_alive>k__BackingField: 0
+  health_ui:
+    bg_bar: {fileID: 6397878962707143826}
+    health_bar: {fileID: 6674198418128698586}
+    health_drift_bar: {fileID: 5065069741961347098}
+    shield_bar: {fileID: 5566508502207678279}
   inventory: []
   item_indexes: []
   main_item: {fileID: 0}
   alt_item: {fileID: 0}
   target: {fileID: 0}
   faction_tag: 1
-  is_alive: 0
   selection_indicator: {fileID: 8837649333110249411}
   is_deployed: 0
   op_behavior_controller:
@@ -496,15 +506,39 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1230555618899894183}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &5065069741961347098 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6294187061805850557, guid: 852337d3087a78c459ce5ccd025a9628,
+    type: 3}
+  m_PrefabInstance: {fileID: 1230555618899894183}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5127429442612532774 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6213707693030312321, guid: 852337d3087a78c459ce5ccd025a9628,
     type: 3}
   m_PrefabInstance: {fileID: 1230555618899894183}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &5566508502207678279 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6652936148784273632, guid: 852337d3087a78c459ce5ccd025a9628,
+    type: 3}
+  m_PrefabInstance: {fileID: 1230555618899894183}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6184249750639701706 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4954260517961003373, guid: 852337d3087a78c459ce5ccd025a9628,
+    type: 3}
+  m_PrefabInstance: {fileID: 1230555618899894183}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6397878962707143826 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5321595408147350325, guid: 852337d3087a78c459ce5ccd025a9628,
+    type: 3}
+  m_PrefabInstance: {fileID: 1230555618899894183}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6674198418128698586 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5587924565896160125, guid: 852337d3087a78c459ce5ccd025a9628,
     type: 3}
   m_PrefabInstance: {fileID: 1230555618899894183}
   m_PrefabAsset: {fileID: 0}

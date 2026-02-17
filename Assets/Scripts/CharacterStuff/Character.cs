@@ -52,10 +52,16 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public float curr_accel_time {get; private set;} = 0;
     public float max_accel_time => base_data.accel_time; // amount of time operator needs to get to top move speed
 
-    [field: Header("Damage")]
-    public int curr_health {get; private set;}
+    [field: Header("Health Stuff")]
+    [field: SerializeField] public HealthComponent health_component {get; private set;}
+    public int curr_health => health_component.curr_health;
     public int max_health => base_data.health;
-    public float health_ratio {get; private set;}
+    public int shield => health_component.shield;
+    public float health_ratio => health_component.health_ratio;
+    public bool is_alive => health_component.is_alive;
+
+    [field: Header("Health UI")]
+    [SerializeField] HealthUI health_ui = new HealthUI();
 
     [field: Header("Inventory")]
     public Item[] inventory;
@@ -78,10 +84,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     [field: Header("AI")]
     public int faction_tag = 1;
     protected bool is_AI_active = false;
-    public BehaviorController behavior_controller;
-    
-    [field: Header("Character State")]
-    public bool is_alive;
+    public BehaviorController behavior_controller;    
     
     [field: Header("Event Bus")]
     public Action<Character> OnDeath;
@@ -109,10 +112,9 @@ public class Character : MonoBehaviour, IHealth, IMovement
         back.SetSiblingIndex(1);
         alt_hand.SetSiblingIndex(0);
 
-        // setup health
-        curr_health = max_health;
-        health_ratio = 1;
-        is_alive = true;
+        // setup health & related ui
+        health_component = new HealthComponent(max_health, base_data.spawn_shield);
+        health_ui.InitializeHealthUI(health_component);
         
         // setup inventory
         inventory = new Item[base_data.inventory.Length];
@@ -204,8 +206,10 @@ public class Character : MonoBehaviour, IHealth, IMovement
             // {
             //     Look(GetPosition() + SingleWeaponRestPosition);
             // }
-            
         }
+
+        // update ui helpers
+        health_ui.UpdateHealthUI();
     }
 
     void FixedUpdate()
@@ -464,22 +468,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     #region Damage/Health System
     public void ChangeHealth(int change_amt)
     {
-        //Debug.Log(base_data.name + " has taken " + damage_amt + " damage");
-
-        curr_health -= change_amt;
-        
-        if (change_amt > 0) // this is damage
-        {
-            if (curr_health <= 0)
-            {
-                is_alive = false;
-            }
-        } else // negative damage is healing
-        {
-            
-        }
-
-        health_ratio = curr_health/(float)max_health;
+        health_component.ChangeHealth(change_amt);
     }
     #endregion
 

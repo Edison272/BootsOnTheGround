@@ -5279,6 +5279,17 @@ MonoBehaviour:
   back_particles: {fileID: 8156116054890078836}
   aim_angle: 0
   current_tile_pos: {x: 0, y: 0}
+  <health_component>k__BackingField:
+    <curr_health>k__BackingField: 0
+    <max_health>k__BackingField: 0
+    <shield>k__BackingField: 0
+    <health_ratio>k__BackingField: 0
+    <is_alive>k__BackingField: 0
+  health_ui:
+    bg_bar: {fileID: 5321595408147350325}
+    health_bar: {fileID: 5587924565896160125}
+    health_drift_bar: {fileID: 6294187061805850557}
+    shield_bar: {fileID: 6652936148784273632}
   inventory:
   - {fileID: 0}
   - {fileID: 0}
@@ -5290,7 +5301,6 @@ MonoBehaviour:
   alt_item: {fileID: 0}
   target: {fileID: 0}
   faction_tag: 1
-  is_alive: 1
 --- !u!95 &234494506826388213
 Animator:
   serializedVersion: 7
@@ -5550,7 +5560,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 7c9598f377f56b448a103005e3fa1dc8, type: 3}
-  m_Color: {r: 1, g: 0.29803923, b: 0, a: 0.4}
+  m_Color: {r: 1, g: 0.7700306, b: 0, a: 0.8}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

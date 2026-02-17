@@ -11,6 +11,7 @@ public class CharacterSO : ScriptableObject
 
     //stats
     public int health = 100;
+    public int spawn_shield = 0;
     public float speed = 3;
     [Range(0.01f,5f)] public float accel_time = 0.5f;
     public float range = 4;

@@ -1,6 +1,4 @@
 public interface IHealth
-{
-    int curr_health {get;}
-    int max_health {get;}
+{    HealthComponent health_component {get;}
     void ChangeHealth(int change_amt);
 }
