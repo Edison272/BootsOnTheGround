@@ -18,7 +18,7 @@ MonoBehaviour:
   accel_time: 1.08
   range: 10
   close_range: 5
-  char_prefab: {fileID: 2428321643129466446, guid: 5e913ed6cace0fb4b8c4fcf8227fde94,
+  char_prefab: {fileID: 1482123644643364697, guid: dc940cd1e1642ea43991509f531244bd,
     type: 3}
   detection_mask:
     serializedVersion: 2
