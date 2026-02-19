@@ -249,7 +249,6 @@ public class PlayerController : MonoBehaviour
         // cancel command if it was done twice
         if (op_select_index == deploy_index) {
             ResetConfirm();
-            squad.SetSelectedOperator(op_select_index);
         } 
         // otherwise select operator and enable operator commands
         else {
@@ -270,14 +269,15 @@ public class PlayerController : MonoBehaviour
     {
         player_view_controller.ResetViewType();
         pointer_delta = Vector2.zero;
-        ResetConfirm();
         GameOverseer.THE_OVERSEER.canvas_control.PlayerEndInput();
+        ResetConfirm();
     }
 
     void ResetConfirm()
     {
         op_select_index = -1;
         ToggleCommandInput(false);
+        squad.SetSelectedOperator(op_select_index);
         GameOverseer.THE_OVERSEER.canvas_control.ToggleReticleCommandUI(false);
     }
 

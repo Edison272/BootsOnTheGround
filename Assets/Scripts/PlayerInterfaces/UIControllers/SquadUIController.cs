@@ -36,4 +36,16 @@ public class SquadUIController : MonoBehaviour
             }
         }
     }
+
+    public void SelectOperatorUI(int index)
+    {
+        foreach(OperatorUIController op_ui in op_ui_controllers)
+        {
+            op_ui.ToggleSelection(false);
+        }
+        if (index != -1)
+        {
+            op_ui_controllers[index-1].ToggleSelection(true);
+        }
+    }
 }
