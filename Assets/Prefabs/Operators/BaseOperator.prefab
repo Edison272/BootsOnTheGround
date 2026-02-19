@@ -275,12 +275,27 @@ PrefabInstance:
     - target: {fileID: 311324697635735612, guid: 852337d3087a78c459ce5ccd025a9628,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.76626647
+      value: 0.9053523
       objectReference: {fileID: 0}
     - target: {fileID: 311324697635735612, guid: 852337d3087a78c459ce5ccd025a9628,
         type: 3}
       propertyPath: m_Color.r
-      value: 0.41320753
+      value: 0.4660377
+      objectReference: {fileID: 0}
+    - target: {fileID: 657273992587017731, guid: 852337d3087a78c459ce5ccd025a9628,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.76862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 657273992587017731, guid: 852337d3087a78c459ce5ccd025a9628,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.76862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 657273992587017731, guid: 852337d3087a78c459ce5ccd025a9628,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.76862746
       objectReference: {fileID: 0}
     - target: {fileID: 734295219127960824, guid: 852337d3087a78c459ce5ccd025a9628,
         type: 3}
@@ -435,6 +450,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1230555618899894183}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &3525609295591183702 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2449594436584508145, guid: 852337d3087a78c459ce5ccd025a9628,
+    type: 3}
+  m_PrefabInstance: {fileID: 1230555618899894183}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3674340958903380662 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2589057906099434769, guid: 852337d3087a78c459ce5ccd025a9628,
@@ -457,7 +478,8 @@ MonoBehaviour:
   vfx_body: {fileID: 4540867145052152448}
   front: {fileID: 2631338122501949222}
   back: {fileID: 6184249750639701706}
-  body_sprite: {fileID: 7250862482808400969}
+  body: {fileID: 7250862482808400969}
+  body_sprite: {fileID: 3525609295591183702}
   main_hand: {fileID: 184197864269267101}
   alt_hand: {fileID: 2053215400763662691}
   head: {fileID: 7638708828582117308}

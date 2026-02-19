@@ -8,7 +8,8 @@ using UnityEngine;
 public class ItemSO : ScriptableObject
 {   
     [SerializeField] GameObject item_prefab;
-
+    [field: Header("Interface")]
+    public Sprite ui_image;
     // Classify Input Type
     [field: Header("Input")]
     [SerializeField] InputEnum input_enum = InputEnum.Normal;

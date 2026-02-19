@@ -17,7 +17,6 @@ public abstract class FuncModule
     public abstract void UseFunction(int action_index);
     public abstract bool CanFunction();
     public abstract void Reset();
-    
 }
 
 

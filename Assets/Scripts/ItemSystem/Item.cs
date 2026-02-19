@@ -40,6 +40,9 @@ public class Item : MonoBehaviour
     public float use_spd_scale = 1f;
     public float reset_spd_scale = 1f;
 
+    [Header("Interface")]
+    public Sprite ui_image => base_data.ui_image;
+
     // Setup immutable item data when this object is made
     public void Setup(ItemSO base_data, InputType input_type, FuncModule func_module, AttackType[] atk_types)
     {            
@@ -204,5 +207,10 @@ public class Item : MonoBehaviour
     public int GetRange()
     {
         return base_data.bonus_range_scalar;
+    }
+
+    public float GetResetCompletion()
+    {
+        return reset_timer / base_data.item_stats["reset_speed"] * reset_spd_scale;
     }
 }

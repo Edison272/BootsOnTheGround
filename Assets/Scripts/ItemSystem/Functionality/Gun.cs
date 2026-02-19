@@ -6,8 +6,8 @@ using UnityEngine;
 public class Gun : FuncModule
 {
     // base data
-    int ammo; // how much ammo the gun uses before reloading
-    int max_ammo; // how much the weapon starts/reloads with
+    public int ammo {get; private set;} // how much ammo the gun uses before reloading
+    public int max_ammo {get; private set;}// how much the weapon starts/reloads with
     float recoil; // how much the aimed position is offset with each shot
     Vector2 target_pos;
     Vector2 recoil_dir;

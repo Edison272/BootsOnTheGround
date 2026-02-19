@@ -19,6 +19,11 @@ public class HealthComponent
         health_ratio = curr_health/max_health;
     }
 
+    public void UpdateHealth()
+    {
+        
+    }
+
     public void ChangeHealth(int damage_amt)
     {
         //Debug.Log(base_data.name + " has taken " + damage_amt + " damage");        

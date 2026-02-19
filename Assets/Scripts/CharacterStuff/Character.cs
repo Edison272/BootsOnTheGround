@@ -10,6 +10,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public GameObject vfx_body; //the vfx body
     public Transform front;
     public Transform back;
+    public Transform body;
     public Transform body_sprite;
     public Transform main_hand; //always set to main hand object
     public Transform alt_hand; //always set to off hand object
@@ -69,7 +70,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     protected int curr_item_index = 0;           // access items indexes list
     public Item main_item;
     public Item alt_item;
-    protected (int, int) current_indexes;
+    public (int, int) current_indexes {get; protected set;}
     protected float switch_cd = 0.5f; // time the char must wait before they can switch to the next weapon
     protected float curr_switch_cd = 0;
 
@@ -245,7 +246,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         {
             Vector3 look_scale = new Vector3 ((int)Mathf.Sign(look_dir.x), 1, 1);
             front.localScale = look_scale;
-            body_sprite.localScale = look_scale;
+            body.localScale = look_scale;
             back.localScale = look_scale;
             akimbo_hand_pos.Item1.x *= -1;
             akimbo_hand_pos.Item2.x *= -1;

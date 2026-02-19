@@ -37,12 +37,14 @@ public class PlayerController : MonoBehaviour
     [Header("Camera Control")]
     public MainCameraController main_cam_controller;
     [Header("UI Stuff")]
-
     [SerializeField] GameObject cursor;
 
     [Header("Squad Interactions")]
     public SquadManager squad;
     private int op_select_index = -1;
+
+    [Header("Item UI")]
+    public ItemUIController item_ui_control;
     
     void Awake() // initialize values before player assumes control
     {
@@ -73,6 +75,7 @@ public class PlayerController : MonoBehaviour
             pointer_delta = Vector2.zero;
         }
         EnableControl();
+        item_ui_control.SetActiveCharacter(active_character);
     }
 
     public void SetPlayerCharacter(Character new_character)

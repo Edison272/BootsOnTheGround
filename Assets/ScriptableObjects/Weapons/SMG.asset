@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item_prefab: {fileID: 5030900112294072495, guid: de1b56efdb5d68e42ba50b660552abab,
     type: 3}
+  ui_image: {fileID: 5005757472056179764, guid: 86d9e3aed432efb448716e3d15f10796,
+    type: 3}
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
