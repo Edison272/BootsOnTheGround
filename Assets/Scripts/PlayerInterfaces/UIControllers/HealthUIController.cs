@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class HealthUIController : MonoBehaviour
 {
+    [Header("Character")]
+    [SerializeField] Character active_character = null;
+    private HealthComponent health_component;
     [Header("Health Bar")]
     public RectTransform bg_bar;
     public TextMeshProUGUI hp_text;
@@ -14,10 +17,13 @@ public class HealthUIController : MonoBehaviour
     private const float c_health_drift_lerp = 3;
     private float prev_health_width = 0;
     
-    [Header("Character")]
-    [SerializeField] Character active_character = null;
-    private HealthComponent health_component;
-    public void SetActiveCharacter(Character active_character)
+    public void Awake()
+    {
+        health_bar.sizeDelta = new Vector2(bg_bar.sizeDelta.x, bg_bar.rect.height);
+        shield_bar.sizeDelta = new Vector2(bg_bar.sizeDelta.x, bg_bar.rect.height);
+        health_drift_bar.sizeDelta = new Vector2(bg_bar.sizeDelta.x, bg_bar.rect.height);
+    }
+    public virtual void SetActiveCharacter(Character active_character)
     {
         this.active_character = active_character;
         health_component = active_character.health_component;
@@ -31,7 +37,7 @@ public class HealthUIController : MonoBehaviour
             float currentWidth = health_drift_bar.sizeDelta.x;
             float targetWidth = health_bar.sizeDelta.x;
             // drift effect
-            float drift_x = Mathf.Lerp(health_drift_bar.sizeDelta.x, health_bar.sizeDelta.x, c_health_drift_lerp * Time.deltaTime);
+            float drift_x = Mathf.Lerp(health_drift_bar.sizeDelta.x, health_bar.sizeDelta.x, Time.deltaTime);
             health_drift_bar.sizeDelta = new Vector2(drift_x, health_drift_bar.sizeDelta.y);
 
             SetHealth();
@@ -56,7 +62,11 @@ public class HealthUIController : MonoBehaviour
 
         shield_bar.anchoredPosition = new Vector2(health_drift_bar.sizeDelta.x, shield_bar.anchoredPosition.y);
 
-        hp_text.text = health_component.total_curr_hitpoints + "/" + health_component.max_health;   
+        if (hp_text)
+        {
+            hp_text.text = health_component.total_curr_hitpoints + "/" + health_component.max_health;
+        }
+           
 
         prev_health_width = health_width;    
     }

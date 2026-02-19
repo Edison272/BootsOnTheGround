@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using NUnit.Framework;
-using UnityEditor.Rendering;
+using TMPro;
 using UnityEngine;
 
 public class Operator : Character
@@ -10,6 +6,8 @@ public class Operator : Character
     [Header("ID")]
     private OperatorSO base_op_data;
     public OpClass op_class => this.base_op_data.op_class;
+    public string id_number {get; private set;}
+    [SerializeField] TextMeshPro nametag;
 
     [field: Header("Op UI Elements")]
     public GameObject selection_indicator;
@@ -34,6 +32,28 @@ public class Operator : Character
     {
         op_behavior_controller = new OperatorController(this);
         behavior_controller = op_behavior_controller;
+    }
+
+    public void AssignIdString(int initialization_order)
+    {
+        string string_op_class = "Free";
+        switch(op_class)
+        {
+            case OpClass.Vanguard:
+                string_op_class = "Vang";
+                break;
+            case OpClass.Overwatch:
+                string_op_class = "Over";
+                break;
+            case OpClass.Specialist:
+                string_op_class = "Spec";
+                break;
+            case OpClass.Responder:
+                string_op_class = "Resp";
+                break;
+        }
+        id_number = string_op_class + "-" + initialization_order;
+        nametag.text = id_number;
     }
 
     public void ToggleOp(bool isActive)

@@ -19,7 +19,7 @@ public class SquadManager : MonoBehaviour
     public HashSet<Character> helpers;
     public Operator[] operators;
     
-    public static readonly int player_char_index = 0; // PLAYER CHARACTER IS FIRST IN SQUAD ARRAY
+    public static readonly int c_player_char_index = 0; // PLAYER CHARACTER IS FIRST IN SQUAD ARRAY
     public Character player_character;
 
     public Vector3 drop_pos;
@@ -31,6 +31,9 @@ public class SquadManager : MonoBehaviour
     public Operator selected_operator;
     public Vector2[] combat_formation; // how the operators align themselves towards the enemy in combat
     public Vector2[] explore_formation; // how the operators move with the player
+
+    [Header("Squad UI")]
+    public SquadUIController squad_ui_control;
     
     public void InitializeAllies()
     {
@@ -42,13 +45,14 @@ public class SquadManager : MonoBehaviour
         CreateOperators();
 
         // reconfigure settings for player character so they don't get taken over by a bot
-        player_character = operators[player_char_index];
+        player_character = operators[c_player_char_index];
         player_character.faction_tag = GameOverseer.SQUAD_TAG;
         player.SetPlayerCharacter(player_character);
-        DeployOperator(player_char_index, transform.position);
+        DeployOperator(c_player_char_index, transform.position);
         player_character.ToggleAI(false);
 
         SetSquadLeader();
+        SetSquadUI();
 
         // set explore formation
 
@@ -72,6 +76,11 @@ public class SquadManager : MonoBehaviour
         }
     }
 
+    public void SetSquadUI()
+    {
+        squad_ui_control.SetSquadManager(this);
+    }
+
     public void CreateOperators()
     {
         // setup all operators. Assign their values but do not set them to active
@@ -80,8 +89,9 @@ public class SquadManager : MonoBehaviour
             operators[i] = operator_presets[i].GenerateOp(Vector2.zero);
             Operator this_op = operators[i];
             this_op.faction_tag = GameOverseer.SQUAD_TAG;
-            this_op.behavior_controller.SetLeader(operators[player_char_index]);
+            this_op.behavior_controller.SetLeader(operators[c_player_char_index]);
             this_op.op_behavior_controller.squad_index = i;
+            this_op.AssignIdString(i);
             squad.Add(operators[i]);
 
             DeployOperator(i, transform.position);
