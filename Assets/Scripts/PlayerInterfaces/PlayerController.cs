@@ -43,8 +43,9 @@ public class PlayerController : MonoBehaviour
     public SquadManager squad;
     private int op_select_index = -1;
 
-    [Header("Item UI")]
+    [Header("Character UI")]
     public ItemUIController item_ui_control;
+    public HealthUIController health_ui_control;
     
     void Awake() // initialize values before player assumes control
     {
@@ -76,6 +77,7 @@ public class PlayerController : MonoBehaviour
         }
         EnableControl();
         item_ui_control.SetActiveCharacter(active_character);
+        health_ui_control.SetActiveCharacter(active_character);
     }
 
     public void SetPlayerCharacter(Character new_character)

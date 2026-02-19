@@ -15,8 +15,11 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public SquadManager squad_manager;
     public EnemyManager enemy_manager;
     public MapManager map_manager;
+
+    [Header("Canvas Managers")]
     public CanvasController canvas_control;
     public ItemUIController item_ui_control;
+    public HealthUIController health_ui_control;
     [Header("Private Managers")]
     [SerializeField] private AIManager ai_manager; // a class containing all the stuff the game ai would need
     [SerializeField] private ObjectiveManager objective_manager;
@@ -47,8 +50,10 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!squad_manager) {squad_manager = GameObject.Find("Squad Manager")?.GetComponent<SquadManager>();}
         if (!enemy_manager) {enemy_manager = GameObject.Find("Enemy Manager")?.GetComponent<EnemyManager>();}
         if (!map_manager) {map_manager = GameObject.Find("Map")?.GetComponent<MapManager>();}
+        
         if (!canvas_control) {canvas_control = GameObject.Find("Canvas Controller")?.GetComponent<CanvasController>();}
         if (!item_ui_control) {item_ui_control = GameObject.Find("Item UI Controller")?.GetComponent<ItemUIController>();}
+        if (!health_ui_control) {health_ui_control = GameObject.Find("Health UI Controller")?.GetComponent<HealthUIController>();}
 
         objective_manager = new ObjectiveManager(this);
 
@@ -71,8 +76,10 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         }
         // let everyone get to know eachother
         squad_manager.player = player_control;
+
         player_control.squad = squad_manager;
         player_control.item_ui_control = item_ui_control;
+        player_control.health_ui_control = health_ui_control;
 
         // initialize squad and enemy managers in the right places
         squad_manager.InitializeAllies();
