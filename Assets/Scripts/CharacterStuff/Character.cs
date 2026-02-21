@@ -15,6 +15,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public Transform main_hand; //always set to main hand object
     public Transform alt_hand; //always set to off hand object
     public Transform head;
+    enum CharacterBodyParts {};
 
     [field: Header("VFX")]
     public Animator animator;
@@ -177,7 +178,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
     #region Updates
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if (!IsInAction())
         {
@@ -213,7 +214,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         health_ui.UpdateHealthUI();
     }
 
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (!IsInAction())
         {
@@ -228,7 +229,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         }
     }
 
-    void LateUpdate()
+    protected virtual void LateUpdate()
     {
         if (!is_alive)
         {

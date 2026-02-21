@@ -13,7 +13,8 @@ public class Operator : Character
     public GameObject selection_indicator;
 
     [Header("Ability")]
-    private float ability_cd;
+    private Ability ability;
+    public float ability_cooldown_progress => ability.GetAbilityCooldownProgress();
 
     public bool is_deployed = false;
 
@@ -24,8 +25,17 @@ public class Operator : Character
         this.base_op_data = base_op_data;
         AssignBaseData(base_op_data);
 
+        // get the operator ability
+        ability = base_op_data.ability.GenerateAbility(this);
+
         // turn off any ui elements
         selection_indicator.SetActive(false);
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        ability.UpdateAction();
     }
 
     public override void CreateBehaviorController()
@@ -77,7 +87,10 @@ public class Operator : Character
 
     public void UseAbility(Vector2 target_area)
     {
-        Debug.Log("I CAST FIREBALL");
+        if (ability.is_usable)
+        {
+            ability.UseAbility();
+        }
     }
 
     public override bool IsInAction()

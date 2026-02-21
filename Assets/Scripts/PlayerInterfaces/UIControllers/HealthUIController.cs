@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class HealthUIController : MonoBehaviour
 {
     [Header("Character")]
-    [SerializeField] Character active_character = null;
+    [SerializeField] protected Character active_character = null;
     private HealthComponent health_component;
     [Header("Health Bar")]
     public RectTransform bg_bar;
@@ -17,7 +17,7 @@ public class HealthUIController : MonoBehaviour
     private const float c_health_drift_lerp = 3;
     private float prev_health_width = 0;
     
-    public void Awake()
+    public virtual void Awake()
     {
         health_bar.sizeDelta = new Vector2(bg_bar.sizeDelta.x, bg_bar.rect.height);
         shield_bar.sizeDelta = new Vector2(bg_bar.sizeDelta.x, bg_bar.rect.height);
@@ -30,7 +30,7 @@ public class HealthUIController : MonoBehaviour
         //shield_bar.sizeDelta = new Vector2(0, shield_bar.sizeDelta.y);
     }
 
-    void Update()
+    public virtual void Update()
     {
         if (active_character)
         {
