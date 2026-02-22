@@ -35,7 +35,7 @@ public class Operator : Character
     protected override void Update()
     {
         base.Update();
-        ability.UpdateAction();
+        ability.UpdateAbility();
     }
 
     public override void CreateBehaviorController()

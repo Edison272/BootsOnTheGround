@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
+public enum CharacterBodyPart {None = -1, Hitbox, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
 public class Character : MonoBehaviour, IHealth, IMovement
 {
     private CharacterSO base_data;
@@ -15,11 +16,12 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public Transform main_hand; //always set to main hand object
     public Transform alt_hand; //always set to off hand object
     public Transform head;
-    public GameObject front_particles;
-    public GameObject back_particles;
-    enum CharacterBodyParts {Hitbox, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
+    public Transform front_particles;
+    public Transform back_particles;
 
     [field: Header("VFX")]
+    public float base_sprite_height;
+    public float base_head_height;
     public Animator animator;
     protected Vector2 sprite_center; // center of mass of this srpite
     public float hitbox_radius {get; private set;}
@@ -102,6 +104,9 @@ public class Character : MonoBehaviour, IHealth, IMovement
         hitbox_radius = GetComponent<CircleCollider2D>().radius;
         akimbo_hand_pos = ((Vector2) main_hand.localPosition, (Vector2) alt_hand.localPosition);
         single_hand_pos = new Vector2(0, main_hand.localPosition.y);
+
+        base_sprite_height = body_sprite.GetComponent<SpriteRenderer>().bounds.size.y;
+        base_head_height = head.localPosition.y;
 
         // set basic sibling order of entity VFX (operator faces BOTTOM RIGHT by default)
         animator.SetBool("FaceFront", true);
@@ -212,6 +217,9 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
         // update ui helpers
         health_ui.UpdateHealthUI();
+
+        // update vfx at the very end
+        UpdateBodyVFX();
     }
 
     protected virtual void FixedUpdate()
@@ -499,7 +507,46 @@ public class Character : MonoBehaviour, IHealth, IMovement
     }
 
     #region Body
+    public virtual Transform GetBodyPart(CharacterBodyPart body_part_type) {
+        Transform body_part = main_body.transform;
+        switch(body_part_type)
+        {
+            case CharacterBodyPart.Hitbox:
+                body_part = main_body.transform;
+                break;
+            case CharacterBodyPart.Front:
+                body_part = front;
+                break;
+            case CharacterBodyPart.Back:
+                body_part = back;
+                break;
+            case CharacterBodyPart.SpriteBody:
+                body_part = body_sprite;
+                break;
+            case CharacterBodyPart.MainHand:
+                body_part = main_hand;
+                break;
+            case CharacterBodyPart.AltHand:
+                body_part = alt_hand;
+                break;
+            case CharacterBodyPart.Head:
+                body_part = head;
+                break;
+            case CharacterBodyPart.FrontParticles:
+                body_part = front_particles;
+                break;
+            case CharacterBodyPart.BackParticles:
+                body_part = back_particles;
+                break;
+        }
+        return body_part;
+    }
 
+    public void UpdateBodyVFX()
+    {
+        float curr_sprite_height = body_sprite.GetComponent<SpriteRenderer>().bounds.size.y;
+        head.transform.localPosition = new Vector3(0, base_head_height * curr_sprite_height/base_sprite_height, 0);
+    }
 
     #endregion
 

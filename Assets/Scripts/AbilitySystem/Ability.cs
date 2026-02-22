@@ -1,22 +1,30 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
 public class Ability
 {
+    public AbilitySO base_data;
     public AbilityComponent[] ability_components;
-    public Operator user;
+    private Operator user;
 
     [Header("Ability Cooldown")]
     public float cooldown = 0f;
 
-    public Action UpdateAction;
+    private Action UpdateAction;
 
     public bool is_usable => cooldown >= 1;
 
+    public GameObject[] ability_vfx;
+
     #region Initalization
-    public Ability(float cooldown_preset = 0f)
+    public Ability(AbilitySO base_data, Operator user, float cooldown_preset = 0f)
     {
+        this.base_data = base_data;
+        this.user = user;
+        ability_components = new AbilityComponent[0];
+        ability_vfx = new GameObject[base_data.ability_vfx.Length];
         if (cooldown_preset < 1)
         {
             UpdateAction = UpdateCooldown;
@@ -26,7 +34,16 @@ public class Ability
             UpdateAction = UpdateActive;
         }
 
-        ability_components = new AbilityComponent[0];
+        // assign vfx from base data
+        int i = 0;
+        foreach(BodyPartDictItem body_part_item in base_data.ability_vfx)
+        {
+            Transform body_part_location = user.GetBodyPart(body_part_item.value);            
+            GameObject new_body_part = MonoBehaviour.Instantiate(body_part_item.key, body_part_location);
+            new_body_part.SetActive(false);
+            ability_vfx[i] = new_body_part;
+            i++;
+        }
     }
     #endregion
 
@@ -39,6 +56,12 @@ public class Ability
         {
             component.ActivateComponent();
         }
+        ToggleAbilityVFX(true);
+    }
+
+    public void UpdateAbility()
+    {
+        UpdateAction();
     }
     public void UpdateActive() // update any components while the ability is active
     {
@@ -49,9 +72,10 @@ public class Ability
     }
     public void UpdateCooldown() // check cooldowns while ability is on cooldown
     {
-        cooldown += Time.deltaTime * 0.5f;
+        cooldown += Time.deltaTime * 0.25f;
         if (cooldown >= 1)
         {
+            ToggleAbilityVFX(false);
             cooldown = 1;
         }
     }
@@ -60,6 +84,17 @@ public class Ability
     {
         
     }
+    #endregion
+
+    #region 
+    public void ToggleAbilityVFX(bool is_enabled)
+    {
+        foreach(GameObject vfx_object in ability_vfx)
+        {
+            vfx_object.SetActive(is_enabled);
+        }
+    }
+
     #endregion
 
     #region Info

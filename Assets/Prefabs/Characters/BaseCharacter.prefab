@@ -5188,10 +5188,17 @@ MonoBehaviour:
   main_hand: {fileID: 1413471862373244730}
   alt_hand: {fileID: 967626683832254148}
   head: {fileID: 8868127414608551963}
+  front_particles: {fileID: 4290919259231171876}
+  back_particles: {fileID: 3195934050608924656}
+  base_sprite_height: 0
+  base_head_height: 0
   animator: {fileID: 234494506826388213}
-  front_particles: {fileID: 2609493673158355598}
-  back_particles: {fileID: 8156116054890078836}
   aim_angle: 0
+  <movement_component>k__BackingField:
+    base_speed: 0
+    current_tile_pos: {x: 0, y: 0}
+    max_accel_time: 0
+    move_speed_modifiers: []
   current_tile_pos: {x: 0, y: 0}
   <health_component>k__BackingField:
     <curr_health>k__BackingField: 0
@@ -5302,7 +5309,6 @@ Transform:
   - {fileID: 8481389507695080430}
   - {fileID: 3861744065797134465}
   - {fileID: 1413471862373244730}
-  - {fileID: 8868127414608551963}
   m_Father: {fileID: 6959899179741513831}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!210 &6221262693360569181
@@ -5393,6 +5399,7 @@ Transform:
   m_Children:
   - {fileID: 3195934050608924656}
   - {fileID: 2449594436584508145}
+  - {fileID: 8868127414608551963}
   - {fileID: 4290919259231171876}
   m_Father: {fileID: 7387620949624410435}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5864,12 +5871,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8302492418108354827}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5625, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7387620949624410435}
+  m_Father: {fileID: 8481389507695080430}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8768880888398556531
 GameObject:

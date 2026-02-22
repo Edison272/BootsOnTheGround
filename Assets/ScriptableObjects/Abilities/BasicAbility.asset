@@ -12,7 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abacdaf7b3ac26043b54e16bca43b59f, type: 3}
   m_Name: BasicAbility
   m_EditorClassIdentifier: 
-  ability_active_type: 2
-  ability_end_type: 0
+  set_ability_active_type: 2
+  ability_end_type: 1
   ability_cooldown_type: 0
-  vfx_prefabs: []
+  curr_func: 2
+  serialized_input_stats:
+    stat_list: []
+  serialized_functionality_stats:
+    stat_list: []
+  ability_vfx:
+    stat_list:
+    - key: {fileID: 531661423089630175, guid: 7183cd590f8685a4ea21d077bfaf854a, type: 3}
+      value: 7
+    - key: {fileID: 8951153385361815444, guid: 73a897e5d9893a7448049312e5d229dd, type: 3}
+      value: 8
+    - key: {fileID: 7109696157832186080, guid: c37dfbee80c114f41b8e9a4fa170eba3, type: 3}
+      value: 6

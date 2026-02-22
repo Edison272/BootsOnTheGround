@@ -140,11 +140,14 @@ public class SquadManager : MonoBehaviour
         } 
         // otherwise do smth cool n shi
         else {
-            selected_operator?.ToggleSelectionIndicator(false);
             int selection_index = Mathf.Clamp(op_index, 0, operator_presets.Length-1);
-            selected_operator = operators[selection_index];
             squad_ui_control.SelectOperatorUI(selection_index);
-            selected_operator.ToggleSelectionIndicator(true);
+
+            selected_operator?.ToggleSelectionIndicator(false);
+
+
+            selected_operator = operators[selection_index];
+            selected_operator?.ToggleSelectionIndicator(true);
         }
     }
 
