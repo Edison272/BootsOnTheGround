@@ -88,8 +88,13 @@ public class CanvasController : MonoBehaviour
         canvas_cursor.anchoredPosition = player_controller.player_view_controller.screen_pos*player_screen.GetComponent<RectTransform>().localScale.x;
         if (action_selector.gameObject.activeSelf)
         {
-            action_selector.anchoredPosition = player_controller.player_view_controller.hold_screen_pos*player_screen.GetComponent<RectTransform>().localScale.x;
-            selection_vector += GameOverseer.THE_OVERSEER.player_control.player_view_controller.last_pointer_delta;
+            Vector3 canvas_pos = player_controller.player_view_controller.screen_pos*player_screen.GetComponent<RectTransform>().localScale.x;
+            if (action_selector.localScale.x == 1) // action selector only expands if player is holding m1 down
+            {
+                canvas_pos = player_controller.player_view_controller.hold_screen_pos*player_screen.GetComponent<RectTransform>().localScale.x;
+            }
+            action_selector.anchoredPosition = canvas_pos;
+            selection_vector += GameOverseer.THE_OVERSEER.player_control.player_view_controller.last_pointer_delta * (int)action_selector.localScale.x;
             float abs_x = Mathf.Abs(selection_vector.x);
             float abs_y = Mathf.Abs(selection_vector.y);
             float manhat_distance = abs_x + abs_y;
@@ -101,14 +106,14 @@ public class CanvasController : MonoBehaviour
                 selection_vector = new Vector2(selection_vector.x * scale, selection_vector.y * scale);
             }
             
-            if (selection_vector.magnitude > indicator_range * 0.9f)
+            if (selection_vector.magnitude > indicator_range * 0.5f)
             {
                 Vector2 center_to_select = selection_vector.normalized;
                 bool x_over_y = Mathf.Abs(center_to_select.x) > Mathf.Abs(center_to_select.y);
                 float convert_X = x_over_y ? (float)Math.Round(center_to_select.x) : (int)center_to_select.x;
                 float convert_y = !x_over_y ? (float)Math.Round(center_to_select.y) : (int)center_to_select.y;
                 converted_selection_vector = new Vector2(convert_X, convert_y);
-                action_indicator.anchoredPosition = converted_selection_vector * indicator_range * 0.8f;
+                action_indicator.anchoredPosition = converted_selection_vector * indicator_range * 0.75f;
             }
             else
             {
@@ -206,6 +211,8 @@ public class CanvasController : MonoBehaviour
     public void ToggleReticleCommandUI(bool enable)
     {
         command_reticle.SetActive(enable);
+        action_selector.localScale = new Vector3(0.5f, 0.5f, 1); 
+        action_selector.gameObject.SetActive(enable);
     }
 
 
@@ -214,7 +221,7 @@ public class CanvasController : MonoBehaviour
     #region Player-Canvas Input
     public void PlayerStartInput()
     {
-        action_selector.gameObject.SetActive(true);
+        action_selector.localScale = new Vector3(1f, 1f, 1);
         canvas_cursor.gameObject.SetActive(false);
         selection_vector = Vector2.zero;
         

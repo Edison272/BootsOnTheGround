@@ -16,6 +16,7 @@ public abstract class FuncModule
     public abstract void UpdateModule(Vector2 target_pos);
     public abstract void UseFunction(int action_index);
     public abstract bool CanFunction();
+    public abstract float FunctionCompletion();
     public abstract void Reset();
 }
 
@@ -48,7 +49,10 @@ Melee Platforms
     {
         return false;
     }
-
+    public override float FunctionCompletion()
+    {
+        throw new System.NotImplementedException();
+    }
     public override void Reset()
     {
         throw new System.NotImplementedException();
@@ -66,6 +70,10 @@ Shield Platforms
     }
 
     public override bool CanFunction()
+    {
+        throw new System.NotImplementedException();
+    }
+    public override float FunctionCompletion()
     {
         throw new System.NotImplementedException();
     }
@@ -97,6 +105,10 @@ Conduit Platforms
     }
 
     public override bool CanFunction()
+    {
+        throw new System.NotImplementedException();
+    }
+    public override float FunctionCompletion()
     {
         throw new System.NotImplementedException();
     }

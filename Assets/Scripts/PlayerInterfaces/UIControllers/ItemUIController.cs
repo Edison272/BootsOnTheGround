@@ -68,16 +68,13 @@ public class ItemUIController : MonoBehaviour
         Gun gun_module = (Gun)ui_item.func_module;
         if (ui_item.reset_timer > 0)
         {
-            reset_bar.localScale = new Vector3(ui_item.GetResetCompletion(), 1, 0);
+            reset_bar.localScale = new Vector3(1-ui_item.GetResetCompletion(), 1, 0);
             item_counter.text = string.Format("Reloading");
-        } 
-        else if (reset_bar.localScale.x > 0)
-        {
-            reset_bar.localScale = new Vector3(0, 1, 1);
-        } 
+        }
         else
         {
             item_counter.text = string.Format("{0} / {1}", gun_module.ammo, gun_module.max_ammo);
+            reset_bar.localScale = new Vector3(ui_item.GetFunctionCompletion(), 1, 1);
         }
     }
 

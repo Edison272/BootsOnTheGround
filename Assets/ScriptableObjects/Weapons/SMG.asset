@@ -41,7 +41,7 @@ MonoBehaviour:
       type: 3}
     attack_enum: 1
     attack_data:
-      damage: 10
+      damage: 35
       pierce: 0
       knockback_amt: 23.9
       effect_time: 0.2
@@ -49,10 +49,10 @@ MonoBehaviour:
     attack_stats:
       stat_list:
       - key: linecast_duration
-        value: 0.3
+        value: 0.2
       - key: linecast_count
-        value: 3
+        value: 1
       - key: linecast_spread
-        value: 30
+        value: 0
       - key: even_spread
         value: 0

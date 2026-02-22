@@ -16,6 +16,10 @@ public class SquadUIController : MonoBehaviour
 
     [Header("Squad")]
     public SquadManager squad_manager;
+    public void Awake()
+    {
+        op_ui_controller_instance.SetActive(false);
+    }
 
     public void SetSquadManager(SquadManager squadManager)
     {

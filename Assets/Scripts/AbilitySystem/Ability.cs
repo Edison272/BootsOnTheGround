@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ability
 {
     public AbilityComponent[] ability_components;
-    public Character user;
+    public Operator user;
 
     [Header("Ability Cooldown")]
     public float cooldown = 0f;

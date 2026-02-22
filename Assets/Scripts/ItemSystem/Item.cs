@@ -213,4 +213,9 @@ public class Item : MonoBehaviour
     {
         return reset_timer / base_data.item_stats["reset_speed"] * reset_spd_scale;
     }
+
+    public float GetFunctionCompletion()
+    {
+        return func_module.FunctionCompletion();
+    }
 }

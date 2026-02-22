@@ -15,7 +15,9 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public Transform main_hand; //always set to main hand object
     public Transform alt_hand; //always set to off hand object
     public Transform head;
-    enum CharacterBodyParts {};
+    public GameObject front_particles;
+    public GameObject back_particles;
+    enum CharacterBodyParts {Hitbox, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
 
     [field: Header("VFX")]
     public Animator animator;
@@ -26,9 +28,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
     protected (bool, bool) direction_state = (true, true);
     protected (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.6f), new Vector2 (0.5f, 0.6f));  // (main pos (left), alt pos (right))
     Vector2 single_hand_pos = new Vector2 (0, 0.6f);  // (main pos, alt pos)
-    public GameObject front_particles;
-    public GameObject back_particles;
-
     //aim & handling
     [field: Header("Aiming")]
     public Vector2 aim_dir {get; private set;} = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
@@ -37,22 +36,21 @@ public class Character : MonoBehaviour, IHealth, IMovement
     readonly Vector2 SingleWeaponRestPosition = new Vector2(1, -1);
     
     [field: Header("Movement")]
-    public float move_speed {get; private set;} = 1; //maximum speed an operator can move at
-    public float base_speed => base_data.speed;
-    public Vector2 move_dir {get; private set;} = Vector2.zero;
-    public Vector2 move_pos {get; private set;} = Vector2.zero;
-    private Vector2 lerp_move_pos = Vector2.zero;
-    public bool destination_reached {get; private set;} = false;
-    public Vector2 last_move_dir {get; private set;} = Vector2.zero;
-    public Vector2 force_dir {get; private set;} = Vector2.zero;
+    [field: SerializeField] public MovementComponent movement_component {get; private set;}
+    public float move_speed => movement_component.move_speed; //maximum speed an operator can move at
+    public float base_speed => movement_component.base_speed;
+    public Vector2 move_dir => movement_component.move_dir;
+    public Vector2 move_pos => movement_component.move_pos;
+    public bool destination_reached => movement_component.destination_reached;
+    public Vector2 last_move_dir => movement_component.last_move_dir;
+    public Vector2 force_dir => movement_component.force_dir;
     public Rigidbody2D entity_rb {get; private set;}
-    public float force_move_time {get; private set;}
     public Vector2Int current_tile_pos = Vector2Int.zero;
 
-    [field: Header("Acceleration")]
-    public float curr_speed {get; private set;} = 0;
-    public float curr_accel_time {get; private set;} = 0;
-    public float max_accel_time => base_data.accel_time; // amount of time operator needs to get to top move speed
+    [Header("Acceleration")]
+    public float curr_speed => movement_component.curr_speed;
+    public float curr_accel_time => movement_component.curr_accel_time;
+    public float max_accel_time => movement_component.max_accel_time; // amount of time operator needs to get to top move speed
 
     [field: Header("Health Stuff")]
     [field: SerializeField] public HealthComponent health_component {get; private set;}
@@ -99,7 +97,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
         // setup movement
         entity_rb = this.GetComponent<Rigidbody2D>();
-        move_speed = base_speed;
 
         // setup VFX
         hitbox_radius = GetComponent<CircleCollider2D>().radius;
@@ -117,6 +114,9 @@ public class Character : MonoBehaviour, IHealth, IMovement
         // setup health & related ui
         health_component = new HealthComponent(max_health, base_data.spawn_shield);
         health_ui.InitializeHealthUI(health_component);
+
+        // setup movement
+        movement_component = new MovementComponent(base_data.speed, base_data.accel_time, entity_rb);
         
         // setup inventory
         inventory = new Item[base_data.inventory.Length];
@@ -341,129 +341,44 @@ public class Character : MonoBehaviour, IHealth, IMovement
     
     public void SetPosition(Vector2 new_position)  // completely change positions and forget where they wanted to go before
     {
-        main_body.transform.position = new_position;
-        move_pos = new_position;
-        destination_reached = true;
+        movement_component.SetPosition(new_position);
     }
     public void SetMove(Vector2 set_move_dir) // get directional movement, useful for dynamic & sudden maneuvers
     {
-        last_move_dir = move_dir;
-        destination_reached = false;
-        curr_accel_time *= Vector2.Dot(last_move_dir, move_dir);
-        move_dir = set_move_dir.normalized;
-        move_pos = GetPosition() + move_dir * 1000;
+        movement_component.SetMove(set_move_dir);
     }
     public void SetMovePos(Vector2 set_move_pos) // get target_position, useful for AI with discrete positioning
     {
-        last_move_dir = move_dir;
-        destination_reached = false;
-        curr_accel_time *= Vector2.Dot(last_move_dir, move_dir);
-        move_dir = (set_move_pos - GetPosition()).normalized;
-        move_pos = set_move_pos;
+        movement_component.SetMovePos(set_move_pos);
     }
-
     public void Move() 
     {
-        if (force_move_time == 1)
-        {
-            // move against knockback
-            if (move_dir != Vector2.zero)
-            {
-                curr_speed = Accelerate();
-                entity_rb.AddForce(move_dir * curr_speed, ForceMode2D.Impulse);
-                animator.SetBool("Moving", true);
-            }
-            // stop knockback & movement after velocity is low enough
-            if (entity_rb.velocity.sqrMagnitude - move_dir.sqrMagnitude <= 0.1f)
-            {
-                force_move_time = 0;
-                entity_rb.velocity = Vector2.zero;
-            }
-        } 
-        else if ((move_pos - GetPosition()).sqrMagnitude > 0.01f && !destination_reached)
-        {
-            curr_speed = Accelerate();
-
-            // // control speed for smooth destination arrival
-            // float speed_rate = (move_pos - GetPosition()).magnitude/curr_speed;
-            // if (speed_rate < 1)
-            // {
-            //     curr_speed *= speed_rate;
-            // }
-
-            lerp_move_pos = Vector2.Lerp(lerp_move_pos, move_pos, Mathf.Max(0.5f, 0.1f + max_accel_time/(curr_accel_time+0.001f)));
-            
-            // movement
-            animator.SetBool("Moving", true);
-            Vector2 move_toward = Vector2.MoveTowards(GetPosition(), lerp_move_pos, Time.fixedDeltaTime * curr_speed);
-            entity_rb.MovePosition(move_toward);
-        } 
-        else if (move_dir != Vector2.zero)
-        {
-            StopMove();
-        }
+        bool move_state = animator.GetBool("Moving");
+        movement_component.FixedMoveUpdate();
+        move_state = movement_component.Move(move_state);
+        animator.SetBool("Moving", move_state);
     }
     public void StopMove()
     {
-        // add some drift if the player was running for too long at top speed
-        if (!is_AI_active && curr_accel_time > max_accel_time * 0.5f)
-        {
-            ForceMove(move_dir, base_speed * (curr_accel_time/(max_accel_time + 0.001f)), true);
-        }
-        curr_accel_time = 0;
-
-        // stop movement
-        destination_reached = true;
-        last_move_dir = move_dir;
-        move_dir = Vector2.zero;
-        move_pos = GetPosition();
+        movement_component.StopMove(is_AI_active);
         animator.SetBool("Moving", false);
     }
     public float GetTravelTime() // return how long it is expected to take for the operator to reach their position
     {
         return (move_pos - GetPosition()).magnitude / base_speed + max_accel_time;
     }
-    private float Accelerate(float modifier = 1f)
-    {
-        if (curr_accel_time < max_accel_time)
-        {
-            curr_accel_time += Time.fixedDeltaTime;
-        }
-        if (curr_accel_time > max_accel_time)
-        {
-            curr_accel_time = max_accel_time;
-        }
-        return move_speed * Mathf.Min(1, curr_accel_time/max_accel_time) * modifier;
-    }
+
     public void ForceMove(Vector2 direction, float scalar, bool movement_override = false)
     {
-        // if movement override, the impulse force will be ignore while the player is moving 
-        force_move_time = movement_override ? 0 : 1;
-        entity_rb.AddForce(direction * scalar, ForceMode2D.Impulse);
-    }
-
-    public void ChangeSpeed(float scale_base, float duration, bool is_decaying = false)
-    {
-        curr_accel_time *= scale_base;
-        if (is_decaying)
-        {
-            StartCoroutine(ChangeSpeedTimer(scale_base, duration));
-        }
-        else
-        {
-            StartCoroutine(ChangeSpeedTimer(scale_base, duration));
-        }
-    }
-
-    private IEnumerator ChangeSpeedTimer(float amount, float duration)
-    {
-        move_speed *= amount;
-        yield return new WaitForSeconds(duration);
-        move_speed /= amount;
+        movement_component.ForceMove(direction, scalar, movement_override);
     }
     public Vector2 GetPosition()
     {
         return entity_rb.position;
+    }
+    public void ChangeSpeed(float scale_base, float duration, bool is_decaying = false)
+    {
+        movement_component.ChangeSpeed(scale_base, duration, is_decaying);
     }
     #endregion
 
@@ -584,6 +499,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
     }
 
     #region Body
+
+
+    #endregion
+
+    #region Stats & Status Changes
 
 
     #endregion
