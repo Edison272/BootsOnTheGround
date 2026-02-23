@@ -193,6 +193,10 @@ public class Character : MonoBehaviour, IHealth, IMovement
         // constantly adjust aim position, since aim doesn't snap
         Aim();
 
+        // Update health
+        health_component.UpdateHealth();
+        movement_component.UpdateMovement();
+
         // set switch item time duration
         if (curr_switch_cd > 0)
         {
@@ -362,7 +366,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public void Move() 
     {
         bool move_state = animator.GetBool("Moving");
-        movement_component.FixedMoveUpdate();
         move_state = movement_component.Move(move_state);
         animator.SetBool("Moving", move_state);
     }
@@ -391,7 +394,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public virtual void ChangeHealth(int change_amt) {health_component.ChangeHealth(change_amt);}
     public virtual void ChangeHealthTick(int change_amt, float duration, float tick_rate = 1) 
     {
-        health_component.ChangeHealthTick(change_amt, duration);
+        health_component.ChangeHealthTick(change_amt, duration, tick_rate);
     }
     public virtual void MaxHealthBoost(int boost_amt, float duration) {health_component.MaxHealthBoost(boost_amt, duration);}
     public virtual void ShieldBoost(int boost_amt) {health_component.ShieldBoost(boost_amt);}

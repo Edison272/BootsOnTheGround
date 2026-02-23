@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -13,7 +14,7 @@ public class HealthComponent
     //public float  {get; private set;}
 
     [Header("Stat Modifiers")]
-    int bonus_health;
+    [SerializeField] List<ChangeHealthTick> health_ticks = new List<ChangeHealthTick>();
 
     public HealthComponent(int max_health, int start_shield, float spawn_health_perc = 1)
     {
@@ -26,12 +27,34 @@ public class HealthComponent
 
     public void UpdateHealth()
     {
-        
+        if (health_ticks.Count > 0)
+        {
+            int net_health_change = 0;
+            for(int i = health_ticks.Count-1; i >= 0; i--)
+            {
+                ChangeHealthTick health_tick = health_ticks[i];
+                if (health_tick.duration_complete)
+                {
+                    // swap n pop removal
+                    int list_end = health_ticks.Count - 1;
+                    health_ticks[i] = health_ticks[list_end];
+                    health_ticks.RemoveAt(list_end); 
+                }
+                else
+                {
+                    net_health_change += health_tick.UpdateTick(Time.deltaTime);
+                    health_ticks[i] = health_tick;
+                }
+            }
+            if (net_health_change != 0)
+            {
+                ChangeHealth(net_health_change);
+            }
+        }
     }
 
     public void ChangeHealth(int damage_amt)
-    {
-        //Debug.Log(base_data.name + " has taken " + damage_amt + " damage");        
+    {     
         if (damage_amt > 0) // this is damage
         {
             shield -= damage_amt;
@@ -49,14 +72,19 @@ public class HealthComponent
                 }
             }
 
-        } else // negative damage is healing
+        } 
+        else // negative damage is healing
         {
-            
+            curr_health -= damage_amt;
+            if (curr_health > max_health)
+            {
+                curr_health = max_health;
+            }
         }
     }
     public void ChangeHealthTick(int change_amt, float duration, float tick_rate = 1)
     {
-
+        health_ticks.Add(new ChangeHealthTick(change_amt, tick_rate, duration));
     }
     #region Stat Change Methods
     public void MaxHealthBoost(int boost_amt, float duration)

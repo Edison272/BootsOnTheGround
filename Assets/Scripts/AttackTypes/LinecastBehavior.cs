@@ -37,13 +37,18 @@ public class LinecastBehavior : MonoBehaviour
     {
         // get all targets hit in linecast
         contacts = Physics2D.LinecastAll(source_pos, target_pos);
+        int curr_pierce = atk_data.pierce+1;
         foreach(RaycastHit2D contact in contacts)
         {
             if (contact.transform.gameObject.tag != object_tag && contact.transform.gameObject.tag != "NoHit")
             {
-                contact.transform.gameObject.GetComponent<IHealth>()?.ChangeHealth(atk_data.damage);
                 atk_data.ApplyData(source_pos, contact.transform.gameObject);
                 end_pos = contact.point;
+                curr_pierce--;
+            }
+            if (curr_pierce == 0)
+            {
+                break;
             }
         }
 
@@ -94,11 +99,13 @@ public class LinecastBehavior : MonoBehaviour
             object_tag = owner.gameObject.tag;
             faction_tag = owner.faction_tag;
         }
-        // set origin position of line render
+        // generate the physics linecast (this also sets a new end_pos based on where the linecast hits)
+        GenerateLinecast();
+
+        // set origin position of "main" line render
         SetLRPositions(0, src_pos, output_pos);
         SetLRPositions(1, src_pos, output_pos);
-        // generate the physics linecast
-        GenerateLinecast();
+
     }
 
     public void StartLinecast(Transform target_char) // homing vairant

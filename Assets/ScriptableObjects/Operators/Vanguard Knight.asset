@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Vanguard Knight
   m_EditorClassIdentifier: 
   character_name: Knight
-  health: 50000
-  spawn_shield: 10000
+  health: 10000
+  spawn_shield: 30000
   speed: 10
   accel_time: 0.5
   range: 10

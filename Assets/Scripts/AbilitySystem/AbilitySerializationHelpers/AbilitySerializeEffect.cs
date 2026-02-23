@@ -5,7 +5,7 @@ using UnityEngine;
 public class AbilitySerializeEffect
 {
     [Header("Stat Boosts")]
-    [SerializeField] CharStatModDictionary char_stat_modifiers = null;
+    [SerializeField] CharStatModifier[] char_stat_modifiers = new CharStatModifier[0];
 
     [Header("Special Item")]
     [SerializeField] ItemSO special_item = null;
@@ -18,7 +18,7 @@ public class AbilitySerializeEffect
         string stats_present = "Create Components: ";
         if (char_stat_modifiers.Length > 0)
         {
-            effect_components.Add(new AbilityEffectStatModComponent(user, char_stat_modifiers));
+            effect_components.Add(new AbilityEffectStatModComponent(user, char_stat_modifiers[0]));
             stats_present += "stats modified, ";
         }
         if (special_item)

@@ -17,14 +17,14 @@ public abstract class AbilityEffectComponent
 
 public class AbilityEffectStatModComponent : AbilityEffectComponent
 {
-    public CharStatModDictionary stat_modifiers;
-    public AbilityEffectStatModComponent(Operator user, CharStatModDictionary stat_modifiers) : base(user)
+    public CharStatModifier stat_modifiers;
+    public AbilityEffectStatModComponent(Operator user, CharStatModifier stat_modifiers) : base(user)
     {
         this.stat_modifiers = stat_modifiers;
     }
     public override void ActivateComponent()
     {
-        stat_modifiers.ApplyStatsToCharacter(user, 5);
+        stat_modifiers.ApplyStats(user, 5);
     }
     public override void DeactivateComponent()
     {

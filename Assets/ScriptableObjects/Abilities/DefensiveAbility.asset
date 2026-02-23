@@ -15,9 +15,11 @@ MonoBehaviour:
   set_ability_active_type: 2
   serialize_ability_effect:
     char_stat_modifiers:
-      stat_list:
-      - <stat_modifier_enum>k__BackingField: 3
-        <modifier_value>k__BackingField: 1000
+    - max_health_boost: 0
+      health_regen: 1000
+      regen_rate: 0.1
+      shield_boost: 10000
+      speed_scale: 1
     special_item: {fileID: 11400000, guid: 8f509684d152d6d4d9baeacc717da5d2, type: 2}
     attacks:
     - prefab: {fileID: 0}
@@ -28,6 +30,8 @@ MonoBehaviour:
         knockback_amt: 0
         effect_time: 0
         slow_amt: 0
+        total_dot_damage: 0
+        total_dot_ticks: 0
       attack_stats:
         stat_list: []
   ability_end_type: 1

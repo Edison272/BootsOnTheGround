@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Firefighter
   m_EditorClassIdentifier: 
   character_name: Knight
-  health: 80000
-  spawn_shield: 30000
+  health: 20000
+  spawn_shield: 0
   speed: 8
   accel_time: 1.08
   range: 10

@@ -65,7 +65,7 @@ public class MovementComponent
     #endregion
     #region Update
 
-    public void FixedMoveUpdate()
+    public void UpdateMovement()
     {
         if (move_speed_modifiers.Count > 0)
         {
@@ -73,7 +73,7 @@ public class MovementComponent
             for(int i = move_speed_modifiers.Count-1; i >= 0; i--)
             {
                 SpeedModifier speed_mod = move_speed_modifiers[i];
-                bool destroy = speed_mod.UpdateModifier(Time.fixedDeltaTime);
+                bool destroy = speed_mod.UpdateModifier(Time.deltaTime);
                 if (destroy)
                 {
                     // swap n pop removal

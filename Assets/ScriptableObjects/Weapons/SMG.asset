@@ -41,11 +41,13 @@ MonoBehaviour:
       type: 3}
     attack_enum: 1
     attack_data:
-      damage: 35
+      damage: 10
       pierce: 0
       knockback_amt: 23.9
-      effect_time: 0.2
-      slow_amt: 0.5
+      effect_time: 10
+      slow_amt: 1
+      total_dot_damage: -150
+      total_dot_ticks: 10
     attack_stats:
       stat_list:
       - key: linecast_duration
