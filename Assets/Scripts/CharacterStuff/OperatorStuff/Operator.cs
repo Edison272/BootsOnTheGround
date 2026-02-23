@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -15,6 +16,11 @@ public class Operator : Character
     [Header("Ability")]
     private Ability ability;
     public float ability_cooldown_progress => ability.GetAbilityCooldownProgress();
+
+    [field: Header("Events")]
+    public event Action<float> OnActiveUpdate;
+    public event Action<float> OnEnemyKilled;
+    public event Action<float> OnDamageTaken;
 
     public bool is_deployed = false;
 
@@ -35,6 +41,7 @@ public class Operator : Character
     protected override void Update()
     {
         base.Update();
+        OnActiveUpdate?.Invoke(Time.deltaTime);
         ability.UpdateAbility();
     }
 
@@ -84,6 +91,16 @@ public class Operator : Character
     {
     
     }
+    #region Damage/Health System
+    public override void ChangeHealth(int change_amt)
+    {
+        if (change_amt > 0) // this is damage
+        {
+            OnDamageTaken?.Invoke(change_amt);
+        }
+        health_component.ChangeHealth(change_amt);
+    }
+    #endregion
 
     public void UseAbility(Vector2 target_area)
     {

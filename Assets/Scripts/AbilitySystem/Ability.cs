@@ -6,28 +6,29 @@ using UnityEngine;
 public class Ability
 {
     public AbilitySO base_data;
-    public AbilityComponent[] ability_components;
+    public AbilityEffectComponent[] ability_components;
+    public AbilityRecoveryComponent ability_recovery;
     private Operator user;
 
     [Header("Ability Cooldown")]
-    public float cooldown = 0f;
-
     private Action UpdateAction;
 
-    public bool is_usable => cooldown >= 1;
+    public bool is_usable => GetAbilityCooldownProgress() == 1;
 
     public GameObject[] ability_vfx;
 
     #region Initalization
-    public Ability(AbilitySO base_data, Operator user, float cooldown_preset = 0f)
+    public Ability(AbilitySO base_data, Operator user, AbilityRecoveryComponent ability_recovery, float cooldown_preset = 0f)
     {
         this.base_data = base_data;
         this.user = user;
-        ability_components = new AbilityComponent[0];
+        this.ability_recovery = ability_recovery;
+
+        ability_components = new AbilityEffectComponent[0];
         ability_vfx = new GameObject[base_data.ability_vfx.Length];
         if (cooldown_preset < 1)
         {
-            UpdateAction = UpdateCooldown;
+            //UpdateAction = ability_recovery.UpdateRecovery;
         } 
         else
         {
@@ -51,8 +52,8 @@ public class Ability
     public void UseAbility() // start the ability
     {
         UpdateAction = UpdateActive;
-        cooldown = 0;
-        foreach(AbilityComponent component in ability_components)
+        ability_recovery.ResetRecovery();
+        foreach(AbilityEffectComponent component in ability_components)
         {
             component.ActivateComponent();
         }
@@ -61,28 +62,19 @@ public class Ability
 
     public void UpdateAbility()
     {
-        UpdateAction();
+        //UpdateAction();
     }
     public void UpdateActive() // update any components while the ability is active
     {
-        if (!IsActive()) // if ability is fully ended, go back on cooldown
-        {
-            UpdateAction = UpdateCooldown;
-        }
-    }
-    public void UpdateCooldown() // check cooldowns while ability is on cooldown
-    {
-        cooldown += Time.deltaTime * 0.25f;
-        if (cooldown >= 1)
-        {
-            ToggleAbilityVFX(false);
-            cooldown = 1;
-        }
+        // if (!IsActive()) // if ability is fully ended, go back on cooldown
+        // {
+        //     UpdateAction = ability_recovery.UpdateRecovery;
+        // }
     }
 
     public void EndAbility() // end the ability and resolve all related components
     {
-        
+            
     }
     #endregion
 
@@ -100,7 +92,7 @@ public class Ability
     #region Info
     public float GetAbilityCooldownProgress()
     {
-        return cooldown;
+        return ability_recovery.AbilityRecoveryCompletion();
     }
     public bool IsActive()
     {

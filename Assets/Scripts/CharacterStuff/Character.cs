@@ -391,7 +391,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     #endregion
 
     #region Damage/Health System
-    public void ChangeHealth(int change_amt)
+    public virtual void ChangeHealth(int change_amt)
     {
         health_component.ChangeHealth(change_amt);
     }

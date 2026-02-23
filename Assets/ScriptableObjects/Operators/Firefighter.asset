@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97cdf939f1c972e4d922640cd38e06b2, type: 3}
-  m_Name: Vanguard Knight 1
+  m_Name: Firefighter
   m_EditorClassIdentifier: 
   character_name: Knight
   health: 80000
@@ -35,4 +35,4 @@ MonoBehaviour:
   command_cost: 3
   deployment_speed: 1
   field_time: -1
-  ability: {fileID: 11400000, guid: 3eebcadb3f811d342bae6dae6cf1391c, type: 2}
+  ability: {fileID: 11400000, guid: 8b4b89cc872c1024796f2821ed778d98, type: 2}

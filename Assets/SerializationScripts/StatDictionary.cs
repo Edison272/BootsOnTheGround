@@ -32,6 +32,10 @@ public class StatDictionary : IEnumerable<StatDictItem>
     {
         return index >= stat_list.Count ? "0" : stat_list[index].key;
     }
+    public float Value(int index)
+    {
+        return index >= stat_list.Count ? 0 : stat_list[index].value;
+    }
     public void RemoveAt(int index)
     {
         if (index > 0 && index < stat_list.Count)

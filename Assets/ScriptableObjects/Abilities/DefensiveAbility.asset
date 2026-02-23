@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: abacdaf7b3ac26043b54e16bca43b59f, type: 3}
-  m_Name: BasicAbility
+  m_Name: DefensiveAbility
   m_EditorClassIdentifier: 
   set_ability_active_type: 2
   ability_end_type: 1
-  ability_recovery_type: 0
+  ability_recovery_type: 2
   serialized_recovery_stats:
     stat_list:
-    - key: recovery_time
-      value: 5
+    - key: damage_taken
+      value: 500
   ability_vfx:
     stat_list:
     - key: {fileID: 531661423089630175, guid: 7183cd590f8685a4ea21d077bfaf854a, type: 3}
