@@ -6,34 +6,31 @@ using UnityEngine;
 public class Ability
 {
     public AbilitySO base_data;
-    public AbilityEffectComponent[] ability_components;
+    public AbilityEffectComponent[] ability_effects;
     public AbilityRecoveryComponent ability_recovery;
     private Operator user;
 
     [Header("Ability Cooldown")]
-    private Action UpdateAction;
 
-    public bool is_usable => GetAbilityCooldownProgress() == 1;
+    public bool is_usable => GetAbilityCooldownProgress() >= 1;
 
     public GameObject[] ability_vfx;
 
     #region Initalization
-    public Ability(AbilitySO base_data, Operator user, AbilityRecoveryComponent ability_recovery, float cooldown_preset = 0f)
+    public Ability(
+        AbilitySO base_data, 
+        Operator user, 
+        AbilityEffectComponent[] ability_effects,
+        AbilityRecoveryComponent ability_recovery 
+        )
     {
         this.base_data = base_data;
         this.user = user;
+        this.ability_effects = ability_effects;
         this.ability_recovery = ability_recovery;
 
-        ability_components = new AbilityEffectComponent[0];
+        ability_effects = new AbilityEffectComponent[0];
         ability_vfx = new GameObject[base_data.ability_vfx.Length];
-        if (cooldown_preset < 1)
-        {
-            //UpdateAction = ability_recovery.UpdateRecovery;
-        } 
-        else
-        {
-            UpdateAction = UpdateActive;
-        }
 
         // assign vfx from base data
         int i = 0;
@@ -51,18 +48,17 @@ public class Ability
     #region Core
     public void UseAbility() // start the ability
     {
-        UpdateAction = UpdateActive;
         ability_recovery.ResetRecovery();
-        foreach(AbilityEffectComponent component in ability_components)
+        foreach(AbilityEffectComponent effect_component in ability_effects)
         {
-            component.ActivateComponent();
+            effect_component.ActivateComponent();
         }
         ToggleAbilityVFX(true);
     }
 
     public void UpdateAbility()
     {
-        //UpdateAction();
+        UpdateActive();
     }
     public void UpdateActive() // update any components while the ability is active
     {
@@ -74,11 +70,11 @@ public class Ability
 
     public void EndAbility() // end the ability and resolve all related components
     {
-            
+        
     }
     #endregion
 
-    #region 
+    #region VFX
     public void ToggleAbilityVFX(bool is_enabled)
     {
         foreach(GameObject vfx_object in ability_vfx)

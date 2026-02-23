@@ -13,8 +13,25 @@ MonoBehaviour:
   m_Name: DefensiveAbility
   m_EditorClassIdentifier: 
   set_ability_active_type: 2
+  serialize_ability_effect:
+    char_stat_modifiers:
+      stat_list:
+      - <stat_modifier_enum>k__BackingField: 3
+        <modifier_value>k__BackingField: 1000
+    special_item: {fileID: 11400000, guid: 8f509684d152d6d4d9baeacc717da5d2, type: 2}
+    attacks:
+    - prefab: {fileID: 0}
+      attack_enum: 0
+      attack_data:
+        damage: 0
+        pierce: 0
+        knockback_amt: 0
+        effect_time: 0
+        slow_amt: 0
+      attack_stats:
+        stat_list: []
   ability_end_type: 1
-  ability_recovery_type: 2
+  serialize_ability_recovery: 2
   serialized_recovery_stats:
     stat_list:
     - key: damage_taken

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public static class StatData
+public static class AttackStatData
 {
     // template stats used to build the dictionary ADD/REMOVE stats HERE
     #region Attack Types

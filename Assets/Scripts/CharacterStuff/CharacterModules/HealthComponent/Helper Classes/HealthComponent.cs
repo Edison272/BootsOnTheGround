@@ -12,6 +12,9 @@ public class HealthComponent
     [field: SerializeField] public bool is_alive {get; private set;}
     //public float  {get; private set;}
 
+    [Header("Stat Modifiers")]
+    int bonus_health;
+
     public HealthComponent(int max_health, int start_shield, float spawn_health_perc = 1)
     {
         this.max_health = max_health;
@@ -51,4 +54,20 @@ public class HealthComponent
             
         }
     }
+    public void ChangeHealthTick(int change_amt, float duration, float tick_rate = 1)
+    {
+
+    }
+    #region Stat Change Methods
+    public void MaxHealthBoost(int boost_amt, float duration)
+    {
+        float curr_ratio = health_ratio;
+        max_health += boost_amt;
+        curr_health = (int)(max_health * curr_ratio);
+    }
+    public void ShieldBoost(int boost_amt)
+    {
+        shield += boost_amt;
+    }
+    #endregion
 }

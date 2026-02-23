@@ -1,0 +1,43 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+[Serializable]
+public class AbilitySerializeEffect
+{
+    [Header("Stat Boosts")]
+    [SerializeField] CharStatModDictionary char_stat_modifiers = null;
+
+    [Header("Special Item")]
+    [SerializeField] ItemSO special_item = null;
+
+    [Header("Ability Attack")]
+    [SerializeField] AttackTypeInit[] attacks = null;
+    public AbilityEffectComponent[] CreateAbilityComponents(Operator user)
+    {
+        List<AbilityEffectComponent> effect_components = new List<AbilityEffectComponent>();
+        string stats_present = "Create Components: ";
+        if (char_stat_modifiers.Length > 0)
+        {
+            effect_components.Add(new AbilityEffectStatModComponent(user, char_stat_modifiers));
+            stats_present += "stats modified, ";
+        }
+        if (special_item)
+        {
+            stats_present += "give special item, ";
+        }
+        if (attacks.Length > 0)
+        {
+            foreach(AttackTypeInit attack in attacks)
+            {
+                stats_present += "launch attack, ";
+            }
+        }
+        Debug.Log(stats_present);
+        return effect_components.ToArray();
+    }
+    public void OnValidate()
+    {
+        
+    }
+
+}

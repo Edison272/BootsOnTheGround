@@ -62,12 +62,10 @@ public class AttackTypeInit // used to initialize ONE attack and its data
         {
             BuildStats(attack_enum, attack_stats); // build new stat dictionary!
             curr_atk = attack_enum;
-            Debug.Log("new attack type! Adjusting . . .");
         } 
-        else if (attack_stats.Length != StatData.GetAtkType(attack_enum).Length) // adjust values of dictionary if it doesn't have all the same stats as the current attack type
+        else if (attack_stats.Length != AttackStatData.GetAtkType(attack_enum).Length) // adjust values of dictionary if it doesn't have all the same stats as the current attack type
         {
             BuildStats(attack_enum, attack_stats);    
-            Debug.Log("new stats detected! Adjusting...");
         }
     }
 
@@ -76,7 +74,7 @@ public class AttackTypeInit // used to initialize ONE attack and its data
         // remove all stats, save them just incase they're important tho
         foreach(StatDictItem stat in stats)
         {
-            if (StatData.GetAtkType(attack_enum).Contains(stat.key))
+            if (AttackStatData.GetAtkType(attack_enum).Contains(stat.key))
             {
                 leftovers[stat.key] = stat.value; // save potentially useful stats for later
             }
@@ -84,9 +82,9 @@ public class AttackTypeInit // used to initialize ONE attack and its data
         stats.Clear();
 
         // Add in relevant stats
-        for(int i = 0; i < StatData.GetAtkType(attack_enum).Length; i++)
+        for(int i = 0; i < AttackStatData.GetAtkType(attack_enum).Length; i++)
         {
-            string key = StatData.GetAtkType(attack_enum)[i];
+            string key = AttackStatData.GetAtkType(attack_enum)[i];
             stats.Add(key, leftovers.ContainsKey(key) ? leftovers[key] : 0); // built new dictionary, and add defaults whenever a leftover cant be found
         }
     }

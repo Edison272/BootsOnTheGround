@@ -1,0 +1,49 @@
+using System;
+using UnityEngine;
+
+public abstract class AbilityEffectComponent
+{
+    public GameObject[] vfx_objects;
+    public bool is_active;
+    protected Operator user;
+    public AbilityEffectComponent(Operator user)
+    {
+        this.user = user;
+    }
+    public abstract void ActivateComponent(); // do the thing!
+    public abstract void DeactivateComponent(); // stop doing the thing
+
+}
+
+public class AbilityEffectStatModComponent : AbilityEffectComponent
+{
+    public CharStatModDictionary stat_modifiers;
+    public AbilityEffectStatModComponent(Operator user, CharStatModDictionary stat_modifiers) : base(user)
+    {
+        this.stat_modifiers = stat_modifiers;
+    }
+    public override void ActivateComponent()
+    {
+        stat_modifiers.ApplyStatsToCharacter(user, 5);
+    }
+    public override void DeactivateComponent()
+    {
+        
+    }
+}
+
+public class AbilityEffectItemComponent : AbilityEffectComponent
+{
+    public AbilityEffectItemComponent(Operator user) : base(user)
+    {
+
+    }
+    public override void ActivateComponent()
+    {
+        
+    }
+    public override void DeactivateComponent()
+    {
+        
+    }
+}

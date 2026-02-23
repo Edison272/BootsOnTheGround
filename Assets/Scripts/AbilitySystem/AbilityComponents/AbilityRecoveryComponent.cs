@@ -7,10 +7,13 @@ public class AbilityRecoveryComponent
 {
     private int max_ability_points;
     private float curr_ability_points;
+    private int max_charges;
+    private int curr_charges;
     private AbilityRecoveryType ability_recovery_type;
     public AbilityRecoveryComponent(AbilityRecoveryType ability_recovery_type, Operator user, float max_ability_points)
     {
         this.ability_recovery_type = ability_recovery_type;
+        Debug.Log(ability_recovery_type);
         switch (ability_recovery_type)
         {
             case AbilityRecoveryType.Time:
@@ -44,11 +47,13 @@ public class AbilityRecoveryComponent
     {
         curr_ability_points += 1 * target_value;
     }
-    #endregion
-
     void DamageTakenRecovery(float damage_taken)
     {
-        Debug.Log(string.Format("OW I TOOK {0} DAMAGE", damage_taken));
+        //Debug.Log(string.Format("OW I TOOK {0} DAMAGE", damage_taken));
         curr_ability_points += (int)damage_taken;
     }
+    #endregion
+    #region SetRecovery
+
+    #endregion
 }

@@ -11,47 +11,44 @@ public class AbilitySO : ScriptableObject
 {   
     [Header("Ability Active Type")] // What the ability does
     [SerializeField] AbilityActiveType set_ability_active_type = AbilityActiveType.EQUIP;
+    public AbilitySerializeEffect serialize_ability_effect;
     private AbilityActiveType curr_ability_active_type = AbilityActiveType.EQUIP;
     
     [Header("Ability End Type")] // When the ability ends
     [SerializeField] AbilityRecoveryType ability_end_type = AbilityRecoveryType.Time;
 
     [Header("Ability Recovery Type")] // How the ability recovers
-    [SerializeField] AbilityRecoveryType ability_recovery_type = AbilityRecoveryType.Time;
-    private AbilityRecoveryType curr_ability_recovery_type = AbilityRecoveryType.Kills;
+    [SerializeField] AbilityRecoveryType serialize_ability_recovery = AbilityRecoveryType.Time;
+    private AbilityRecoveryType curr_ability_recovery = AbilityRecoveryType.Kills;
     [SerializeField] StatDictionary serialized_recovery_stats;
     [Header("Ability VFX")]  // VFX prefabs which will be attached to the user in various areas for the duration of the ability
     public BodyPartDictionary ability_vfx;
     
     public Ability GenerateAbility(Operator give_operator) // generate an ability for an operator
     {
-        return new Ability(this, give_operator, SetRecoveryType(give_operator));
+        return new Ability(this, give_operator, SetEffectComponents(give_operator), SetRecoveryComponent(give_operator));
     }
-    private void SetActiveType()
+    #region  Create Ability Components
+    private AbilityEffectComponent[] SetEffectComponents(Operator give_operator)
     {
-        switch (set_ability_active_type)
-        {
-            case AbilityActiveType.ATTACK:
-                break;
-        }
+        return serialize_ability_effect.CreateAbilityComponents(give_operator);
     }
-
-    private AbilityRecoveryComponent SetRecoveryType(Operator give_operator)
+    private AbilityRecoveryComponent SetRecoveryComponent(Operator give_operator)
     {
         Dictionary<string, float> recovery_stats = serialized_recovery_stats.ToDictionary();
-        AbilityRecoveryComponent ability_recovery = null;
-        ability_recovery = new AbilityRecoveryComponent(ability_recovery_type, give_operator, serialized_recovery_stats.Value(0));
+        AbilityRecoveryComponent ability_recovery = new AbilityRecoveryComponent(serialize_ability_recovery, give_operator, serialized_recovery_stats.Value(0));
         return ability_recovery;
     }
+    #endregion
 
-    #region Scriptable Object Serialization
+    #region SO Serialization
     private bool ValidateDictionary(StatDictionary check_dict) // return true if the dict is empty or null
     {
         return check_dict == null || check_dict.Length == 0;
     }
     public void OnValidate()
     {
-        if (curr_ability_recovery_type != ability_recovery_type || ValidateDictionary(serialized_recovery_stats))
+        if (curr_ability_recovery != serialize_ability_recovery || ValidateDictionary(serialized_recovery_stats))
         {
             if (serialized_recovery_stats == null)
             {
@@ -59,7 +56,7 @@ public class AbilitySO : ScriptableObject
             }
             
             serialized_recovery_stats.Clear();
-            switch (ability_recovery_type)
+            switch (serialize_ability_recovery)
             {
                 case AbilityRecoveryType.Time:
                     serialized_recovery_stats.Add("recovery_time", 10f);
@@ -71,8 +68,10 @@ public class AbilitySO : ScriptableObject
                     serialized_recovery_stats.Add("damage_taken", 500f);
                     break;
             }
-            curr_ability_recovery_type = ability_recovery_type;
+            curr_ability_recovery = serialize_ability_recovery;
         }
+
+        serialize_ability_effect.OnValidate();
     }
     #endregion
 }

@@ -380,10 +380,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         movement_component.ForceMove(direction, scalar, movement_override);
     }
-    public Vector2 GetPosition()
-    {
-        return entity_rb.position;
-    }
+    public Vector2 GetPosition() {return entity_rb.position;}
     public void ChangeSpeed(float scale_base, float duration, bool is_decaying = false)
     {
         movement_component.ChangeSpeed(scale_base, duration, is_decaying);
@@ -391,10 +388,13 @@ public class Character : MonoBehaviour, IHealth, IMovement
     #endregion
 
     #region Damage/Health System
-    public virtual void ChangeHealth(int change_amt)
+    public virtual void ChangeHealth(int change_amt) {health_component.ChangeHealth(change_amt);}
+    public virtual void ChangeHealthTick(int change_amt, float duration, float tick_rate = 1) 
     {
-        health_component.ChangeHealth(change_amt);
+        health_component.ChangeHealthTick(change_amt, duration);
     }
+    public virtual void MaxHealthBoost(int boost_amt, float duration) {health_component.MaxHealthBoost(boost_amt, duration);}
+    public virtual void ShieldBoost(int boost_amt) {health_component.ShieldBoost(boost_amt);}
     #endregion
 
     #region  AI Stuff
