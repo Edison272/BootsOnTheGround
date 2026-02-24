@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 public enum CharacterBodyPart {None = -1, Hitbox, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
@@ -66,8 +68,8 @@ public class Character : MonoBehaviour, IHealth, IMovement
     [SerializeField] HealthUI health_ui = new HealthUI();
 
     [field: Header("Inventory")]
-    public Item[] inventory;
-    public Vector2Int[] item_indexes;  // Access items from the items list with indexes. Vector X for Main Item, Vector Y for Alt Item
+    public List<Item> inventory;
+    public List<Vector2Int> item_indexes;  // Access items from the items list with indexes. Vector X for Main Item, Vector Y for Alt Item
     protected int curr_item_index = 0;           // access items indexes list
     public Item main_item;
     public Item alt_item;
@@ -124,19 +126,21 @@ public class Character : MonoBehaviour, IHealth, IMovement
         movement_component = new MovementComponent(base_data.speed, base_data.accel_time, entity_rb);
         
         // setup inventory
-        inventory = new Item[base_data.inventory.Length];
-        item_indexes = new Vector2Int[base_data.item_indexes.Length];
+        Item[] init_inventory = new Item[base_data.inventory.Length];
+        Vector2Int[] init_item_indexes = new Vector2Int[base_data.item_indexes.Length];
         for (int i = 0; i < base_data.item_indexes.Length; i++)
         {
             int main_item = base_data.item_indexes[i].x;
             int alt_item = base_data.item_indexes[i].y;
-            item_indexes[i] = base_data.item_indexes[i];
-            inventory[main_item] = base_data.inventory[main_item].GenerateItem(main_hand);
+            init_item_indexes[i] = base_data.item_indexes[i];
+            init_inventory[main_item] = base_data.inventory[main_item].GenerateItem(main_hand);
             if (alt_item > -1)
             {
-                inventory[alt_item] = base_data.inventory[alt_item].GenerateItem(alt_hand);
+                init_inventory[alt_item] = base_data.inventory[alt_item].GenerateItem(alt_hand);
             }
         }
+        inventory = init_inventory.ToList<Item>();
+        item_indexes = init_item_indexes.ToList<Vector2Int>();
         // set initial active items
         foreach(Item item in inventory)
         {
@@ -448,21 +452,30 @@ public class Character : MonoBehaviour, IHealth, IMovement
         if (spec_index == -1) // typical incrementation
         {
             curr_item_index += 1;
-            if (curr_item_index > item_indexes.Length - 1)
+            if (curr_item_index > item_indexes.Count - 1)
             {
                 curr_item_index = 0;
             }
         }
         else // specific index
         {
-            curr_item_index = Mathf.Clamp(spec_index, 0, item_indexes.Length);
+            curr_item_index = Mathf.Clamp(spec_index, 0, item_indexes.Count);
         }
         UnequipActive(); //unequipped item will call the "SetSwitchItem" in animator to set the new active item
         current_indexes = (item_indexes[curr_item_index].x, item_indexes[curr_item_index].y);
         EquipActive(curr_item_index); // set up the new shi
         curr_switch_cd = switch_cd;
     }
+    public int AddItem(Item new_item)
+    {
+        inventory.Add(new_item);
+        item_indexes.Add(new Vector2Int(inventory.Count-1, -1));
 
+        new_item.NewUser(this);
+        new_item.UnequipItem();
+
+        return item_indexes.Count-1;
+    }
     public void SetSwitchItem() // only setup the new item VFX after the old one has been put away completely
     {
         main_item.EquipItem();

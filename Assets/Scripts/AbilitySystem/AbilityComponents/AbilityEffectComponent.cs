@@ -36,17 +36,19 @@ public class AbilityEffectStatModComponent : AbilityEffectComponent
 public class AbilityEffectItemComponent : AbilityEffectComponent
 {
     Item ability_item;
-    public AbilityEffectItemComponent(Operator user) : base(user)
+    int item_index;
+    public AbilityEffectItemComponent(Operator user, ItemSO new_item) : base(user)
     {
-
+        ability_item = new_item.GenerateItem(user.main_hand);
+        item_index = user.AddItem(ability_item);
     }
     public override void ActivateComponent()
     {
-        user.SwitchItem();
+        user.SwitchItem(item_index);
     }
     public override void DeactivateComponent()
     {
         user.ResetItems();
-        user.SwitchItem();
+        user.SwitchItem(0);
     }
 }

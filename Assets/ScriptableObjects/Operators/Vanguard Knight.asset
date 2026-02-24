@@ -37,4 +37,4 @@ MonoBehaviour:
   command_cost: 3
   deployment_speed: 1
   field_time: -1
-  ability: {fileID: 11400000, guid: 3eebcadb3f811d342bae6dae6cf1391c, type: 2}
+  ability: {fileID: 11400000, guid: 0924986d979fd0d468293f6b61c2c371, type: 2}

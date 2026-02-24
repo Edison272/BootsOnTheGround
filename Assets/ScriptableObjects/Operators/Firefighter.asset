@@ -27,8 +27,8 @@ MonoBehaviour:
   max_space: 5
   inventory:
   - {fileID: 11400000, guid: 8f509684d152d6d4d9baeacc717da5d2, type: 2}
-  - {fileID: 11400000, guid: cf688422d583beb408b32bc9e89da26c, type: 2}
-  - {fileID: 11400000, guid: cf688422d583beb408b32bc9e89da26c, type: 2}
+  - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
+  - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
   item_indexes:
   - {x: 0, y: -1}
   - {x: 1, y: 2}
@@ -36,4 +36,4 @@ MonoBehaviour:
   command_cost: 3
   deployment_speed: 1
   field_time: -1
-  ability: {fileID: 11400000, guid: 0924986d979fd0d468293f6b61c2c371, type: 2}
+  ability: {fileID: 11400000, guid: 8b4b89cc872c1024796f2821ed778d98, type: 2}

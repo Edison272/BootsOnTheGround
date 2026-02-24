@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item_prefab: {fileID: 764744361160584554, guid: c606d78aa421fba46aa30b630ae78444,
     type: 3}
+  ui_image: {fileID: -2364898982482507018, guid: 5db43a79db810324ea675df7ed816da8,
+    type: 3}
   input_enum: 2
   is_full_auto: 1
   dynamic_aim: 1
@@ -46,6 +48,8 @@ MonoBehaviour:
       knockback_amt: 0
       effect_time: 0
       slow_amt: 0.01
+      total_dot_damage: 0
+      total_dot_ticks: 0
     attack_stats:
       stat_list:
       - key: melee_duration
@@ -69,6 +73,8 @@ MonoBehaviour:
       knockback_amt: 0
       effect_time: 0
       slow_amt: 0.01
+      total_dot_damage: 0
+      total_dot_ticks: 0
     attack_stats:
       stat_list:
       - key: melee_duration
@@ -92,6 +98,8 @@ MonoBehaviour:
       knockback_amt: 7.1
       effect_time: 0
       slow_amt: 0.01
+      total_dot_damage: 0
+      total_dot_ticks: 0
     attack_stats:
       stat_list:
       - key: melee_duration
