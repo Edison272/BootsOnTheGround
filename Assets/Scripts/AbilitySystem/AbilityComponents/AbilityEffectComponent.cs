@@ -35,16 +35,18 @@ public class AbilityEffectStatModComponent : AbilityEffectComponent
 
 public class AbilityEffectItemComponent : AbilityEffectComponent
 {
+    Item ability_item;
     public AbilityEffectItemComponent(Operator user) : base(user)
     {
 
     }
     public override void ActivateComponent()
     {
-        
+        user.SwitchItem();
     }
     public override void DeactivateComponent()
     {
-        
+        user.ResetItems();
+        user.SwitchItem();
     }
 }

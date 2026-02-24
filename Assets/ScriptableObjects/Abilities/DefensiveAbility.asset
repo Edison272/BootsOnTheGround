@@ -20,6 +20,7 @@ MonoBehaviour:
       regen_rate: 0.1
       shield_boost: 10000
       speed_scale: 1
+      speed_scale_decay: 0
     special_item: {fileID: 11400000, guid: 8f509684d152d6d4d9baeacc717da5d2, type: 2}
     attacks:
     - prefab: {fileID: 0}
@@ -38,7 +39,7 @@ MonoBehaviour:
   serialized_duration_stats:
     stat_list:
     - key: recovery_time
-      value: 100
+      value: 10
   serialize_ability_recovery: 2
   serialized_recovery_stats:
     stat_list:
@@ -46,7 +47,7 @@ MonoBehaviour:
       value: 1000
   ability_vfx:
     stat_list:
-    - key: {fileID: 531661423089630175, guid: 7183cd590f8685a4ea21d077bfaf854a, type: 3}
+    - key: {fileID: 1742313508217192193, guid: ceff8344df8af5f4ebc7f666619d2c25, type: 3}
       value: 7
     - key: {fileID: 8951153385361815444, guid: 73a897e5d9893a7448049312e5d229dd, type: 3}
       value: 8

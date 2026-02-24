@@ -32,7 +32,6 @@ public class Ability
         this.ability_recovery = ability_recovery;
         this.ability_duration = ability_duration;
 
-        ability_effects = new AbilityEffectComponent[0];
         ability_vfx = new GameObject[base_data.ability_vfx.Length];
 
         // assign vfx from base data

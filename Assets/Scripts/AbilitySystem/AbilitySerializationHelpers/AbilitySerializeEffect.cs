@@ -23,6 +23,7 @@ public class AbilitySerializeEffect
         }
         if (special_item)
         {
+            effect_components.Add(new AbilityEffectItemComponent(user));
             stats_present += "give special item, ";
         }
         if (attacks.Length > 0)
