@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ public class HealthComponent
             for(int i = health_ticks.Count-1; i >= 0; i--)
             {
                 ChangeHealthTick health_tick = health_ticks[i];
-                if (health_tick.duration_complete)
+                if (health_tick.effect_complete)
                 {
                     // swap n pop removal
                     int list_end = health_ticks.Count - 1;
@@ -42,7 +43,7 @@ public class HealthComponent
                 }
                 else
                 {
-                    net_health_change += health_tick.UpdateTick(Time.deltaTime);
+                    net_health_change += health_tick.UpdateTick();
                     health_ticks[i] = health_tick;
                 }
             }
@@ -82,12 +83,12 @@ public class HealthComponent
             }
         }
     }
-    public void ChangeHealthTick(int change_amt, float duration, float tick_rate = 1)
+    public void ChangeHealthTick(int change_amt, float duration, float tick_rate, AbilityEffectComponent effect_controller)
     {
-        health_ticks.Add(new ChangeHealthTick(change_amt, tick_rate, duration));
+        health_ticks.Add(new ChangeHealthTick(change_amt, tick_rate, duration, effect_controller));
     }
     #region Stat Change Methods
-    public void MaxHealthBoost(int boost_amt, float duration)
+    public void MaxHealthBoost(int boost_amt, float duration, AbilityEffectComponent effect_controller)
     {
         float curr_ratio = health_ratio;
         max_health += boost_amt;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 [System.Serializable]
@@ -30,7 +31,7 @@ public class AttackData
         {
             if (slow_amt != 1)
             {
-                targ_move?.ChangeSpeed(slow_amt, effect_time);
+                targ_move?.ChangeSpeed(slow_amt, effect_time, false);
             }
             if (total_dot_damage != 0)
             {

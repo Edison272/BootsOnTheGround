@@ -4,7 +4,7 @@ using UnityEngine;
 public abstract class AbilityEffectComponent
 {
     public GameObject[] vfx_objects;
-    public bool is_active;
+    public bool is_active {get; protected set;}
     protected Operator user;
     public AbilityEffectComponent(Operator user)
     {
@@ -17,19 +17,19 @@ public abstract class AbilityEffectComponent
 
 public class AbilityEffectStatModComponent : AbilityEffectComponent
 {
-    public CharStatModifier stat_modifiers;
-    public Action EndStatMod;
+    CharStatModifier stat_modifiers;
     public AbilityEffectStatModComponent(Operator user, CharStatModifier stat_modifiers) : base(user)
     {
         this.stat_modifiers = stat_modifiers;
     }
     public override void ActivateComponent()
     {
-        stat_modifiers.ApplyStats(user, 5);
+        is_active = true;
+        stat_modifiers.ApplyStats(user, 100000, this);
     }
     public override void DeactivateComponent()
     {
-        //EndStatMod();
+        is_active = false;
     }
 }
 

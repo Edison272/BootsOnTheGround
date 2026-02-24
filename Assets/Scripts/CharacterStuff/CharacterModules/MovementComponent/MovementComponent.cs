@@ -73,8 +73,7 @@ public class MovementComponent
             for(int i = move_speed_modifiers.Count-1; i >= 0; i--)
             {
                 SpeedModifier speed_mod = move_speed_modifiers[i];
-                bool destroy = speed_mod.UpdateModifier(Time.deltaTime);
-                if (destroy)
+                if (speed_mod.effect_complete)
                 {
                     // swap n pop removal
                     int list_end = move_speed_modifiers.Count - 1;
@@ -83,8 +82,8 @@ public class MovementComponent
                 }
                 else
                 {
+                    net_speed_modifier *= speed_mod.UpdateModifier();
                     move_speed_modifiers[i] = speed_mod;
-                    net_speed_modifier *= speed_mod.modifier_scale;
                 }
             }
             move_speed = base_speed * net_speed_modifier;
@@ -178,10 +177,10 @@ public class MovementComponent
         force_move_time = movement_override ? 0 : 1;
         entity_rb.AddForce(direction * scalar, ForceMode2D.Impulse);
     }
-    public void ChangeSpeed(float speed_modifier, float duration, bool is_decaying = false)
+    public void ChangeSpeed(float speed_modifier, float duration, bool is_decaying, AbilityEffectComponent effect_controller)
     {
         curr_accel_time *= speed_modifier;
-        move_speed_modifiers.Add(new SpeedModifier(speed_modifier, duration, is_decaying));
+        move_speed_modifiers.Add(new SpeedModifier(speed_modifier, duration, is_decaying, effect_controller));
     }
     #endregion
 }

@@ -350,19 +350,12 @@ public class Character : MonoBehaviour, IHealth, IMovement
     #endregion
 
     #region Movement
-    
-    public void SetPosition(Vector2 new_position)  // completely change positions and forget where they wanted to go before
-    {
-        movement_component.SetPosition(new_position);
-    }
-    public void SetMove(Vector2 set_move_dir) // get directional movement, useful for dynamic & sudden maneuvers
-    {
-        movement_component.SetMove(set_move_dir);
-    }
-    public void SetMovePos(Vector2 set_move_pos) // get target_position, useful for AI with discrete positioning
-    {
-        movement_component.SetMovePos(set_move_pos);
-    }
+    // completely change positions and forget where they wanted to go before
+    public void SetPosition(Vector2 new_position)  {movement_component.SetPosition(new_position);}
+    // get directional movement, useful for dynamic & sudden maneuvers
+    public void SetMove(Vector2 set_move_dir) {movement_component.SetMove(set_move_dir);}
+    // get target_position, useful for AI with discrete positioning
+    public void SetMovePos(Vector2 set_move_pos) {movement_component.SetMovePos(set_move_pos);}
     public void Move() 
     {
         bool move_state = animator.GetBool("Moving");
@@ -374,29 +367,26 @@ public class Character : MonoBehaviour, IHealth, IMovement
         movement_component.StopMove(is_AI_active);
         animator.SetBool("Moving", false);
     }
-    public float GetTravelTime() // return how long it is expected to take for the operator to reach their position
-    {
-        return (move_pos - GetPosition()).magnitude / base_speed + max_accel_time;
-    }
-
+    // return how long it is expected to take for the operator to reach their position
+    public float GetTravelTime() {return (move_pos - GetPosition()).magnitude / base_speed + max_accel_time;}
     public void ForceMove(Vector2 direction, float scalar, bool movement_override = false)
     {
         movement_component.ForceMove(direction, scalar, movement_override);
     }
     public Vector2 GetPosition() {return entity_rb.position;}
-    public void ChangeSpeed(float scale_base, float duration, bool is_decaying = false)
+    public void ChangeSpeed(float scale_base, float duration, bool is_decaying, AbilityEffectComponent effect_controller = null)
     {
-        movement_component.ChangeSpeed(scale_base, duration, is_decaying);
+        movement_component.ChangeSpeed(scale_base, duration, is_decaying, effect_controller);
     }
     #endregion
 
     #region Damage/Health System
     public virtual void ChangeHealth(int change_amt) {health_component.ChangeHealth(change_amt);}
-    public virtual void ChangeHealthTick(int change_amt, float duration, float tick_rate = 1) 
+    public virtual void ChangeHealthTick(int change_amt, float duration, float tick_rate, AbilityEffectComponent effect_controller = null) 
     {
-        health_component.ChangeHealthTick(change_amt, duration, tick_rate);
+        health_component.ChangeHealthTick(change_amt, duration, tick_rate, effect_controller);
     }
-    public virtual void MaxHealthBoost(int boost_amt, float duration) {health_component.MaxHealthBoost(boost_amt, duration);}
+    public virtual void MaxHealthBoost(int boost_amt, float duration, AbilityEffectComponent effect_controller = null) {health_component.MaxHealthBoost(boost_amt, duration, effect_controller);}
     public virtual void ShieldBoost(int boost_amt) {health_component.ShieldBoost(boost_amt);}
     #endregion
 
