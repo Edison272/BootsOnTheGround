@@ -8,6 +8,7 @@ public class Ability
     public AbilitySO base_data;
     public AbilityEffectComponent[] ability_effects;
     public AbilityRecoveryComponent ability_recovery;
+    public AbilityDurationComponent ability_duration;
     private Operator user;
 
     [Header("Ability Cooldown")]
@@ -21,13 +22,15 @@ public class Ability
         AbilitySO base_data, 
         Operator user, 
         AbilityEffectComponent[] ability_effects,
-        AbilityRecoveryComponent ability_recovery 
+        AbilityRecoveryComponent ability_recovery, 
+        AbilityDurationComponent ability_duration
         )
     {
         this.base_data = base_data;
         this.user = user;
         this.ability_effects = ability_effects;
         this.ability_recovery = ability_recovery;
+        this.ability_duration = ability_duration;
 
         ability_effects = new AbilityEffectComponent[0];
         ability_vfx = new GameObject[base_data.ability_vfx.Length];
@@ -48,29 +51,40 @@ public class Ability
     #region Core
     public void UseAbility() // start the ability
     {
-        ability_recovery.ResetRecovery();
         foreach(AbilityEffectComponent effect_component in ability_effects)
         {
             effect_component.ActivateComponent();
         }
+        // disable Ability Recovery
+        ability_recovery.ResetRecovery();
+        ability_recovery.SetRecoveryActive(false);
+
+        // turn on ability state
+        ability_duration.ResetDuration();
+        ability_duration.SetDurationActive(true);
+
         ToggleAbilityVFX(true);
     }
 
     public void UpdateAbility()
     {
-        UpdateActive();
+        if (ability_duration.duration_complete)
+        {
+            EndAbility();
+        }
     }
-    public void UpdateActive() // update any components while the ability is active
-    {
-        // if (!IsActive()) // if ability is fully ended, go back on cooldown
-        // {
-        //     UpdateAction = ability_recovery.UpdateRecovery;
-        // }
-    }
-
     public void EndAbility() // end the ability and resolve all related components
     {
-        
+        foreach(AbilityEffectComponent effect_component in ability_effects)
+        {
+            effect_component.DeactivateComponent();
+        }
+        ability_recovery.ResetRecovery();
+        ability_recovery.SetRecoveryActive(true);
+
+        ability_duration.ResetDuration();
+        ability_duration.SetDurationActive(false);
+        ToggleAbilityVFX(false);
     }
     #endregion
 
@@ -92,7 +106,7 @@ public class Ability
     }
     public bool IsActive()
     {
-        return false;
+        return !ability_duration.duration_complete;
     }
 
     #endregion

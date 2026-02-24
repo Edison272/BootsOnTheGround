@@ -18,6 +18,7 @@ public abstract class AbilityEffectComponent
 public class AbilityEffectStatModComponent : AbilityEffectComponent
 {
     public CharStatModifier stat_modifiers;
+    public Action EndStatMod;
     public AbilityEffectStatModComponent(Operator user, CharStatModifier stat_modifiers) : base(user)
     {
         this.stat_modifiers = stat_modifiers;
@@ -28,7 +29,7 @@ public class AbilityEffectStatModComponent : AbilityEffectComponent
     }
     public override void DeactivateComponent()
     {
-        
+        //EndStatMod();
     }
 }
 

@@ -9,25 +9,35 @@ public class AbilityRecoveryComponent
     private float curr_ability_points;
     private int max_charges;
     private int curr_charges;
+    private Action<float> recovery_function;
     private AbilityRecoveryType ability_recovery_type;
+    private Operator user;
     public AbilityRecoveryComponent(AbilityRecoveryType ability_recovery_type, Operator user, float max_ability_points)
     {
         this.ability_recovery_type = ability_recovery_type;
-        Debug.Log(ability_recovery_type);
+        this.user = user;
+        this.max_ability_points = (int)max_ability_points;
+
+        SetRecoveryActive(true);
+    }
+    public void SetRecoveryActive(bool is_active)
+    {
         switch (ability_recovery_type)
         {
             case AbilityRecoveryType.Time:
                 // 1 sec = 1 ability points
-                user.OnActiveUpdate += TimerRecovery;
+                if (is_active) {user.OnActiveUpdate += TimerRecovery;}
+                else {user.OnActiveUpdate -= TimerRecovery;}
                 break;
             case AbilityRecoveryType.Kills:
-                user.OnEnemyKilled += KillRecovery;
+                if (is_active) {user.OnEnemyKilled += KillRecovery;}
+                else {user.OnEnemyKilled -= KillRecovery;}
                 break;
             case AbilityRecoveryType.DamageTaken:
-                user.OnDamageTaken += DamageTakenRecovery;
+                if (is_active) {user.OnDamageTaken += DamageTakenRecovery;}
+                else {user.OnDamageTaken -= DamageTakenRecovery;}
                 break;
         }
-        this.max_ability_points = (int)max_ability_points;
     }
     public void ResetRecovery()
     {

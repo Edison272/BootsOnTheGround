@@ -34,7 +34,11 @@ MonoBehaviour:
         total_dot_ticks: 0
       attack_stats:
         stat_list: []
-  ability_end_type: 1
+  serialize_ability_duration: 0
+  serialized_duration_stats:
+    stat_list:
+    - key: recovery_time
+      value: 100
   serialize_ability_recovery: 2
   serialized_recovery_stats:
     stat_list:

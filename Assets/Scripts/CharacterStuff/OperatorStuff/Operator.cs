@@ -15,6 +15,7 @@ public class Operator : Character
 
     [Header("Ability")]
     private Ability ability;
+    //public bool ability_in_use => ability.ability_duration
     public float ability_cooldown_progress => ability.GetAbilityCooldownProgress();
 
     [field: Header("Events")]

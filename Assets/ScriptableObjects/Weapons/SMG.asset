@@ -43,10 +43,10 @@ MonoBehaviour:
     attack_data:
       damage: 10
       pierce: 0
-      knockback_amt: 23.9
-      effect_time: 10
+      knockback_amt: 82.1
+      effect_time: 4
       slow_amt: 1
-      total_dot_damage: -150
+      total_dot_damage: 80
       total_dot_ticks: 10
     attack_stats:
       stat_list:

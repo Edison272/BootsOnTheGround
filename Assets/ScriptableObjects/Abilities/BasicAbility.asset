@@ -22,12 +22,16 @@ MonoBehaviour:
       speed_scale: 0
     special_item: {fileID: 0}
     attacks: []
-  ability_end_type: 1
+  serialize_ability_duration: 0
+  serialized_duration_stats:
+    stat_list:
+    - key: recovery_time
+      value: 4
   serialize_ability_recovery: 0
   serialized_recovery_stats:
     stat_list:
     - key: recovery_time
-      value: 2
+      value: 4
   ability_vfx:
     stat_list:
     - key: {fileID: 531661423089630175, guid: 7183cd590f8685a4ea21d077bfaf854a, type: 3}
