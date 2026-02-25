@@ -189,6 +189,15 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpAbility"",
+                    ""type"": ""Button"",
+                    ""id"": ""8cb62e7f-17c8-40c3-a5ed-9982515fb88f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -420,6 +429,17 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""OpDeploy4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cd83dda5-99c3-49fa-a88a-5bcae94fa773"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpAbility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1018,6 +1038,7 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         m_GroundActions_OpDeploy2 = m_GroundActions.FindAction("OpDeploy2", throwIfNotFound: true);
         m_GroundActions_OpDeploy3 = m_GroundActions.FindAction("OpDeploy3", throwIfNotFound: true);
         m_GroundActions_OpDeploy4 = m_GroundActions.FindAction("OpDeploy4", throwIfNotFound: true);
+        m_GroundActions_OpAbility = m_GroundActions.FindAction("OpAbility", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1122,6 +1143,7 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_GroundActions_OpDeploy2;
     private readonly InputAction m_GroundActions_OpDeploy3;
     private readonly InputAction m_GroundActions_OpDeploy4;
+    private readonly InputAction m_GroundActions_OpAbility;
     /// <summary>
     /// Provides access to input actions defined in input action map "GroundActions".
     /// </summary>
@@ -1177,6 +1199,10 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "GroundActions/OpDeploy4".
         /// </summary>
         public InputAction @OpDeploy4 => m_Wrapper.m_GroundActions_OpDeploy4;
+        /// <summary>
+        /// Provides access to the underlying input action "GroundActions/OpAbility".
+        /// </summary>
+        public InputAction @OpAbility => m_Wrapper.m_GroundActions_OpAbility;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1236,6 +1262,9 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
             @OpDeploy4.started += instance.OnOpDeploy4;
             @OpDeploy4.performed += instance.OnOpDeploy4;
             @OpDeploy4.canceled += instance.OnOpDeploy4;
+            @OpAbility.started += instance.OnOpAbility;
+            @OpAbility.performed += instance.OnOpAbility;
+            @OpAbility.canceled += instance.OnOpAbility;
         }
 
         /// <summary>
@@ -1280,6 +1309,9 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
             @OpDeploy4.started -= instance.OnOpDeploy4;
             @OpDeploy4.performed -= instance.OnOpDeploy4;
             @OpDeploy4.canceled -= instance.OnOpDeploy4;
+            @OpAbility.started -= instance.OnOpAbility;
+            @OpAbility.performed -= instance.OnOpAbility;
+            @OpAbility.canceled -= instance.OnOpAbility;
         }
 
         /// <summary>
@@ -1657,6 +1689,13 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnOpDeploy4(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "OpAbility" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnOpAbility(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

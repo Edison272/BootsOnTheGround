@@ -16,7 +16,7 @@ public class CaptureArea : MonoBehaviour
 
     [Header("Capture Data")]
     private float curr_capture_time = 0;
-    private float max_capture_time = 1f;
+    private float max_capture_time = 5f;
     private int owner = -1;
     [SerializeField] private int squad_weight = 0;
     [SerializeField] private int enemy_weight = 0;

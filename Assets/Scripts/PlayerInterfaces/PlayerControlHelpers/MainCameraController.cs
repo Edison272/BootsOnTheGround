@@ -9,8 +9,8 @@ public class MainCameraController
 
     [Header("Camera Render Data")]
     [SerializeField] float camera_zoom_time = 0.5f;
-    [SerializeField] float base_zoom_level = 1.5f;
-    [SerializeField] float zoom_factor = 0.9f;
+    [SerializeField] float base_zoom_level = 1.1f;
+    [SerializeField] float zoom_factor = 0.3f;
     float lerp_amount = 1;
     float zoom_diff; // set current zoom
     float curr_zoom; // set current zoom

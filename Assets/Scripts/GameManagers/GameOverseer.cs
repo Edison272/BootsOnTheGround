@@ -13,6 +13,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
 {
     [Header("Monobehaviour Managers")]
     public PlayerController player_control;
+    public PlayerActionController player_action_control;
     public SquadManager squad_manager;
     public EnemyManager enemy_manager;
     public MapManager map_manager;
@@ -54,6 +55,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         THE_OVERSEER = this;
 
         if (!player_control) {player_control = GameObject.Find("Player Controller")?.GetComponent<PlayerController>();}
+        if (!player_action_control) {player_action_control = GameObject.Find("Action Controller")?.GetComponent<PlayerActionController>();}
         if (!squad_manager) {squad_manager = GameObject.Find("Squad Manager")?.GetComponent<SquadManager>();}
         if (!enemy_manager) {enemy_manager = GameObject.Find("Enemy Manager")?.GetComponent<EnemyManager>();}
         if (!map_manager) {map_manager = GameObject.Find("Map")?.GetComponent<MapManager>();}
@@ -90,6 +92,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         player_control.squad = squad_manager;
         player_control.item_ui_control = item_ui_control;
         player_control.health_ui_control = health_ui_control;
+        player_control.player_action_control = player_action_control;
 
         // initialize squad and enemy managers in the right places
         squad_manager.InitializeAllies();

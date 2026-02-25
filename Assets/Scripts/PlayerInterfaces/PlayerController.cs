@@ -37,6 +37,8 @@ public class PlayerController : MonoBehaviour
     
     [Header("Camera Control")]
     public MainCameraController main_cam_controller;
+    [Header("Player Action Control")]
+    public PlayerActionController player_action_control; // seperate class for ui-based player actions
     [Header("UI Stuff")]
     [SerializeField] GameObject cursor;
 
@@ -103,6 +105,8 @@ public class PlayerController : MonoBehaviour
         controls.GroundActions.OpDeploy2.performed += OpDeploy2;
         controls.GroundActions.OpDeploy3.performed += OpDeploy3;
         controls.GroundActions.OpDeploy4.performed += OpDeploy4;
+        // Activate selected operator ability with q
+        controls.GroundActions.OpAbility.performed += GetOperatorAbility;
 
         main_cam_controller.SetCameraZoom(active_character.GetRangeScalar());
         GameOverseer.THE_OVERSEER.canvas_control.SetCommandUI(in_command_mode);
@@ -246,12 +250,11 @@ public class PlayerController : MonoBehaviour
     void OpDeploy2(InputAction.CallbackContext context) {GetOperator(2);}
     void OpDeploy3(InputAction.CallbackContext context) {GetOperator(3);}
     void OpDeploy4(InputAction.CallbackContext context) {GetOperator(4);}
-
-    private void GetOperator(int deploy_index = 1)
+    void GetOperator(int deploy_index = 1)
     {
         // cancel command if it was done twice
         if (op_select_index == deploy_index) {
-            ResetConfirm();
+            ResetOrder();
         } 
         // otherwise select operator and enable operator commands
         else {
@@ -273,15 +276,27 @@ public class PlayerController : MonoBehaviour
         player_view_controller.ResetViewType();
         pointer_delta = Vector2.zero;
         GameOverseer.THE_OVERSEER.canvas_control.PlayerEndInput();
-        ResetConfirm();
+        ResetOrder();
     }
-
-    void ResetConfirm()
+    void ResetOrder()
     {
         op_select_index = -1;
         ToggleCommandInput(false);
         squad.SetSelectedOperator(op_select_index);
         GameOverseer.THE_OVERSEER.canvas_control.ToggleReticleCommandUI(false);
+    }
+    void GetOperatorAbility(InputAction.CallbackContext context)
+    {
+        
+    }
+
+    void CancelOperatorAbility()
+    {
+        
+    }
+    void ConfirmOperatorAbility()
+    {
+        
     }
 
     #endregion

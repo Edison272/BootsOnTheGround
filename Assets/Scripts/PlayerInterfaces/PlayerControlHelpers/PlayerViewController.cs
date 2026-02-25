@@ -68,12 +68,12 @@ public class PlayerViewController
         //     Mathf.Clamp(screen_pos.x, rect.xMin, rect.xMax),
         //     Mathf.Clamp(screen_pos.y, rect.yMin, rect.yMax)
         // );
-        float lowest_dimension = rect.xMax;
-        if (lowest_dimension > rect.yMax)
-        {
-            lowest_dimension = rect.yMax;
-        }
-        screen_pos = CircularClamp(screen_pos, rect.center, lowest_dimension * 0.8f);
+        // float lowest_dimension = rect.xMax;
+        // if (lowest_dimension > rect.yMax)
+        // {
+        //     lowest_dimension = rect.yMax;
+        // }
+        screen_pos = CircularClamp(screen_pos, rect.center, rect.xMax);
         // convert to viewport coordinates (anchored to render texture)
         float view_x = (screen_pos.x - rect.xMin) / rect.width;
         float view_y = (screen_pos.y - rect.yMin) / rect.height;

@@ -44,12 +44,10 @@ MonoBehaviour:
   serialized_recovery_stats:
     stat_list:
     - key: damage_taken
-      value: 1000
+      value: 500
   ability_vfx:
     stat_list:
-    - key: {fileID: 1742313508217192193, guid: ceff8344df8af5f4ebc7f666619d2c25, type: 3}
+    - key: {fileID: 1742313508217192193, guid: 3e71230dfceec96478f29b0fae44da98, type: 3}
       value: 7
-    - key: {fileID: 8951153385361815444, guid: 73a897e5d9893a7448049312e5d229dd, type: 3}
-      value: 8
     - key: {fileID: 7109696157832186080, guid: c37dfbee80c114f41b8e9a4fa170eba3, type: 3}
       value: 6
