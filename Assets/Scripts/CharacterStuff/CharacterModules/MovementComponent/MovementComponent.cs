@@ -7,10 +7,11 @@ using UnityEngine.UIElements;
 [Serializable]
 public class MovementComponent
 {
-    [field: Header("VFX")]
+    [field: Header("Base Data")]
+    public readonly float base_move_speed;
+    public readonly float base_accel_time;
     [field: Header("Movement")]
     public float move_speed {get; private set;} = 1; // maximum speed an operator can move at
-    public float base_speed;
     public Vector2 move_dir {get; private set;} = Vector2.zero;
     public Vector2 move_pos {get; private set;} = Vector2.zero;
     private Vector2 lerp_move_pos = Vector2.zero;
@@ -30,15 +31,31 @@ public class MovementComponent
     public List<SpeedModifier> move_speed_modifiers = new List<SpeedModifier>();
 
     #region Constructor
-    public MovementComponent(float base_speed, float max_accel_time, Rigidbody2D entity_rb)
+    public MovementComponent(float base_move_speed, float max_accel_time, Rigidbody2D entity_rb)
     {
-        this.base_speed = base_speed;
+        this.base_move_speed = base_move_speed;
+        this.move_speed = base_move_speed;
+        this.base_accel_time = max_accel_time;
         this.max_accel_time = max_accel_time;
         this.entity_rb = entity_rb;
+    }
+    public void ResetMovementComponent()
+    {
+        move_speed = base_move_speed;
+        max_accel_time = base_accel_time;
+        curr_speed = 0;
+        curr_accel_time = 0;
 
-        move_speed = base_speed;
+        move_dir = Vector2.zero;
+        move_pos = Vector2.zero;
+        destination_reached = true;
+        force_dir = Vector2.zero;
+        force_move_time = 0;
+
+        move_speed_modifiers.Clear();
     }
     #endregion
+    
     #region Set Values
     public void SetPosition(Vector2 new_position)  // completely change positions and forget where they wanted to go before
     {
@@ -86,7 +103,7 @@ public class MovementComponent
                     move_speed_modifiers[i] = speed_mod;
                 }
             }
-            move_speed = base_speed * net_speed_modifier;
+            move_speed = base_move_speed * net_speed_modifier;
         }
     }
     #endregion
@@ -140,7 +157,7 @@ public class MovementComponent
         // add some drift if the player was running for too long at top speed
         if (!is_AI_active && curr_accel_time > max_accel_time * 0.5f)
         {
-            ForceMove(move_dir, base_speed * (curr_accel_time/(max_accel_time + 0.001f)), true);
+            ForceMove(move_dir, base_move_speed * (curr_accel_time/(max_accel_time + 0.001f)), true);
         }
         curr_accel_time = 0;
 
@@ -167,7 +184,7 @@ public class MovementComponent
     private Vector2 GetPosition() {return entity_rb.position;}
     public float GetTravelTime() // return how long it is expected to take for the operator to reach their position
     {
-        return (move_pos - GetPosition()).magnitude / base_speed + max_accel_time;
+        return (move_pos - GetPosition()).magnitude / base_move_speed + max_accel_time;
     }
     #endregion
     #region Change Stats

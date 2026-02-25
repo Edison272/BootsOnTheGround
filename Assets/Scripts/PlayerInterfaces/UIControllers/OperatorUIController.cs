@@ -6,6 +6,10 @@ using UnityEngine.UI;
 public class OperatorUIController : HealthUIController
 {
     private Operator active_operator;
+    [Header("Deployment Status")]
+    [SerializeField] GameObject operator_active_ui;
+    [SerializeField] GameObject operator_inactive_ui;
+    [SerializeField] TextMeshProUGUI redeployment_text;
     [Header("Operator Profile")]
     public TextMeshProUGUI operator_id;
     public RectTransform profile_image;
@@ -41,11 +45,24 @@ public class OperatorUIController : HealthUIController
         base.Update();
         if (active_operator)
         {   
-            float cd_progress = active_operator.ability_cooldown_progress;
-            cooldown_mask.localScale = new Vector3(1, cd_progress, 1);
-            if (cd_progress >= 1 != ready_vfx.activeSelf)
+            if (active_operator.is_alive)
             {
-                ready_vfx.SetActive(cd_progress >= 1);
+                operator_active_ui.SetActive(true);
+                operator_inactive_ui.SetActive(false);
+
+                float cd_progress = active_operator.ability_cooldown_progress;
+                cooldown_mask.localScale = new Vector3(1, cd_progress, 1);
+                if (cd_progress >= 1 != ready_vfx.activeSelf)
+                {
+                    ready_vfx.SetActive(cd_progress >= 1);
+                }
+            }
+            else if (active_operator.curr_redeployment_time > 0)
+            {
+                operator_active_ui.SetActive(false);
+                operator_inactive_ui.SetActive(true);
+                redeployment_text.text = "Redploy: " + active_operator.curr_redeployment_time.ToString("F1");
+                active_operator.curr_redeployment_time -= Time.deltaTime;
             }
         }
     }

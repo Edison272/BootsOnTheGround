@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
+using UnityEngine.SceneManagement;
 
 
 public enum TargetType {Closest, Furthest, MostHP, LeastHP}
@@ -42,8 +43,12 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public static readonly int SQUAD_TAG = 0;
     public static readonly int ENEMY_TAG = 1;
 
-    // Objective Management
+    [Header("Game Over")]
+    public GameObject game_over_screen;
+    public Action GameOverBus;
 
+    // Objective Management
+    #region Initialziation
     void Awake()
     {
         THE_OVERSEER = this;
@@ -59,6 +64,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!squad_ui_control) {squad_ui_control = GameObject.Find("Squad UI Controller")?.GetComponent<SquadUIController>();}
 
         objective_manager = new ObjectiveManager(this);
+        game_over_screen.SetActive(false);
 
         SQUAD_COLOR = serialize_squad_color;
         ENEMY_COLOR = serialize_enemy_color;
@@ -95,6 +101,19 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         // setup an AI manager after base data has been created
         ai_manager = new AIManager(this, map_manager.Wall, map_manager.Floor);
     }
+    #endregion
+    #region Game Events
+    public void GameOver()
+    {
+        game_over_screen.SetActive(true);
+
+    }
+
+    public void ReturnToMain()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+    #endregion
     #region Objective Manager Stuff
     // when an objective is captured, send enemies to recature it
     public static void ObjectiveCaptured(MajorObjective maj_poi)

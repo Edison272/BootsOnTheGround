@@ -42,7 +42,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
     [field: Header("Movement")]
     [field: SerializeField] public MovementComponent movement_component {get; private set;}
     public float move_speed => movement_component.move_speed; //maximum speed an operator can move at
-    public float base_speed => movement_component.base_speed;
     public Vector2 move_dir => movement_component.move_dir;
     public Vector2 move_pos => movement_component.move_pos;
     public bool destination_reached => movement_component.destination_reached;
@@ -173,7 +172,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         behavior_controller = new BehaviorController(this);
     }
-    public void ResetData()
+    public virtual void ResetData()
     {
         
     }
@@ -372,7 +371,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         animator.SetBool("Moving", false);
     }
     // return how long it is expected to take for the operator to reach their position
-    public float GetTravelTime() {return (move_pos - GetPosition()).magnitude / base_speed + max_accel_time;}
+    public float GetTravelTime() {return movement_component.GetTravelTime();}
     public void ForceMove(Vector2 direction, float scalar, bool movement_override = false)
     {
         movement_component.ForceMove(direction, scalar, movement_override);

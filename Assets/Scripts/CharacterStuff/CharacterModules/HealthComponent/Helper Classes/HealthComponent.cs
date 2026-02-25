@@ -5,26 +5,40 @@ using UnityEngine;
 [System.Serializable]
 public class HealthComponent
 {
+    [field: Header("Origin Data")]
+    private readonly int origin_max_health;
+    private readonly int start_shield;
+    [field: Header("Current Data")]
     [field: SerializeField] public int curr_health {get; private set;}
     [field: SerializeField] public int max_health {get; private set;}
     [field: SerializeField] public int shield {get; private set;}
     public float health_ratio => curr_health/(float)max_health;
     public int total_curr_hitpoints => curr_health + shield;
     public int total_max_hitpoints => max_health + shield;
-    [field: SerializeField] public bool is_alive {get; private set;}
+    public bool is_alive => curr_health > 0;
     //public float  {get; private set;}
 
     [Header("Stat Modifiers")]
     [SerializeField] List<ChangeHealthTick> health_ticks = new List<ChangeHealthTick>();
 
+    #region initializers
     public HealthComponent(int max_health, int start_shield, float spawn_health_perc = 1)
     {
+        this.origin_max_health = max_health;
         this.max_health = max_health;
         this.curr_health = (int)(max_health * spawn_health_perc);
+        this.start_shield = start_shield;
         this.shield = start_shield;
-
-        is_alive = true;
     }
+    public void ResetHealthComponent(float spawn_health_perc = 1)
+    {
+        max_health = origin_max_health;
+        shield = start_shield;
+        curr_health = (int)(max_health * spawn_health_perc);
+
+        health_ticks.Clear();
+    }
+    #endregion
 
     public void UpdateHealth()
     {
@@ -67,10 +81,6 @@ public class HealthComponent
             if (damage_amt > 0)
             {
                 curr_health -= damage_amt;
-                if (curr_health <= 0)
-                {
-                    is_alive = false;
-                }
             }
 
         } 

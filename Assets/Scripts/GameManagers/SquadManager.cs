@@ -134,20 +134,23 @@ public class SquadManager : MonoBehaviour
     {
         // cancel command if it was done twice
         if (op_index == -1) {
-            selected_operator.ToggleSelectionIndicator(false);
+            if (selected_operator)
+            {
+                selected_operator.ToggleSelectionIndicator(false);
+            }
             selected_operator = null;
             squad_ui_control.SelectOperatorUI(op_index);
         } 
         // otherwise do smth cool n shi
         else {
             int selection_index = Mathf.Clamp(op_index, 0, operator_presets.Length-1);
-            squad_ui_control.SelectOperatorUI(selection_index);
-
-            selected_operator?.ToggleSelectionIndicator(false);
-
-
-            selected_operator = operators[selection_index];
-            selected_operator?.ToggleSelectionIndicator(true);
+            selected_operator?.ToggleSelectionIndicator(false);   
+            if (operators[selection_index])
+            {
+                squad_ui_control.SelectOperatorUI(selection_index);
+                selected_operator = operators[selection_index];
+                selected_operator?.ToggleSelectionIndicator(true);             
+            }
         }
     }
 
@@ -182,16 +185,16 @@ public class SquadManager : MonoBehaviour
             selected_operator.SetCommandBehavior(CommandMode.Follow);
         }
     }
-    public void RetreatOperator(int op_index)
-    {
-        Operator select_op = operators[Mathf.Clamp(op_index, 0, operator_presets.Length-1)];
-        if (select_op.is_deployed)
-        {
-            select_op.ToggleOp(false);
-            select_op.ToggleAI(false);
-            select_op.is_deployed = false;
-        }
-    }
+    // public void RetreatOperator(int op_index)
+    // {
+    //     Operator select_op = operators[Mathf.Clamp(op_index, 0, operator_presets.Length-1)];
+    //     if (select_op.is_deployed)
+    //     {
+    //         select_op.ToggleOp(false);
+    //         select_op.ToggleAI(false);
+    //         select_op.is_deployed = false;
+    //     }
+    // }
 
     #endregion
 
@@ -200,7 +203,20 @@ public class SquadManager : MonoBehaviour
     //     curr_command = (CommandMode)(((int)curr_command + 1) % (int)CommandMode.Count-1);
     //     Debug.Log("Set Command to: "  + curr_command);
     // }
+    public void RedeployOperator(Operator redeploy_op, float redploy_time)
+    {
+        StartCoroutine(EnumRedeployOperator(redeploy_op, redploy_time));
+    }
+    private IEnumerator EnumRedeployOperator(Operator redeploy_op, float redploy_time)
+    {
+        Debug.Log("redeploying..." + redploy_time);
+        yield return new WaitForSeconds(redploy_time);
+        Debug.Log("redployment finished in " + redploy_time);
+        redeploy_op.Redeploy();
+        redeploy_op.gameObject.SetActive(true);
+        
 
+    }
     public void SquadMateLost()
     {
         

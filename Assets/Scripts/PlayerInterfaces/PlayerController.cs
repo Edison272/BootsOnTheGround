@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -125,15 +126,17 @@ public class PlayerController : MonoBehaviour
         {
             if (main_continuous) {MainAction();}
             if (alt_continuous) {AltAction();}
-        }    
 
-        // set look pos
-        if (active_character)
-        {
+            // set look pos
             player_view_controller.UpdateView(pointer_delta*0.5f, active_character.GetPosition());
             pointer_delta = Vector2.zero;
             active_character.Look(look_pos);
             main_cam_controller.UpdateCamData(active_character.GetPosition(), look_pos);
+
+            if (!active_character.IsInAction())
+            {
+                GameOverseer.THE_OVERSEER.GameOver();
+            }
             
         }
         // prepare camera data

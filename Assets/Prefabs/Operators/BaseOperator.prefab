@@ -191,7 +191,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8601971188711307729
 Transform:
   m_ObjectHideFlags: 0
@@ -688,10 +688,11 @@ MonoBehaviour:
   head: {fileID: 7638708828582117308}
   front_particles: {fileID: 3071357657118452355}
   back_particles: {fileID: 4416327845471410263}
+  base_sprite_height: 0
+  base_head_height: 0
   animator: {fileID: 1320355488441388370}
   aim_angle: 0
   <movement_component>k__BackingField:
-    base_speed: 0
     current_tile_pos: {x: 0, y: 0}
     max_accel_time: 0
     move_speed_modifiers: []
@@ -700,7 +701,7 @@ MonoBehaviour:
     <curr_health>k__BackingField: 0
     <max_health>k__BackingField: 0
     <shield>k__BackingField: 0
-    <is_alive>k__BackingField: 0
+    health_ticks: []
   health_ui:
     bg_bar: {fileID: 6397878962707143826}
     health_bar: {fileID: 6674198418128698586}
@@ -714,7 +715,7 @@ MonoBehaviour:
   faction_tag: 1
   nametag: {fileID: 668327687475740912}
   selection_indicator: {fileID: 8837649333110249411}
-  is_deployed: 0
+  curr_redeployment_time: 0
   op_behavior_controller:
     command: 0
     favorite_target: 0

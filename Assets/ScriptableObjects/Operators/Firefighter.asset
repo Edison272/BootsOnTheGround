@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   character_name: Knight
   health: 20000
-  spawn_shield: 0
-  speed: 8
+  spawn_shield: 10000
+  speed: 9
   accel_time: 1.08
   range: 10
   close_range: 5
@@ -33,7 +33,5 @@ MonoBehaviour:
   - {x: 0, y: -1}
   - {x: 1, y: 2}
   op_class: 2
-  command_cost: 3
-  deployment_speed: 1
-  field_time: -1
+  redeployment_time: 60
   ability: {fileID: 11400000, guid: 8b4b89cc872c1024796f2821ed778d98, type: 2}

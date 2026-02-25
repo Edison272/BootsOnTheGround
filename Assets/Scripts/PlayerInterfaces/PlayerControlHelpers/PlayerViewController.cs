@@ -113,7 +113,6 @@ public class PlayerViewController
         
         prev_view_enum = curr_view_enum;
         curr_view_enum = view_type;
-        Debug.Log(view_type);
     }
     public void ResetViewType() // order resets to previous state. primary and command reset to each other
     {

@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+
+using Random = UnityEngine.Random;
 
 public class Operator : Character
 {
@@ -23,10 +26,12 @@ public class Operator : Character
     public event Action<float> OnEnemyKilled;
     public event Action<float> OnDamageTaken;
 
-    public bool is_deployed = false;
+    [field: Header("Events")]
+    public float curr_redeployment_time = 0;
 
     public OperatorController op_behavior_controller;
 
+    #region Initializers
     public void AssignBaseOpData(OperatorSO base_op_data)
     {
         this.base_op_data = base_op_data;
@@ -38,13 +43,44 @@ public class Operator : Character
         // turn off any ui elements
         selection_indicator.SetActive(false);
     }
+    public override void ResetData() // reset data after redeploying
+    {
+        health_component.ResetHealthComponent();
+        movement_component.ResetMovementComponent();
 
+        movement_component.SetPosition(GameOverseer.THE_OVERSEER.squad_manager.player_character.GetPosition() + Random.insideUnitCircle  * 2);
+        GetReady();
+    }
+    #endregion
+    #region Updates
     protected override void Update()
     {
         base.Update();
         OnActiveUpdate?.Invoke(Time.deltaTime);
         ability.UpdateAbility();
+
+        // if (curr_redeployment_time > 0)
+        // {
+        //     curr_redeployment_time -= Time.deltaTime;
+        //     if (curr_redeployment_time <= 0)
+        //     {
+        //         curr_redeployment_time = 0;
+        //         ResetData();
+        //     }
+        // }
     }
+
+    protected override void LateUpdate()
+    {
+        if (!is_alive && curr_redeployment_time == 0)
+        {
+            
+            GameOverseer.THE_OVERSEER.squad_manager.RedeployOperator(this, base_op_data.redeployment_time);
+            curr_redeployment_time += base_op_data.redeployment_time;
+            gameObject.SetActive(false);
+        }
+    }
+    #endregion
 
     public override void CreateBehaviorController()
     {
@@ -79,13 +115,19 @@ public class Operator : Character
         vfx_body.SetActive(isActive);
         entity_rb.simulated = isActive;
         main_body.GetComponent<SpriteRenderer>().enabled = isActive;
-        is_deployed = isActive;
     }
 
     public void Deploy()
     {
         behavior_controller.anchor_position = GetPosition();
         GetReady();
+    }
+
+    public void Redeploy()
+    {
+        Debug.Log("Redeployed");
+        ResetData();
+        curr_redeployment_time = 0;
     }
 
     public void Retreat()
@@ -108,12 +150,13 @@ public class Operator : Character
         if (ability.is_usable)
         {
             ability.UseAbility();
+            curr_redeployment_time += base_op_data.redeployment_time;
         }
     }
 
     public override bool IsInAction()
     {
-        return is_alive && is_deployed;
+        return is_alive;
     }
 
 
