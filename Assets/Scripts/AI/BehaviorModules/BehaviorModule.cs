@@ -4,5 +4,6 @@ using UnityEngine;
 
 public abstract class BehaviorModule
 {
+    public abstract bool UpdateModule();
 
 }

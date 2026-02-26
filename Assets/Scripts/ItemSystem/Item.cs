@@ -118,8 +118,6 @@ public class Item : MonoBehaviour
         curr_rot = Quaternion.Lerp(curr_rot, aim_rot, rot_scale);
         source_pos = user.GetPosition() + (Vector2)(curr_rot * Vector2.right * (user.hitbox_radius+0.1f));
         target_pos = user.GetPosition() + (Vector2)(curr_rot * Vector2.right * aim_dir.magnitude);
-        
-        Debug.DrawLine(user.GetPosition(), target_pos, Color.gray);
     }
 
     public void Use()
@@ -202,7 +200,6 @@ public class Item : MonoBehaviour
     {
         return base_data.is_full_auto;
     }
-    #endregion
 
     public int GetRange()
     {
@@ -218,4 +215,12 @@ public class Item : MonoBehaviour
     {
         return func_module.FunctionCompletion();
     }
+    #endregion
+    #region Debug
+    void OnDrawGizmosSelected()
+    {
+        Debug.DrawLine(user.GetPosition(), target_pos, Color.gray);
+    }
+
+    #endregion
 }

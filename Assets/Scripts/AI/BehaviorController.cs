@@ -107,7 +107,7 @@ public class BehaviorController
                 Debug.DrawLine(character.GetPosition(), contact.point, Color.white);
             } else
             {
-                Debug.DrawLine(character.GetPosition(), contact.point, Color.grey);
+                Debug.DrawLine(character.GetPosition(), character.target.GetPosition(), Color.grey);
             }
         } 
         else
@@ -200,7 +200,7 @@ public class BehaviorController
     {
         Vector2 move_dir = Vector2.zero;
     }
-    protected virtual void EngageCommand()
+    protected virtual void EngageCommand() // prioritize finding enemies and taking them down
     {
         Vector2 move_dir = Vector2.zero;
         if (character.target)
