@@ -49,7 +49,6 @@ public struct ChangeHealthTick
     }
     public void StopEffect()
     {
-        Debug.Log("shutting down health tick");
         duration = 0;
     }
 }

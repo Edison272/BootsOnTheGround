@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: BasicEnemy
   m_EditorClassIdentifier: 
   character_name: Vanguard Operator
-  health: 300
-  spawn_shield: 50
-  speed: 3
+  health: 30000
+  spawn_shield: 50000
+  speed: 5
   accel_time: 0.5
   range: 5
   close_range: 5
@@ -26,6 +26,6 @@ MonoBehaviour:
     m_Bits: 0
   max_space: 5
   inventory:
-  - {fileID: 11400000, guid: 2d1f52d9f7d9dbf40a235b8fa7414e45, type: 2}
+  - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
   item_indexes:
   - {x: 0, y: -1}

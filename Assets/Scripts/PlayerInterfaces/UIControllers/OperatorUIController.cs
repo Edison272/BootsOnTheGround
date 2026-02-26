@@ -61,7 +61,7 @@ public class OperatorUIController : HealthUIController
             {
                 operator_active_ui.SetActive(false);
                 operator_inactive_ui.SetActive(true);
-                redeployment_text.text = "Redploy: " + active_operator.curr_redeployment_time.ToString("F1");
+                redeployment_text.text = "Redeploy: " + active_operator.curr_redeployment_time.ToString("F1");
                 active_operator.curr_redeployment_time -= Time.deltaTime;
             }
         }

@@ -45,7 +45,7 @@ MonoBehaviour:
       pierce: 0
       knockback_amt: 0
       effect_time: 3
-      slow_amt: 0.56
+      slow_amt: 1
       total_dot_damage: 80
       total_dot_ticks: 10
     attack_stats:

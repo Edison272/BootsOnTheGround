@@ -16,8 +16,8 @@ MonoBehaviour:
   serialize_ability_effect:
     char_stat_modifiers:
     - max_health_boost: 0
-      health_regen: 100
-      regen_rate: 0.1
+      health_regen: 0
+      regen_rate: 0
       shield_boost: 1000
       speed_scale: 1.2
       speed_scale_decay: 0

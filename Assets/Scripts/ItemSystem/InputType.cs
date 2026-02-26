@@ -15,6 +15,7 @@ public abstract class InputType
     }
     public abstract void Use();
     public abstract void Stop();
+    public abstract void Reset();
     public abstract float GetStatus(); // return a 0-1 float value for readiness
     public abstract void ChangeUseSpeed(float scalar); // multiple something by the scalar to increase/slowdown an item's use speed
 }
@@ -39,6 +40,10 @@ public class NormalInput : InputType // standard input. Use() = Output
     public override void Stop()
     {
         
+    }
+    public override void Reset()
+    {
+        next_use = Time.time;
     }
 
     public override float GetStatus() // return a float reflecting when the next attack will be ready. 0 = ready, 1 = not ready
@@ -75,6 +80,10 @@ public class ChargeInput : InputType // Use() to charge up overtime, output chan
     public override void Stop()
     {
         item.Action((int)(charge_states * ((curr_charge - threshold) / (max_charge+0.01f))));
+        curr_charge = 0;
+    }
+    public override void Reset()
+    {
         curr_charge = 0;
     }
 
@@ -120,7 +129,11 @@ public class IncrementInput : InputType // Output changes depending on extended 
     {
         curr_inc = 0;
     }
-
+    public override void Reset()
+    {
+        next_use = Time.time;
+        curr_inc = 0;
+    }
     public override float GetStatus() // return a float for the percentage of incrementation
     {
         return Mathf.Min(1, curr_inc/max_inc);

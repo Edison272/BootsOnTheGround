@@ -12,6 +12,7 @@ public abstract class AbilityEffectComponent
     }
     public abstract void ActivateComponent(); // do the thing!
     public abstract void DeactivateComponent(); // stop doing the thing
+    public abstract void ResetComponent(); // refersh ts
 
 }
 
@@ -31,6 +32,11 @@ public class AbilityEffectStatModComponent : AbilityEffectComponent
     {
         is_active = false;
     }
+
+    public override void ResetComponent()
+    {
+        DeactivateComponent();
+    }
 }
 
 public class AbilityEffectItemComponent : AbilityEffectComponent
@@ -48,7 +54,12 @@ public class AbilityEffectItemComponent : AbilityEffectComponent
     }
     public override void DeactivateComponent()
     {
-        user.ResetItems();
+        user.ResetItemData(item_index);
         user.SwitchItem(0);
+    }
+
+    public override void ResetComponent()
+    {
+        DeactivateComponent();
     }
 }

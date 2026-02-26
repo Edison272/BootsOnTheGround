@@ -9,7 +9,6 @@ public class AbilityRecoveryComponent
     private float curr_ability_points;
     private int max_charges;
     private int curr_charges;
-    private Action<float> recovery_function;
     private AbilityRecoveryType ability_recovery_type;
     private Operator user;
     public AbilityRecoveryComponent(AbilityRecoveryType ability_recovery_type, Operator user, float max_ability_points)
@@ -47,6 +46,11 @@ public class AbilityRecoveryComponent
     {
         return (float)curr_ability_points/max_ability_points;
     }
+    public void ResetComponent()
+    {
+        ResetRecovery();
+    }
+
 
     #region recovery fx types
     void TimerRecovery(float deltaTime)

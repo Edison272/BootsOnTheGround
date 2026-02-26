@@ -48,7 +48,7 @@ public class Operator : Character
         health_component.ResetHealthComponent();
         movement_component.ResetMovementComponent();
 
-        movement_component.SetPosition(GameOverseer.THE_OVERSEER.squad_manager.player_character.GetPosition() + Random.insideUnitCircle  * 2);
+        movement_component.SetPosition(GameOverseer.THE_OVERSEER.squad_manager.player_character.GetPosition() + Random.insideUnitCircle * 2);
         GetReady();
     }
     #endregion
@@ -72,11 +72,12 @@ public class Operator : Character
 
     protected override void LateUpdate()
     {
-        if (!is_alive && curr_redeployment_time == 0)
+        if (!is_alive && curr_redeployment_time == 0f)
         {
-            
             GameOverseer.THE_OVERSEER.squad_manager.RedeployOperator(this, base_op_data.redeployment_time);
             curr_redeployment_time += base_op_data.redeployment_time;
+            ResetItemData();
+            ability.ResetAbility();
             gameObject.SetActive(false);
         }
     }
@@ -125,7 +126,7 @@ public class Operator : Character
 
     public void Redeploy()
     {
-        Debug.Log("Redeployed");
+        gameObject.SetActive(true);
         ResetData();
         curr_redeployment_time = 0;
     }
@@ -150,7 +151,6 @@ public class Operator : Character
         if (ability.is_usable)
         {
             ability.UseAbility();
-            curr_redeployment_time += base_op_data.redeployment_time;
         }
     }
 

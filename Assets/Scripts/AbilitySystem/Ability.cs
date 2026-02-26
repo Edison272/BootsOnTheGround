@@ -85,6 +85,17 @@ public class Ability
         ability_duration.SetDurationActive(false);
         ToggleAbilityVFX(false);
     }
+
+    public void ResetAbility()
+    {
+        ToggleAbilityVFX(false);
+        foreach (AbilityEffectComponent effect_component in ability_effects)
+        {
+            effect_component.ResetComponent();
+        }
+        ability_duration.ResetComponent();
+        ability_recovery.ResetComponent();
+    }
     #endregion
 
     #region VFX

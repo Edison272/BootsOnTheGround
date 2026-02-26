@@ -33,7 +33,7 @@ public class Item : MonoBehaviour
     [field: Header("Functionality")]
     public FuncModule func_module;
     public AttackType[] attacks;
-    public bool is_equipped = false; // can only use an item if it is equipped
+    public bool is_equipped {get; private set;} = false; // can only use an item if it is equipped
     public float reset_timer {get; private set;} // block this weapon's if disabled time > 0
 
     [field: Header("Modifiers")]
@@ -42,7 +42,7 @@ public class Item : MonoBehaviour
 
     [Header("Interface")]
     public Sprite ui_image => base_data.ui_image;
-
+    #region Initializers
     // Setup immutable item data when this object is made
     public void Setup(ItemSO base_data, InputType input_type, FuncModule func_module, AttackType[] atk_types)
     {            
@@ -74,6 +74,25 @@ public class Item : MonoBehaviour
         y_offset = this.transform.position.y - user.transform.position.y;
     }
 
+    public void ResetData() // reset data to original state
+    {
+        Debug.Log("Resetting Item");
+        use_spd_scale = 1;
+        reset_spd_scale = 1;
+
+        // reset animator state
+        animator.Rebind();
+        animator.Update(0f);
+
+        is_equipped = false;
+        reset_timer = 0;
+
+        input_type.Reset();
+        func_module.ResetData();
+    }
+
+    #endregion
+
     // Update is called once per frame
     void Update()
     {
@@ -84,7 +103,7 @@ public class Item : MonoBehaviour
             {
                 //functionality.
                 animator.SetBool("Resetting", false);
-                func_module.Reset();
+                func_module.ResetData();
                 reset_timer = 0;
 
             }
@@ -95,7 +114,7 @@ public class Item : MonoBehaviour
     // setup the weapon for the user whenever it's picked up or equipped
     public void EquipItem()
     {
-        animator.SetBool("IsEquipped", true);
+        animator.SetBool("IsEquipped", true); // call set equipped function through editor
     }
 
     public void UnequipItem()
@@ -103,7 +122,7 @@ public class Item : MonoBehaviour
         animator.SetBool("IsEquipped", false);
     }
 
-    public void SetEquipped(int int_is_equipped)
+    public void SetEquipped(int int_is_equipped) // 
     {
         is_equipped = int_is_equipped > 0 ? true : false;
     }

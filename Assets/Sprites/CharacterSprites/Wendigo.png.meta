@@ -147,7 +147,7 @@ TextureImporter:
         width: 32
         height: 64
       alignment: 9
-      pivot: {x: 0.5, y: 0}
+      pivot: {x: 0.5, y: -0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -155,6 +155,27 @@ TextureImporter:
       bones: []
       spriteID: c35855813748d7cb0800000000000000
       internalID: -4864586392625904324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wendigo_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6ee8c1876de7ed44a39532173687d74
+      internalID: -1213929848
       vertices: []
       indices: 
       edges: []
@@ -171,6 +192,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       Wendigo_0: -4864586392625904324
+      Wendigo_1: -1213929848
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

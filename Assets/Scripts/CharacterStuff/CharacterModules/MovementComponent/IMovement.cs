@@ -45,7 +45,6 @@ public struct SpeedModifier
     }
     public void StopEffect()
     {
-        Debug.Log("shutting down speed change");
         duration = 0;
     }
 }

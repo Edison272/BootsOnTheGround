@@ -17,7 +17,7 @@ public abstract class FuncModule
     public abstract void UseFunction(int action_index);
     public abstract bool CanFunction();
     public abstract float FunctionCompletion();
-    public abstract void Reset();
+    public abstract void ResetData();
 }
 
 
@@ -53,7 +53,7 @@ Melee Platforms
     {
         throw new System.NotImplementedException();
     }
-    public override void Reset()
+    public override void ResetData()
     {
         throw new System.NotImplementedException();
     }
@@ -78,7 +78,7 @@ Shield Platforms
         throw new System.NotImplementedException();
     }
 
-    public override void Reset()
+    public override void ResetData()
     {
         throw new System.NotImplementedException();
     }
@@ -113,7 +113,7 @@ Conduit Platforms
         throw new System.NotImplementedException();
     }
 
-    public override void Reset()
+    public override void ResetData()
     {
         throw new System.NotImplementedException();
     }

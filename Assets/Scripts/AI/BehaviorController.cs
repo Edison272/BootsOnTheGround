@@ -63,9 +63,10 @@ public class BehaviorController
     {
         leader = new_leader;
     }
-
+#region Update
     public virtual void UpdateAI()
     {   
+        // some tempo controllers
         if (curr_time > 0)
         {
             curr_time -= Time.fixedDeltaTime;
@@ -149,7 +150,7 @@ public class BehaviorController
             // }
         }
     }
-
+    #endregion
     #region Commands
     public void SetCommand(CommandMode command)
     {

@@ -146,13 +146,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
             item.NewUser(this);
             item.UnequipItem();
         }
-        EquipActive(0);
-        SetSwitchItem();
-        SetAimStyle(alt_item);
-
-        // initialize default look position
-        aim_dir = SingleWeaponRestPosition;
-        Look(entity_rb.position + aim_dir);
 
         // setup AI
         CreateBehaviorController();
@@ -160,6 +153,8 @@ public class Character : MonoBehaviour, IHealth, IMovement
     // make sure the operator LOOKS ready
     public void GetReady()
     {        
+        EquipActive(0);
+        SetSwitchItem();
         // equip items
         SetSwitchItem();
         SetAimStyle(alt_item);
@@ -480,6 +475,25 @@ public class Character : MonoBehaviour, IHealth, IMovement
         main_item.EquipItem();
         alt_item?.EquipItem();
         SetAimStyle(alt_item); // adjust how the item(s) look in the player's hands
+    }
+    public void ResetItemData(int specific_index = -1)
+    {
+        if (specific_index != -1)
+        {
+            inventory[item_indexes[specific_index].x].ResetData();
+            if (item_indexes[specific_index].y != -1)
+            {
+                inventory[item_indexes[-1].y].ResetData();
+            }
+        } 
+        else
+        {
+            foreach(Item item in inventory)
+            {
+                item.ResetData();
+            }            
+        }
+
     }
 
     #endregion

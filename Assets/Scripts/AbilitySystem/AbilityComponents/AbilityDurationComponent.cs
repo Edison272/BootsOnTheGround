@@ -45,6 +45,11 @@ public class AbilityDurationComponent
         return (float)curr_duration/max_duration;
     }
 
+    public void ResetComponent()
+    {
+        
+    }
+
     #region recovery fx types
     void TimerRecovery(float deltaTime)
     {

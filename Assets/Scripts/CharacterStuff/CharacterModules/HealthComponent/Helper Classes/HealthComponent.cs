@@ -81,6 +81,10 @@ public class HealthComponent
             if (damage_amt > 0)
             {
                 curr_health -= damage_amt;
+                if (curr_health < 0)
+                {
+                    curr_health = 0;
+                }
             }
 
         } 

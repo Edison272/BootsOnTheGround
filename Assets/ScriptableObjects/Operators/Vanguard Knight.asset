@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Vanguard Knight
   m_EditorClassIdentifier: 
   character_name: Knight
-  health: 2000
+  health: 1000
   spawn_shield: 1000
   speed: 10
   accel_time: 0.5
@@ -26,13 +26,11 @@ MonoBehaviour:
     m_Bits: 0
   max_space: 5
   inventory:
-  - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
   - {fileID: 11400000, guid: 2d1f52d9f7d9dbf40a235b8fa7414e45, type: 2}
-  - {fileID: 11400000, guid: cf688422d583beb408b32bc9e89da26c, type: 2}
+  - {fileID: 11400000, guid: 2d1f52d9f7d9dbf40a235b8fa7414e45, type: 2}
   item_indexes:
   - {x: 0, y: -1}
   - {x: 1, y: -1}
-  - {x: 2, y: -1}
   op_class: 0
-  redeployment_time: 30
+  redeployment_time: 5
   ability: {fileID: 11400000, guid: 0924986d979fd0d468293f6b61c2c371, type: 2}

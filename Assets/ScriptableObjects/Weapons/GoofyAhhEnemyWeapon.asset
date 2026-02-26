@@ -41,7 +41,7 @@ MonoBehaviour:
       type: 3}
     attack_enum: 0
     attack_data:
-      damage: 5
+      damage: 150
       pierce: 0
       knockback_amt: 0
       effect_time: 0

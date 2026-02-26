@@ -26,7 +26,7 @@ public class Gun : FuncModule
         return (float)ammo / max_ammo;
     }
 
-    public override void Reset()
+    public override void ResetData()
     {
         ammo = max_ammo;
     }

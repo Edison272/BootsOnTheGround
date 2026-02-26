@@ -203,20 +203,17 @@ public class SquadManager : MonoBehaviour
     //     curr_command = (CommandMode)(((int)curr_command + 1) % (int)CommandMode.Count-1);
     //     Debug.Log("Set Command to: "  + curr_command);
     // }
+    #region Operator Redeploy
     public void RedeployOperator(Operator redeploy_op, float redploy_time)
     {
         StartCoroutine(EnumRedeployOperator(redeploy_op, redploy_time));
     }
     private IEnumerator EnumRedeployOperator(Operator redeploy_op, float redploy_time)
     {
-        Debug.Log("redeploying..." + redploy_time);
         yield return new WaitForSeconds(redploy_time);
-        Debug.Log("redployment finished in " + redploy_time);
         redeploy_op.Redeploy();
-        redeploy_op.gameObject.SetActive(true);
-        
-
     }
+    #endregion
     public void SquadMateLost()
     {
         
