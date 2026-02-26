@@ -46,6 +46,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
 
     [Header("Game Over")]
     public GameObject game_over_screen;
+    public GameObject game_succeed_screen;
     public Action GameOverBus;
 
     // Objective Management
@@ -65,7 +66,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!health_ui_control) {health_ui_control = GameObject.Find("Health UI Controller")?.GetComponent<HealthUIController>();}
         if (!squad_ui_control) {squad_ui_control = GameObject.Find("Squad UI Controller")?.GetComponent<SquadUIController>();}
 
-        objective_manager = new ObjectiveManager(this);
+        objective_manager = new ObjectiveManager(this, map_manager.gen_preset.objectives);
         game_over_screen.SetActive(false);
 
         SQUAD_COLOR = serialize_squad_color;
@@ -104,11 +105,31 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         // setup an AI manager after base data has been created
         ai_manager = new AIManager(this, map_manager.Wall, map_manager.Floor);
     }
+
+    void Update()
+    {
+        if (THE_OVERSEER.objective_manager.objectives_complete && !game_succeed_screen.activeSelf)
+        {
+            THE_OVERSEER.GameWin();
+            
+        }
+        Debug.Log(THE_OVERSEER.objective_manager.frontier_objective + ", " + THE_OVERSEER.objective_manager.total_objectives);
+    }
     #endregion
     #region Game Events
     public void GameOver()
     {
-        game_over_screen.SetActive(true);
+        if (!game_succeed_screen.activeSelf)
+        {
+            game_over_screen.SetActive(true);
+        }
+        player_control.FreeCursor();
+    }
+
+    public void GameWin()
+    {
+        Debug.Log("win");
+        game_succeed_screen.SetActive(true);
         player_control.FreeCursor();
     }
 
@@ -134,6 +155,10 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public static void ObjectiveSecured()
     {
         THE_OVERSEER.objective_manager.ObjectiveSecured();
+        if (THE_OVERSEER.objective_manager.objectives_complete)
+        {
+            THE_OVERSEER.GameWin();
+        }
     }
     #endregion
 

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Vanguard Knight
   m_EditorClassIdentifier: 
   character_name: Knight
-  health: 1000
-  spawn_shield: 1000
+  health: 1500
+  spawn_shield: 0
   speed: 10
   accel_time: 0.5
-  range: 10
+  range: 15
   close_range: 5
   char_prefab: {fileID: 1617546575173960562, guid: 388e4c59c8e01914595d32397206eb35,
     type: 3}
@@ -31,6 +31,6 @@ MonoBehaviour:
   item_indexes:
   - {x: 0, y: -1}
   - {x: 1, y: -1}
-  op_class: 0
-  redeployment_time: 5
+  op_class: 2
+  redeployment_time: 10
   ability: {fileID: 11400000, guid: 0924986d979fd0d468293f6b61c2c371, type: 2}

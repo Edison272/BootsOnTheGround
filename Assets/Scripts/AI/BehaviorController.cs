@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 // control a character using a series of behaviors
@@ -82,6 +81,7 @@ public class BehaviorController
             curr_time += is_acting ? aggro_time : rest_time;
         }
 
+        
         if (character.target)
         {
             // reset if target untrackable
@@ -140,14 +140,14 @@ public class BehaviorController
         else
         {
             // character couldn't reach path on time. something went wrong
-            // curr_travel_time += Time.fixedDeltaTime;
-            // if (curr_travel_time >= estimated_travel_time * 1.5f && prev_tile_pos == character.current_tile_pos)
-            // {
-            //     character.StopMove();
-            //     Debug.Log("I'm lost...");
-            //     movement_queue.Clear();
-            //     curr_travel_time = 0;
-            // }
+            curr_travel_time += Time.fixedDeltaTime;
+            if (curr_travel_time >= estimated_travel_time * 1f)
+            {
+                character.StopMove();
+                movement_queue.Clear();
+                curr_travel_time = 0;
+                SetCommand(CommandMode.Follow);
+            }
         }
     }
     #endregion
@@ -179,9 +179,10 @@ public class BehaviorController
     }
     protected virtual void FollowCommand()
     {        
-        if ((character.GetPosition() - leader.GetPosition()).sqrMagnitude > 4f * 4f)
+        Vector2 leader_position = leader? leader.GetPosition() : character.GetPosition();
+        if ((character.GetPosition() - leader_position).magnitude > 3.5f)
         {
-            anchor_position = (character.GetPosition() - leader.GetPosition()).normalized * 4f + leader.GetPosition();
+            anchor_position = (character.GetPosition() - leader.GetPosition()).normalized * 3.5f + leader.GetPosition();
             //Debug.Log("Following");
             Vector2 obj_pos = anchor_position + leader.move_dir * 3;
             if (character.target)

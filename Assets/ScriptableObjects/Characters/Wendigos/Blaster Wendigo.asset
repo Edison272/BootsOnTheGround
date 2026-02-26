@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01d6ed72db80d54439e76ec450c54420, type: 3}
+  m_Name: Blaster Wendigo
+  m_EditorClassIdentifier: 
+  character_name: Vanguard Operator
+  health: 500
+  spawn_shield: 100
+  speed: 2
+  accel_time: 0.5
+  range: 9
+  close_range: 3
+  char_prefab: {fileID: 2589057906099434769, guid: 383be83fe97b3f943a8a055bb860e5dc,
+    type: 3}
+  detection_mask:
+    serializedVersion: 2
+    m_Bits: 0
+  max_space: 5
+  inventory:
+  - {fileID: 11400000, guid: 15007d21cf7441c4baa6731cd39f976d, type: 2}
+  item_indexes:
+  - {x: 0, y: -1}

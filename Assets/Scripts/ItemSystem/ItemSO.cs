@@ -56,7 +56,19 @@ public class ItemSO : ScriptableObject
         {
             item_stats[stat.Key] = stat.Value; 
         }
-        
+        // attack types
+        item_attack_types = new AttackType[serialized_attacks.Length];
+        int i = 0;
+        foreach(AttackTypeInit atk_type_init in serialized_attacks)
+        {
+            atk_type_init.OnValidate();
+            if (atk_type_init.IsDictSetUp())
+            {
+                item_attack_types[i] = atk_type_init.CreateAttackType();
+                i++;
+            }
+        }
+
         // setup input type
         InputType input_type = null;
         switch (input_enum) {

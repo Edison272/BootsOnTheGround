@@ -40,8 +40,15 @@ public class PlayerViewController
     }
     public void ResetView(Vector2 character_position)
     {
+        
+        screen_pos = new Vector2(0, 0);
+        Rect rect = player_screen.rect;
+        float view_x = (screen_pos.x - rect.xMin) / rect.width;
+        float view_y = (screen_pos.y - rect.yMin) / rect.height;
+        viewport_pos = new Vector3(view_x, view_y, 0);
+        //this.player_pos = player_pos;
+        LookPosUpdateAction();
         look_pos = character_position;
-        screen_pos = new Vector2(Screen.width/2, Screen.height/2);
         last_pointer_delta = Vector2.zero;
     }
     public void SetRange(float range_scalar)
@@ -64,16 +71,16 @@ public class PlayerViewController
         screen_pos += last_pointer_delta;
         
         Rect rect = player_screen.rect;
-        // screen_pos = new Vector2(
-        //     Mathf.Clamp(screen_pos.x, rect.xMin, rect.xMax),
-        //     Mathf.Clamp(screen_pos.y, rect.yMin, rect.yMax)
-        // );
+        screen_pos = new Vector2(
+            Mathf.Clamp(screen_pos.x, rect.xMin, rect.xMax),
+            Mathf.Clamp(screen_pos.y, rect.yMin, rect.yMax)
+        );
         // float lowest_dimension = rect.xMax;
         // if (lowest_dimension > rect.yMax)
         // {
         //     lowest_dimension = rect.yMax;
         // }
-        screen_pos = CircularClamp(screen_pos, rect.center, rect.xMax);
+        //screen_pos = CircularClamp(screen_pos, rect.center, rect.xMax);
         // convert to viewport coordinates (anchored to render texture)
         float view_x = (screen_pos.x - rect.xMin) / rect.width;
         float view_y = (screen_pos.y - rect.yMin) / rect.height;

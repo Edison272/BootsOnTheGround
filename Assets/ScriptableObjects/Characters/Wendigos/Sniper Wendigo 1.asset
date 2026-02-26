@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01d6ed72db80d54439e76ec450c54420, type: 3}
+  m_Name: Sniper Wendigo 1
+  m_EditorClassIdentifier: 
+  character_name: Vanguard Operator
+  health: 300
+  spawn_shield: 0
+  speed: 2
+  accel_time: 0.5
+  range: 12
+  close_range: 4
+  char_prefab: {fileID: 3022059914479871405, guid: 14b86a3a1649fe047acd9370fa1756f4,
+    type: 3}
+  detection_mask:
+    serializedVersion: 2
+    m_Bits: 0
+  max_space: 5
+  inventory:
+  - {fileID: 11400000, guid: b5cf64260ade16c4f8eae8dd92f9225f, type: 2}
+  item_indexes:
+  - {x: 0, y: -1}

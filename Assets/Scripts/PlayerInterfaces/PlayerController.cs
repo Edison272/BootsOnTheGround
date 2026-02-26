@@ -1,6 +1,3 @@
-using System;
-using System.Drawing;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -78,6 +75,8 @@ public class PlayerController : MonoBehaviour
             player_view_controller.ResetView(active_character.GetPosition());
             pointer_delta = Vector2.zero;
         }
+        SetMainAction(true);
+        SetAltAction(active_character.HasAltAction());
         EnableControl();
         item_ui_control.SetActiveCharacter(active_character);
         health_ui_control.SetActiveCharacter(active_character);
