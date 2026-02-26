@@ -83,6 +83,12 @@ public class PlayerController : MonoBehaviour
         health_ui_control.SetActiveCharacter(active_character);
     }
 
+    public void FreeCursor()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+    }
+
     public void SetPlayerCharacter(Character new_character)
     {
         active_character = new_character;

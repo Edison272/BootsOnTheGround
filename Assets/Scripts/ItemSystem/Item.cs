@@ -238,7 +238,10 @@ public class Item : MonoBehaviour
     #region Debug
     void OnDrawGizmosSelected()
     {
-        Debug.DrawLine(user.GetPosition(), target_pos, Color.gray);
+        if (user)
+        {
+            Debug.DrawLine(user.GetPosition(), target_pos, Color.gray);
+        }
     }
 
     #endregion

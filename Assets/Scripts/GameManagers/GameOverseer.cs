@@ -109,7 +109,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public void GameOver()
     {
         game_over_screen.SetActive(true);
-
+        player_control.FreeCursor();
     }
 
     public void ReturnToMain()

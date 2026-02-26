@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 989c4355df8ccbc47abe518623378798, type: 3}
   m_Name: Heavy LMG
   m_EditorClassIdentifier: 
-  item_prefab: {fileID: 3117911291600889211, guid: 23d818127ea563648b58ee4f2c3bb338,
+  item_prefab: {fileID: 827612200135298292, guid: 48f581c9ba3136c4998f0a89be66a5b2,
     type: 3}
   ui_image: {fileID: -7263692644043572507, guid: 4385cab06ae89354087c269ec5424415,
     type: 3}
