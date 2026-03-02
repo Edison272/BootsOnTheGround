@@ -34,7 +34,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     // Layermask stuff
     public static readonly LayerMask avoid_map_mask = 1 << 7; // check if map is in the way of this raycast
     public static readonly LayerMask avoid_obstacles_mask = (1 << 6) | (1 << 7); // check if map and entities are in the way of this raycast
-    
+    public static readonly LayerMask find_interactable_mask = 1 << 9;
     // Faction stuff
     [SerializeField] private Color serialize_squad_color;
     [SerializeField] private Color serialize_enemy_color;
@@ -113,7 +113,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
             THE_OVERSEER.GameWin();
             
         }
-        Debug.Log(THE_OVERSEER.objective_manager.frontier_objective + ", " + THE_OVERSEER.objective_manager.total_objectives);
+        //Debug.Log(THE_OVERSEER.objective_manager.frontier_objective + ", " + THE_OVERSEER.objective_manager.total_objectives);
     }
     #endregion
     #region Game Events

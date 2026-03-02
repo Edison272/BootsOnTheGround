@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
 public enum CharacterBodyPart {None = -1, Hitbox, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
@@ -75,6 +76,10 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public (int, int) current_indexes {get; protected set;}
     protected float switch_cd = 0.5f; // time the char must wait before they can switch to the next weapon
     protected float curr_switch_cd = 0;
+    private int holding_capacity = 0;
+
+    [field: Header("Interactables")]
+    public float interaction_range = 2;
 
     [field: Header("Detection")]
     // [SerializeField] CircleCollider2D range_collider;
@@ -140,6 +145,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         }
         inventory = init_inventory.ToList<Item>();
         item_indexes = init_item_indexes.ToList<Vector2Int>();
+        holding_capacity = Mathf.Max(item_indexes.Count, base_data.holding_capacity);
         // set initial active items
         foreach(Item item in inventory)
         {
@@ -149,6 +155,8 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
         // setup AI
         CreateBehaviorController();
+
+        GetReady();
     }
     // make sure the operator LOOKS ready
     public void GetReady()
@@ -175,6 +183,15 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public void ConnectToEventBus(Action<Character> death)
     {
         OnDeath = death;
+    }
+
+    // Initialize op if it's a prefab that's placed on the scene, and has 
+    public void Start()
+    {
+        if (!entity_rb && base_data)
+        {
+            AssignBaseData(base_data);
+        }
     }
 
     #endregion
@@ -439,6 +456,20 @@ public class Character : MonoBehaviour, IHealth, IMovement
         main_item.UnequipItem();
         alt_item?.UnequipItem();
     }
+    public void PickupItem(Item new_item)
+    {
+        Item switch_out_item = null;
+        if (item_indexes.Count >= holding_capacity)
+        {
+            // switch out current item with the new pickup
+            switch_out_item = inventory[current_indexes.Item1];
+            inventory[current_indexes.Item1] = new_item;
+        } 
+        else
+        {
+            AddItem(new_item);
+        }
+    }
     public void SwitchItem(int spec_index = -1) // cycle between item_indexes slots, or choose a select slot with spec_index
     {
         if (spec_index == curr_item_index) {return;} // dont do anything if switching to active items
@@ -459,6 +490,16 @@ public class Character : MonoBehaviour, IHealth, IMovement
         current_indexes = (item_indexes[curr_item_index].x, item_indexes[curr_item_index].y);
         EquipActive(curr_item_index); // set up the new shi
         curr_switch_cd = switch_cd;
+    }
+    public IInteractable FindInteractables()
+    {
+        Collider2D[] interactables = Physics2D.OverlapCircleAll(GetPosition(), base_data.close_range, GameOverseer.find_interactable_mask);
+        IInteractable closest_interactable = null;
+        if (interactables.Length > 0)
+        {
+            closest_interactable = interactables[0].GetComponent<IInteractable>();
+        }
+        return closest_interactable;
     }
     public int AddItem(Item new_item)
     {
@@ -493,7 +534,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
                 item.ResetData();
             }            
         }
-
     }
 
     #endregion

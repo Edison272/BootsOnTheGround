@@ -146,7 +146,11 @@ public class PlayerController : MonoBehaviour
             {
                 GameOverseer.THE_OVERSEER.GameOver();
             }
-            
+            IInteractable interactable = active_character.FindInteractables();
+            if (interactable != null)
+            {
+                Debug.Log(interactable.Identify());
+            }
         }
         // prepare camera data
         player_view_controller.UpdateLookPos();
@@ -199,7 +203,7 @@ public class PlayerController : MonoBehaviour
     void ResetItem(InputAction.CallbackContext context) {active_character.ResetItems();}
     void SwitchItem(InputAction.CallbackContext context) {
         // set new input functionality
-        if (!in_command_mode && op_select_index == -1)
+        if (op_select_index == -1)
         {
             active_character.SwitchItem();
             SetMainAction(true);
