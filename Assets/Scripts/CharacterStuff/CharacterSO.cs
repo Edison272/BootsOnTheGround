@@ -16,6 +16,7 @@ public class CharacterSO : ScriptableObject
     [Range(0.01f,5f)] public float accel_time = 0.5f;
     public float range = 4;
     public float close_range = 3; // entering close range forces character to retarget
+    public float interaction_range = 1;
 
     public GameObject char_prefab;
 

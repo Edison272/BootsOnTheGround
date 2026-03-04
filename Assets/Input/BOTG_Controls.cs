@@ -146,6 +146,15 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Pickup Item"",
+                    ""type"": ""Button"",
+                    ""id"": ""f14f0159-6b64-4083-bd3f-6d5c60fa15d1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Toggle Command Mode"",
                     ""type"": ""Button"",
                     ""id"": ""4a2c2a60-b6e3-48d1-9ec9-f57bf2df53cb"",
@@ -440,6 +449,39 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""OpAbility"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0431eab1-fbdf-4ba5-9a7f-324b78ea46ee"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pickup Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4eecb4a0-76f6-4c7c-bf8d-b3922206b70e"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pickup Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""429ffcbd-4e85-4e59-83f1-76c24ed60269"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pickup Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1033,6 +1075,7 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         m_GroundActions_AltAction = m_GroundActions.FindAction("Alt Action", throwIfNotFound: true);
         m_GroundActions_ResetItem = m_GroundActions.FindAction("Reset Item", throwIfNotFound: true);
         m_GroundActions_SwitchItem = m_GroundActions.FindAction("Switch Item", throwIfNotFound: true);
+        m_GroundActions_PickupItem = m_GroundActions.FindAction("Pickup Item", throwIfNotFound: true);
         m_GroundActions_ToggleCommandMode = m_GroundActions.FindAction("Toggle Command Mode", throwIfNotFound: true);
         m_GroundActions_OpDeploy1 = m_GroundActions.FindAction("OpDeploy1", throwIfNotFound: true);
         m_GroundActions_OpDeploy2 = m_GroundActions.FindAction("OpDeploy2", throwIfNotFound: true);
@@ -1138,6 +1181,7 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_GroundActions_AltAction;
     private readonly InputAction m_GroundActions_ResetItem;
     private readonly InputAction m_GroundActions_SwitchItem;
+    private readonly InputAction m_GroundActions_PickupItem;
     private readonly InputAction m_GroundActions_ToggleCommandMode;
     private readonly InputAction m_GroundActions_OpDeploy1;
     private readonly InputAction m_GroundActions_OpDeploy2;
@@ -1179,6 +1223,10 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "GroundActions/SwitchItem".
         /// </summary>
         public InputAction @SwitchItem => m_Wrapper.m_GroundActions_SwitchItem;
+        /// <summary>
+        /// Provides access to the underlying input action "GroundActions/PickupItem".
+        /// </summary>
+        public InputAction @PickupItem => m_Wrapper.m_GroundActions_PickupItem;
         /// <summary>
         /// Provides access to the underlying input action "GroundActions/ToggleCommandMode".
         /// </summary>
@@ -1247,6 +1295,9 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
             @SwitchItem.started += instance.OnSwitchItem;
             @SwitchItem.performed += instance.OnSwitchItem;
             @SwitchItem.canceled += instance.OnSwitchItem;
+            @PickupItem.started += instance.OnPickupItem;
+            @PickupItem.performed += instance.OnPickupItem;
+            @PickupItem.canceled += instance.OnPickupItem;
             @ToggleCommandMode.started += instance.OnToggleCommandMode;
             @ToggleCommandMode.performed += instance.OnToggleCommandMode;
             @ToggleCommandMode.canceled += instance.OnToggleCommandMode;
@@ -1294,6 +1345,9 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
             @SwitchItem.started -= instance.OnSwitchItem;
             @SwitchItem.performed -= instance.OnSwitchItem;
             @SwitchItem.canceled -= instance.OnSwitchItem;
+            @PickupItem.started -= instance.OnPickupItem;
+            @PickupItem.performed -= instance.OnPickupItem;
+            @PickupItem.canceled -= instance.OnPickupItem;
             @ToggleCommandMode.started -= instance.OnToggleCommandMode;
             @ToggleCommandMode.performed -= instance.OnToggleCommandMode;
             @ToggleCommandMode.canceled -= instance.OnToggleCommandMode;
@@ -1654,6 +1708,13 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSwitchItem(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pickup Item" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPickupItem(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Toggle Command Mode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     public ItemUIController item_ui_control;
     public HealthUIController health_ui_control;
     
+#region Initializers
     void Awake() // initialize values before player assumes control
     {
         // get map
@@ -103,6 +104,8 @@ public class PlayerController : MonoBehaviour
         controls.GroundActions.ResetItem.performed += ResetItem;
         // switch the item
         controls.GroundActions.SwitchItem.performed += SwitchItem;
+        // pickup / Interact
+        controls.GroundActions.PickupItem.performed += PickupItem;
         // Toggle Command Mode
         controls.GroundActions.ToggleCommandMode.performed += CommandView;
         // Deploy Op with num keys
@@ -126,6 +129,7 @@ public class PlayerController : MonoBehaviour
     {
         controls.Disable();
     }
+    #endregion
 
     #region Updates
     // Update is called once per frame
@@ -145,11 +149,6 @@ public class PlayerController : MonoBehaviour
             if (!active_character.IsInAction())
             {
                 GameOverseer.THE_OVERSEER.GameOver();
-            }
-            IInteractable interactable = active_character.FindInteractables();
-            if (interactable != null)
-            {
-                Debug.Log(interactable.Identify());
             }
         }
         // prepare camera data
@@ -209,6 +208,14 @@ public class PlayerController : MonoBehaviour
             SetMainAction(true);
             SetAltAction(active_character.HasAltAction());
             main_cam_controller.SetCameraZoom(active_character.GetRangeScalar());
+        }
+    }
+    void PickupItem(InputAction.CallbackContext context)
+    {
+        IInteractable interactable = active_character.FindInteractables();
+        if (interactable != null)
+        {
+            Debug.Log(interactable.Identify());
         }
     }
     #endregion

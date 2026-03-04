@@ -60,6 +60,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Pickup Item",
+                    "type": "Button",
+                    "id": "f14f0159-6b64-4083-bd3f-6d5c60fa15d1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Toggle Command Mode",
                     "type": "Button",
                     "id": "4a2c2a60-b6e3-48d1-9ec9-f57bf2df53cb",
@@ -354,6 +363,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "OpAbility",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0431eab1-fbdf-4ba5-9a7f-324b78ea46ee",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pickup Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4eecb4a0-76f6-4c7c-bf8d-b3922206b70e",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pickup Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "429ffcbd-4e85-4e59-83f1-76c24ed60269",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pickup Item",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

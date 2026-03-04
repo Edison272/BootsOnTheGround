@@ -79,7 +79,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     private int holding_capacity = 0;
 
     [field: Header("Interactables")]
-    public float interaction_range = 2;
+    public float interaction_range = 1;
 
     [field: Header("Detection")]
     // [SerializeField] CircleCollider2D range_collider;
@@ -146,6 +146,9 @@ public class Character : MonoBehaviour, IHealth, IMovement
         inventory = init_inventory.ToList<Item>();
         item_indexes = init_item_indexes.ToList<Vector2Int>();
         holding_capacity = Mathf.Max(item_indexes.Count, base_data.holding_capacity);
+
+        interaction_range = base_data.interaction_range;
+
         // set initial active items
         foreach(Item item in inventory)
         {
@@ -493,7 +496,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     }
     public IInteractable FindInteractables()
     {
-        Collider2D[] interactables = Physics2D.OverlapCircleAll(GetPosition(), base_data.close_range, GameOverseer.find_interactable_mask);
+        Collider2D[] interactables = Physics2D.OverlapCircleAll(GetPosition(), hitbox_radius + interaction_range, GameOverseer.find_interactable_mask);
         IInteractable closest_interactable = null;
         if (interactables.Length > 0)
         {
