@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {   
-    [SerializeField] ItemSO base_data; // SO contains important base data
+    [field: SerializeField] public ItemSO base_data {get; private set;} // SO contains important base data
     // Input Instance
     InputType input_type;
 
@@ -65,6 +65,7 @@ public class Item : MonoBehaviour
     public void NewUser(Character new_user)
     {
         user = new_user;
+        
         // if no rotator object, rotator object is the user's hand (items in use are always a child transform of something else)
         if (!rotator_object)
         {
@@ -72,6 +73,12 @@ public class Item : MonoBehaviour
         }
 
         y_offset = this.transform.position.y - user.transform.position.y;
+    }
+    public void DropItem()
+    {
+        user = null;
+        rotator_object = null;
+        y_offset = 0;
     }
 
     public void ResetData() // reset data to original state

@@ -39,6 +39,9 @@ public class PlayerController : MonoBehaviour
     [Header("UI Stuff")]
     [SerializeField] GameObject cursor;
 
+    [Header("Item Inteaction")]
+    IInteractable closest_interactable;
+
     [Header("Squad Interactions")]
     public SquadManager squad;
     private int op_select_index = -1;
@@ -150,6 +153,9 @@ public class PlayerController : MonoBehaviour
             {
                 GameOverseer.THE_OVERSEER.GameOver();
             }
+
+            // do some ui stuff too
+            closest_interactable = active_character.FindInteractables();
         }
         // prepare camera data
         player_view_controller.UpdateLookPos();
@@ -212,10 +218,12 @@ public class PlayerController : MonoBehaviour
     }
     void PickupItem(InputAction.CallbackContext context)
     {
-        IInteractable interactable = active_character.FindInteractables();
-        if (interactable != null)
+        if (closest_interactable != null)
         {
-            Debug.Log(interactable.Identify());
+            active_character.UseInteractable(closest_interactable);
+            SetMainAction(true);
+            SetAltAction(active_character.HasAltAction());
+            main_cam_controller.SetCameraZoom(active_character.GetRangeScalar());
         }
     }
     #endregion

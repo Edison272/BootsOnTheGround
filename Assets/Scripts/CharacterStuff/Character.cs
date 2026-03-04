@@ -137,10 +137,10 @@ public class Character : MonoBehaviour, IHealth, IMovement
             int main_item = base_data.item_indexes[i].x;
             int alt_item = base_data.item_indexes[i].y;
             init_item_indexes[i] = base_data.item_indexes[i];
-            init_inventory[main_item] = base_data.inventory[main_item].GenerateItem(main_hand);
+            init_inventory[main_item] = GetItemSO(base_data.inventory[main_item]);
             if (alt_item > -1)
             {
-                init_inventory[alt_item] = base_data.inventory[alt_item].GenerateItem(alt_hand);
+                init_inventory[alt_item] = GetItemSO(base_data.inventory[alt_item]);
             }
         }
         inventory = init_inventory.ToList<Item>();
@@ -459,20 +459,37 @@ public class Character : MonoBehaviour, IHealth, IMovement
         main_item.UnequipItem();
         alt_item?.UnequipItem();
     }
-    public void PickupItem(Item new_item)
+
+    public Item GetItemSO(ItemSO new_item, bool on_alt_hand = false)
+    {
+        Transform hand_hold = on_alt_hand ? alt_hand : main_hand;
+        return new_item.GenerateItem(hand_hold);
+    }
+    public Item PickupItem(Item new_item)
     {
         Item switch_out_item = null;
         if (item_indexes.Count >= holding_capacity)
-        {
+        {            
             // switch out current item with the new pickup
             switch_out_item = inventory[current_indexes.Item1];
             inventory[current_indexes.Item1] = new_item;
+
+            new_item.transform.parent = main_hand;
+            new_item.transform.localPosition = Vector3.zero;
+            float scale = new_item.transform.localScale.x;
+            new_item.transform.localScale = new Vector3(Mathf.Abs(scale), Mathf.Abs(scale), Mathf.Abs(scale));
+            new_item.NewUser(this);
+            
+            EquipActive(curr_item_index); // set up the new shi
+            curr_switch_cd = switch_cd;
         } 
         else
         {
             AddItem(new_item);
         }
+        return switch_out_item;
     }
+    
     public void SwitchItem(int spec_index = -1) // cycle between item_indexes slots, or choose a select slot with spec_index
     {
         if (spec_index == curr_item_index) {return;} // dont do anything if switching to active items
@@ -541,6 +558,10 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
     #endregion
     #region Item Interaction
+    public void UseInteractable(IInteractable interactable)
+    {
+        interactable.Interact(this);
+    }
     public void UseMainItem()
     {
         main_item.Use();
