@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Instructions_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: dbbb7ec28baa04f4f8f514acff075684, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 5298429952
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 187096342528
+    m_Localized: 'Basic Controls
+
+
+      - WASD To Move
+
+
+      - E to Switch Weapons
+
+
+      -
+      R to Reload
+
+
+      - SPACE to toggle to WIDE view
+
+
+      - LMB to shoot (when
+      not commanding operators)
+
+
+      - RMB to shoot secondary (for dual-wielded
+      weapons)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 884755898368
+    m_Localized: 'COMMANDING OPERATORS
+
+
+      1)  1-4 to Select an Operator
+
+
+      2) 
+      Move Cursor to a target location, then Hold LMB to fully open the Operator''s
+      Action Wheel
+
+
+      3)  While Holding LMB, move the mouse to interact with
+      the Action Wheel options.
+
+
+      - Selector must SNAP to the a selected action
+      to select it.
+
+
+
+      4) Release LMB to confirm the action if an action is
+      selected in the action wheel, or cancel the action if nothing is selected
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153308794880
+    m_Localized: CAPTURE ALL THE WHITE ZONES TO WIN
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

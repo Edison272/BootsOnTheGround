@@ -56,7 +56,7 @@ Material:
     - _TextureWidth: 1024
     - _UnderlayDilate: -1
     - _UnderlayOffsetX: 0
-    - _UnderlayOffsetY: 0
+    - _UnderlayOffsetY: 0.03
     - _UnderlaySoftness: 0
     - _VertexOffsetX: 0
     - _VertexOffsetY: 0
@@ -7973,7 +7973,8 @@ MonoBehaviour:
     m_MarkToMarkAdjustmentRecords: []
   m_ShouldReimportFontFeatures: 0
   m_FallbackFontAssetTable:
-  - {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  - {fileID: 11400000, guid: 0fdc157b5df8f624cbe03c4fb36fe039, type: 2}
+  - {fileID: 11400000, guid: f94ce94c2d0df7546933da8c46c68f55, type: 2}
   m_FontWeightTable:
   - regularTypeface: {fileID: 0}
     italicTypeface: {fileID: 0}
