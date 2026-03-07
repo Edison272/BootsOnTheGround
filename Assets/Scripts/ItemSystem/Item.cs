@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ItemType {Weapon, Support}
 public class Item : MonoBehaviour
 {   
     [field: SerializeField] public ItemSO base_data {get; private set;} // SO contains important base data

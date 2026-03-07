@@ -36,6 +36,19 @@ public class PlayerController : MonoBehaviour
     public MainCameraController main_cam_controller;
     [Header("Player Action Control")]
     public PlayerActionController player_action_control; // seperate class for ui-based player actions
+    [Header("Player Targetting Control")]
+    public TargettingController player_targetting_control; // seperate class for ui-based player actions
+    [SerializeField] LineRenderer main_line_renderer;
+    [SerializeField] LineRenderer vfx_line_renderer;
+    [SerializeField] Color origin_color_serialized; // line always starts out white and semi transparent
+    [SerializeField] Color wall_color_serialized; // line render color when the player is looking at a wall
+    [SerializeField] Color base_color_serialized;
+    [SerializeField] Color crit_color_serialized; // line render color when the player is aiming at center of mass
+    public static Color origin_color;
+    public static Color wall_color;
+    public static Color base_color;
+    public static Color crit_color;
+
     [Header("UI Stuff")]
     [SerializeField] GameObject cursor;
 
@@ -65,9 +78,16 @@ public class PlayerController : MonoBehaviour
         main_action = controls.GroundActions.MainAction;
         alt_action = controls.GroundActions.AltAction;
 
+        // set colors for targetting
+        origin_color = origin_color_serialized;
+        wall_color = wall_color_serialized;
+        base_color = base_color_serialized;
+        crit_color = crit_color_serialized;
+
         // set helper classes
         player_view_controller = new PlayerViewController(main_cam, player_screen.rectTransform);
         main_cam_controller = new MainCameraController(main_cam, player_screen.rectTransform);
+        player_targetting_control = new TargettingController(main_line_renderer, vfx_line_renderer);
         player_view_controller.SetMCController(main_cam_controller);
         main_cam_controller.SetPVController(player_view_controller);
     }
@@ -153,6 +173,7 @@ public class PlayerController : MonoBehaviour
             pointer_delta = Vector2.zero;
             active_character.Look(look_pos);
             main_cam_controller.UpdateCamData(active_character.GetPosition(), look_pos);
+            player_targetting_control.UpdateTargetting(active_character);
 
             if (!active_character.IsInAction())
             {

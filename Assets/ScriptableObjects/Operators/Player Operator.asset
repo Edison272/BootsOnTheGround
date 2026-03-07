@@ -19,17 +19,18 @@ MonoBehaviour:
   accel_time: 0.5
   range: 10
   close_range: 5
+  interaction_range: 1
   char_prefab: {fileID: 1617546575173960562, guid: ccbe11c2689227c40b7f9c5a929c95ec,
     type: 3}
   detection_mask:
     serializedVersion: 2
     m_Bits: 0
-  max_space: 5
+  holding_capacity: 2
   inventory:
   - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
   - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
-  - {fileID: 11400000, guid: 2d1f52d9f7d9dbf40a235b8fa7414e45, type: 2}
   - {fileID: 11400000, guid: e9fe9862a1e5d644b82b8e848028dcf5, type: 2}
+  - {fileID: 11400000, guid: 2d1f52d9f7d9dbf40a235b8fa7414e45, type: 2}
   item_indexes:
   - {x: 0, y: 1}
   - {x: 2, y: -1}

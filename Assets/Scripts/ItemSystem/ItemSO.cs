@@ -23,6 +23,7 @@ public class ItemSO : ScriptableObject
     [SerializeField] FuncEnum func_enum = FuncEnum.Gun;
     public Dictionary<string, float> item_stats {get; private set;}
     public AttackType[] item_attack_types = new AttackType[0];
+    public ItemType item_type = ItemType.Weapon;
 
     [field: Header("Serialization")]
     [SerializeField] private InputEnum curr_input = InputEnum.Increment; // detect when the input type has changed to update it

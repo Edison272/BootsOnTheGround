@@ -5,7 +5,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
-public enum CharacterBodyPart {None = -1, Hitbox, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
+public enum CharacterBodyPart {None = -1, Hitbox, TrueFront, TrueBack, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
 public class Character : MonoBehaviour, IHealth, IMovement
 {
     private CharacterSO base_data;
@@ -21,6 +21,8 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public Transform head;
     public Transform front_particles;
     public Transform back_particles;
+    public Transform true_front;
+    public Transform true_back;
 
     [field: Header("VFX")]
     public float base_sprite_height;
@@ -174,14 +176,12 @@ public class Character : MonoBehaviour, IHealth, IMovement
         Look(entity_rb.position + aim_dir);
     }
 
-    public virtual void CreateBehaviorController()
-    {
-        behavior_controller = new BehaviorController(this);
-    }
+    public virtual void CreateBehaviorController() {behavior_controller = new BehaviorController(this);}
     public virtual void ResetData()
     {
         
     }
+    public void SetFactionTag(int tag) {faction_tag = tag;}
 
     public void ConnectToEventBus(Action<Character> death)
     {
@@ -562,6 +562,23 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         interactable.Interact(this);
     }
+
+    public void StartMainAction()
+    {
+        main_item.Use();
+        if (current_indexes.Item2 != -1)
+        {
+            alt_item.Use();
+        }
+    }
+    public void StopMainAction()
+    {
+        main_item.Stop();
+        if (current_indexes.Item2 != -1)
+        {
+            alt_item.Stop();
+        }
+    }
     public void UseMainItem()
     {
         main_item.Use();
@@ -596,6 +613,12 @@ public class Character : MonoBehaviour, IHealth, IMovement
         {
             case CharacterBodyPart.Hitbox:
                 body_part = main_body.transform;
+                break;
+            case CharacterBodyPart.TrueFront:
+                body_part = true_front;
+                break;
+            case CharacterBodyPart.TrueBack:
+                body_part = true_back;
                 break;
             case CharacterBodyPart.Front:
                 body_part = front;

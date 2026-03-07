@@ -92,6 +92,7 @@ public class SquadManager : MonoBehaviour
             this_op.behavior_controller.SetLeader(operators[c_player_char_index]);
             this_op.op_behavior_controller.squad_index = i;
             this_op.AssignIdString(i);
+            this_op.SetFactionTag(0);
             squad.Add(operators[i]);
 
             DeployOperator(i, transform.position);

@@ -32,6 +32,7 @@ public class EnemyManager : MonoBehaviour
         new_enemy.gameObject.tag = this.gameObject.tag;
         new_enemy.faction_tag = GameOverseer.ENEMY_TAG;
         new_enemy.ConnectToEventBus(EnemyLost);
+        new_enemy.SetFactionTag(1);
 
         // set up enemy behaviors
         new_enemy.ToggleAI(true);
