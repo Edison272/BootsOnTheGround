@@ -5,7 +5,7 @@ using UnityEngine;
 
 using Random = UnityEngine.Random;
 
-public class Operator : Character
+public class Operator : Character, IInteractable
 {
     [Header("ID")]
     private OperatorSO base_op_data;
@@ -164,6 +164,13 @@ public class Operator : Character
     public void ToggleSelectionIndicator(bool enable)
     {
         selection_indicator.SetActive(enable);
+    }
+    #endregion
+
+    #region Interaction
+    public void Interact(Character character)
+    {
+        throw new NotImplementedException();
     }
     #endregion
 }

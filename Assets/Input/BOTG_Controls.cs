@@ -119,7 +119,7 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Alt Action"",
+                    ""name"": ""Order Action"",
                     ""type"": ""Button"",
                     ""id"": ""4192e230-28f5-4a93-be91-bbe6080a14f0"",
                     ""expectedControlType"": """",
@@ -360,7 +360,7 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Alt Action"",
+                    ""action"": ""Order Action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1072,7 +1072,7 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         m_GroundActions_Move = m_GroundActions.FindAction("Move", throwIfNotFound: true);
         m_GroundActions_Look = m_GroundActions.FindAction("Look", throwIfNotFound: true);
         m_GroundActions_MainAction = m_GroundActions.FindAction("Main Action", throwIfNotFound: true);
-        m_GroundActions_AltAction = m_GroundActions.FindAction("Alt Action", throwIfNotFound: true);
+        m_GroundActions_OrderAction = m_GroundActions.FindAction("Order Action", throwIfNotFound: true);
         m_GroundActions_ResetItem = m_GroundActions.FindAction("Reset Item", throwIfNotFound: true);
         m_GroundActions_SwitchItem = m_GroundActions.FindAction("Switch Item", throwIfNotFound: true);
         m_GroundActions_PickupItem = m_GroundActions.FindAction("Pickup Item", throwIfNotFound: true);
@@ -1178,7 +1178,7 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_GroundActions_Move;
     private readonly InputAction m_GroundActions_Look;
     private readonly InputAction m_GroundActions_MainAction;
-    private readonly InputAction m_GroundActions_AltAction;
+    private readonly InputAction m_GroundActions_OrderAction;
     private readonly InputAction m_GroundActions_ResetItem;
     private readonly InputAction m_GroundActions_SwitchItem;
     private readonly InputAction m_GroundActions_PickupItem;
@@ -1212,9 +1212,9 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @MainAction => m_Wrapper.m_GroundActions_MainAction;
         /// <summary>
-        /// Provides access to the underlying input action "GroundActions/AltAction".
+        /// Provides access to the underlying input action "GroundActions/OrderAction".
         /// </summary>
-        public InputAction @AltAction => m_Wrapper.m_GroundActions_AltAction;
+        public InputAction @OrderAction => m_Wrapper.m_GroundActions_OrderAction;
         /// <summary>
         /// Provides access to the underlying input action "GroundActions/ResetItem".
         /// </summary>
@@ -1286,9 +1286,9 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
             @MainAction.started += instance.OnMainAction;
             @MainAction.performed += instance.OnMainAction;
             @MainAction.canceled += instance.OnMainAction;
-            @AltAction.started += instance.OnAltAction;
-            @AltAction.performed += instance.OnAltAction;
-            @AltAction.canceled += instance.OnAltAction;
+            @OrderAction.started += instance.OnOrderAction;
+            @OrderAction.performed += instance.OnOrderAction;
+            @OrderAction.canceled += instance.OnOrderAction;
             @ResetItem.started += instance.OnResetItem;
             @ResetItem.performed += instance.OnResetItem;
             @ResetItem.canceled += instance.OnResetItem;
@@ -1336,9 +1336,9 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
             @MainAction.started -= instance.OnMainAction;
             @MainAction.performed -= instance.OnMainAction;
             @MainAction.canceled -= instance.OnMainAction;
-            @AltAction.started -= instance.OnAltAction;
-            @AltAction.performed -= instance.OnAltAction;
-            @AltAction.canceled -= instance.OnAltAction;
+            @OrderAction.started -= instance.OnOrderAction;
+            @OrderAction.performed -= instance.OnOrderAction;
+            @OrderAction.canceled -= instance.OnOrderAction;
             @ResetItem.started -= instance.OnResetItem;
             @ResetItem.performed -= instance.OnResetItem;
             @ResetItem.canceled -= instance.OnResetItem;
@@ -1688,12 +1688,12 @@ public partial class @BOTG_Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMainAction(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Alt Action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Order Action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnAltAction(InputAction.CallbackContext context);
+        void OnOrderAction(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Reset Item" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

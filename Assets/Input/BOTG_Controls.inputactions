@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Alt Action",
+                    "name": "Order Action",
                     "type": "Button",
                     "id": "4192e230-28f5-4a93-be91-bbe6080a14f0",
                     "expectedControlType": "",
@@ -274,7 +274,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Alt Action",
+                    "action": "Order Action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

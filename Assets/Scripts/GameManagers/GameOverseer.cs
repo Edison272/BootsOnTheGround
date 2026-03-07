@@ -35,6 +35,8 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public static readonly LayerMask avoid_map_mask = 1 << 7; // check if map is in the way of this raycast
     public static readonly LayerMask avoid_obstacles_mask = (1 << 6) | (1 << 7); // check if map and entities are in the way of this raycast
     public static readonly LayerMask find_interactable_mask = 1 << 9;
+    public static readonly LayerMask find_characters_mask = 1 << 6;
+    public static readonly LayerMask characters_and_interactables_mask = (1 << 6) | (1 << 9);
     // Faction stuff
     [SerializeField] private Color serialize_squad_color;
     [SerializeField] private Color serialize_enemy_color;
@@ -93,7 +95,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         player_control.squad = squad_manager;
         player_control.item_ui_control = item_ui_control;
         player_control.health_ui_control = health_ui_control;
-        player_control.player_action_control = player_action_control;
+        player_control.player_action_controller = player_action_control;
 
         // initialize squad and enemy managers in the right places
         squad_manager.InitializeAllies();

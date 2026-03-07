@@ -9,6 +9,7 @@ public enum CharacterBodyPart {None = -1, Hitbox, TrueFront, TrueBack, Front, Ba
 public class Character : MonoBehaviour, IHealth, IMovement
 {
     private CharacterSO base_data;
+    public string character_name => base_data.character_name;
     [field: Header("Body Parts")]
     public GameObject main_body;//basically the hitbox
     public GameObject vfx_body; //the vfx body
@@ -81,6 +82,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     private int holding_capacity = 0;
 
     [field: Header("Interactables")]
+    List<Collider2D> interactables_in_range = new List<Collider2D>();
     public float interaction_range = 1;
 
     [field: Header("Detection")]
@@ -513,11 +515,14 @@ public class Character : MonoBehaviour, IHealth, IMovement
     }
     public IInteractable FindInteractables()
     {
-        Collider2D[] interactables = Physics2D.OverlapCircleAll(GetPosition(), hitbox_radius + interaction_range, GameOverseer.find_interactable_mask);
+        ContactFilter2D interactable_filter = new ContactFilter2D();
+        interactable_filter.SetLayerMask(GameOverseer.find_interactable_mask);
+        interactable_filter.useLayerMask = true; // Actively use the mask
+        Physics2D.OverlapCircle(GetPosition(), hitbox_radius + interaction_range, interactable_filter, interactables_in_range);
         IInteractable closest_interactable = null;
-        if (interactables.Length > 0)
+        if (interactables_in_range.Count > 0)
         {
-            closest_interactable = interactables[0].GetComponent<IInteractable>();
+            closest_interactable = interactables_in_range[0].GetComponent<IInteractable>();
         }
         return closest_interactable;
     }

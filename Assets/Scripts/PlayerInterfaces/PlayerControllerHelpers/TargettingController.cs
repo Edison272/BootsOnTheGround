@@ -11,7 +11,7 @@ public class TargettingController
     LineRenderer main_line_render;
     LineRenderer vfx_line_render;
     bool target_allies;
-    public float alignment = 0;
+    public float alignment = 1;
     public TargettingController(LineRenderer main_line_render, LineRenderer vfx_line_render)
     {
         this.main_line_render = main_line_render;
@@ -30,7 +30,6 @@ public class TargettingController
         Color end_color = PlayerController.base_color;
         Color start_color = PlayerController.origin_color;
         float width_mult = 0f;
-        alignment = 0;
         if (contacts.Length > 0)
         {
             foreach(RaycastHit2D contact in contacts)
@@ -47,9 +46,9 @@ public class TargettingController
                 if (contact_char && target_allies == (active_character.faction_tag == contact_char.faction_tag))
                 {
                     target_pos = contact.point;
-                    Vector2 target_dir = (target_pos - contact.transform.GetComponent<Rigidbody2D>().centerOfMass).normalized;
-                    Vector2 perfect_dir = (active_character.GetPosition() - contact.transform.GetComponent<Rigidbody2D>().centerOfMass).normalized;
-                    alignment = Mathf.InverseLerp(0.9f, 1, -Vector2.Dot(-target_dir, perfect_dir));                    
+                    // Vector2 hit_dir = (contact.transform.GetComponent<Rigidbody2D>().centerOfMass - target_pos).normalized;
+                    // Vector2 center_dir = (active_character.GetPosition() - target_pos).normalized;
+                    // alignment = Vector2.Dot(hit_dir, center_dir);                
                     
                     alpha = 0.75f * (alignment);
                     width_mult = 0.5f * (alignment);
