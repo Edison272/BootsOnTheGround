@@ -70,10 +70,11 @@ public class PlayerViewController
         last_pointer_delta = pointer_delta;
         screen_pos += last_pointer_delta;
         
+        float cam_scale = main_camera_controller.target_zoom;
         Rect rect = player_screen.rect;
         screen_pos = new Vector2(
-            Mathf.Clamp(screen_pos.x, rect.xMin, rect.xMax),
-            Mathf.Clamp(screen_pos.y, rect.yMin, rect.yMax)
+            Mathf.Clamp(screen_pos.x, rect.xMin / cam_scale, rect.xMax / cam_scale),
+            Mathf.Clamp(screen_pos.y, rect.yMin / cam_scale, rect.yMax / cam_scale)
         );
         // float lowest_dimension = rect.xMax;
         // if (lowest_dimension > rect.yMax)

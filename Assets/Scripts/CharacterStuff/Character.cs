@@ -140,7 +140,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
             init_inventory[main_item] = GetItemSO(base_data.inventory[main_item]);
             if (alt_item > -1)
             {
-                init_inventory[alt_item] = GetItemSO(base_data.inventory[alt_item]);
+                init_inventory[alt_item] = GetItemSO(base_data.inventory[alt_item], true);
             }
         }
         inventory = init_inventory.ToList<Item>();

@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Rendering;
 using UnityEngine;
 [System.Serializable]
 public class MainCameraController
@@ -14,9 +15,10 @@ public class MainCameraController
     float lerp_amount = 1;
     float zoom_diff; // set current zoom
     float curr_zoom; // set current zoom
-    [SerializeField]float target_zoom; // set current zoom
+    [SerializeField] public float target_zoom {get; private set;} // set current zoom
     [SerializeField] float player_range; // player look range (based on weapons and base stats)
     float curr_zoom_time;
+    [SerializeField] public const float c_max_zoom = 5;
 
     [Header("Camera Positioning")]
     Vector2 source_position;
@@ -84,7 +86,7 @@ public class MainCameraController
         player_view_controller.SetRange(zoom_scalar);
         curr_zoom = player_screen.localScale.x;
         curr_zoom_time = 0;
-        target_zoom = base_zoom_level + (5 - zoom_scalar) * zoom_factor;
+        target_zoom = base_zoom_level + (c_max_zoom - zoom_scalar) * zoom_factor;
         zoom_diff = target_zoom - player_screen.localScale.x;
     }
 
@@ -92,7 +94,7 @@ public class MainCameraController
     {
         // update cam position to move to look position within circular bounds
         float cam_range = 5 + 1.5f * player_range;
-        Vector2 offset = (target_position - source_position) * 0.5f;
+        Vector2 offset = (target_position - source_position) * 0.1f;
         if (offset.sqrMagnitude > cam_range * cam_range)
         {
             offset = offset.normalized * cam_range;
@@ -101,7 +103,7 @@ public class MainCameraController
         Vector3 cam_pos = source_position + offset;
         cam_pos.z = -10;
 
-        main_cam.transform.position = Vector3.Lerp(main_cam.transform.position, cam_pos, 0.25f);
+        main_cam.transform.position = cam_pos;
     }
 
     public void SetCameraAtPosition()

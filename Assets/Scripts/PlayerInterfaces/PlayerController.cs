@@ -49,6 +49,9 @@ public class PlayerController : MonoBehaviour
     [Header("Character UI")]
     public ItemUIController item_ui_control;
     public HealthUIController health_ui_control;
+
+    [Header("Settings")]
+    [Range(0.1f, 3)] public float sensitivity = 2f;
     
 #region Initializers
     void Awake() // initialize values before player assumes control
@@ -138,13 +141,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // prepare camera data
+        player_view_controller.UpdateLookPos();
         if (active_character)
         {
             if (main_continuous) {MainAction();}
             if (alt_continuous) {AltAction();}
 
             // set look pos
-            player_view_controller.UpdateView(pointer_delta*0.5f, active_character.GetPosition());
+            player_view_controller.UpdateView(pointer_delta*0.75f, active_character.GetPosition());
             pointer_delta = Vector2.zero;
             active_character.Look(look_pos);
             main_cam_controller.UpdateCamData(active_character.GetPosition(), look_pos);
@@ -157,8 +162,6 @@ public class PlayerController : MonoBehaviour
             // do some ui stuff too
             closest_interactable = active_character.FindInteractables();
         }
-        // prepare camera data
-        player_view_controller.UpdateLookPos();
     }
     void LateUpdate()
     {   
@@ -184,7 +187,7 @@ public class PlayerController : MonoBehaviour
     }
     void StopMove(InputAction.CallbackContext context) {active_character.StopMove();}
     void Look(InputAction.CallbackContext context) {
-        pointer_delta += looking.ReadValue<Vector2>();
+        pointer_delta += sensitivity * looking.ReadValue<Vector2>()/main_cam_controller.target_zoom;
     }
     void MainStart(InputAction.CallbackContext context) {
         active_character.UseMainItem();
