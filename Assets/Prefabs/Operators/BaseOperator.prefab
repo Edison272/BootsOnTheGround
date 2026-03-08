@@ -594,6 +594,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8205214754011559109, guid: 852337d3087a78c459ce5ccd025a9628,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 7501651884322301389, guid: 5ed00213e0021ae4eb3e1d774729c9db,
+        type: 3}
     m_RemovedComponents:
     - {fileID: 592922226325099996, guid: 852337d3087a78c459ce5ccd025a9628, type: 3}
     - {fileID: 4863002432012826597, guid: 852337d3087a78c459ce5ccd025a9628, type: 3}
@@ -683,16 +689,20 @@ MonoBehaviour:
   back: {fileID: 6184249750639701706}
   body: {fileID: 7250862482808400969}
   body_sprite: {fileID: 3525609295591183702}
+  body_outline: {fileID: 7581632338163845308}
   main_hand: {fileID: 184197864269267101}
   alt_hand: {fileID: 2053215400763662691}
   head: {fileID: 7638708828582117308}
   front_particles: {fileID: 3071357657118452355}
   back_particles: {fileID: 4416327845471410263}
+  true_front: {fileID: 0}
+  true_back: {fileID: 0}
   base_sprite_height: 0
   base_head_height: 0
   animator: {fileID: 1320355488441388370}
   aim_angle: 0
   <movement_component>k__BackingField:
+    <destination_reached>k__BackingField: 0
     current_tile_pos: {x: 0, y: 0}
     max_accel_time: 0
     move_speed_modifiers: []
@@ -711,6 +721,7 @@ MonoBehaviour:
   item_indexes: []
   main_item: {fileID: 0}
   alt_item: {fileID: 0}
+  interaction_range: 1
   target: {fileID: 0}
   faction_tag: 1
   nametag: {fileID: 668327687475740912}
@@ -720,7 +731,6 @@ MonoBehaviour:
     command: 0
     favorite_target: 0
     character: {fileID: 0}
-    leader: {fileID: 0}
     base_engage_dist: 0
     anchor_position: {x: 0, y: 0}
     move_to_pos: {x: 0, y: 0}
@@ -776,6 +786,12 @@ Transform:
 --- !u!4 &7250862482808400969 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8481389507695080430, guid: 852337d3087a78c459ce5ccd025a9628,
+    type: 3}
+  m_PrefabInstance: {fileID: 1230555618899894183}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7581632338163845308 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8657204508436027163, guid: 852337d3087a78c459ce5ccd025a9628,
     type: 3}
   m_PrefabInstance: {fileID: 1230555618899894183}
   m_PrefabAsset: {fileID: 0}

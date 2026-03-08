@@ -17,6 +17,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public Transform back;
     public Transform body;
     public Transform body_sprite;
+    public Transform body_outline;
     public Transform main_hand; //always set to main hand object
     public Transform alt_hand; //always set to off hand object
     public Transform head;
@@ -655,6 +656,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
     public void UpdateBodyVFX()
     {
+        body_outline.GetComponent<SpriteRenderer>().sprite = body_sprite.GetComponent<SpriteRenderer>().sprite;
         float curr_sprite_height = body_sprite.GetComponent<SpriteRenderer>().bounds.size.y;
         head.transform.localPosition = new Vector3(0, base_head_height * curr_sprite_height/base_sprite_height, 0);
     }

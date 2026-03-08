@@ -21,6 +21,7 @@ public class OrderController
     [Header("UI components")]
     [SerializeField] FollowPlayerZoneUI follow_player_ui;
     [SerializeField] GameObject hold_position_ui;
+    [SerializeField] GameObject sprite_outline;
     public OrderController(PlayerController player_controller, SquadManager squad_manager)
     {
         this.player_controller = player_controller;
@@ -32,6 +33,8 @@ public class OrderController
         follow_player_ui.gameObject.SetActive(false);
         hold_position_ui = GameObject.Instantiate(Resources.Load<GameObject>("UI/MovePointer"));
         hold_position_ui.SetActive(false);
+        sprite_outline = GameObject.Instantiate(Resources.Load<GameObject>("UI/SpriteOutline"));
+        sprite_outline.SetActive(false);
     }
 
     public void UpdateOrderControl(Vector2 look_pos)
