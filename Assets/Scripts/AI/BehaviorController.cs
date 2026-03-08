@@ -75,7 +75,7 @@ public class BehaviorController
                 behavior_modules[new_command] = new HoldPositionBM(character, this);
                 break;
             case CommandMode.Interact:
-                behavior_modules[new_command] = new HoldPositionBM(character, this);
+                behavior_modules[new_command] = new InteractBM(character, this);
                 break;
             case CommandMode.Engage:
                 behavior_modules[new_command] = new EngageEnemyBM(character, this);
@@ -166,7 +166,7 @@ public class BehaviorController
     #region Commands
     public void SetCommand(CommandMode command)
     {
-        Debug.Log(character.name + " will " + command);
+        //Debug.Log(character.name + " will " + command);
         this.command = command;
         current_module = behavior_modules[command];
         current_module.StartModule();

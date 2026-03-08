@@ -42,7 +42,6 @@ public class HoldPositionBM : BehaviorModule
             {
                 GotoAnchor();
             }
-            Debug.Log("Holding!");
         }
         else
         {
@@ -70,22 +69,16 @@ public class FollowLeaderBM : BehaviorModule
 {
     Vector2 leader_position;
     public float follow_until_dist = 3.5f;
-    float estimated_travel_time;
-    float curr_travel_time;
     public FollowLeaderBM(Character character, BehaviorController behavior_controller) : base(character, behavior_controller)
     {
         
     }
 
-    public override void StartModule()
-    {
-        
-    }
+    public override void StartModule(){}
 
     public override void UpdateModule()
     {
         leader_position = behavior_controller.leader ? behavior_controller.leader.GetPosition() : character.GetPosition();
-
         // when far away from the leader, get within range of them
         if ((character.GetPosition() - leader_position).magnitude > follow_until_dist)
         {
@@ -96,16 +89,11 @@ public class FollowLeaderBM : BehaviorModule
         // otherwise, *slightly* get in range pursue targets, and be ready to move when the player does
         else if (behavior_controller.leader.move_dir != character.move_dir)
         {
-            character.SetMove(behavior_controller.leader.move_dir);
+            Vector2 move_dir = behavior_controller.leader.move_dir;
+            if (move_dir != Vector2.zero){character.SetMove(behavior_controller.leader.move_dir);}
+            else{character.StopMove();}
+            
         }
-    }
-
-    void Follow()
-    {
-        behavior_controller.anchor_position = (character.GetPosition() - behavior_controller.leader.GetPosition()).normalized * follow_until_dist + behavior_controller.leader.GetPosition();
-        Vector2 obj_pos = behavior_controller.anchor_position + behavior_controller.leader.move_dir * follow_until_dist * 1.1f;
-        Vector2 move_pos = (obj_pos - behavior_controller.anchor_position).normalized * Mathf.Clamp((behavior_controller.anchor_position - obj_pos).magnitude, 2, behavior_controller.base_engage_dist);
-        
     }
 }
 
@@ -136,6 +124,7 @@ public class EngageEnemyBM : BehaviorModule
 
 public class InteractBM : BehaviorModule
 {
+    bool interaction_complete = false;
     public InteractBM(Character character, BehaviorController behavior_controller) : base(character, behavior_controller)
     {
         
@@ -143,11 +132,31 @@ public class InteractBM : BehaviorModule
 
     public override void StartModule()
     {
-        
+        GotoAnchor();
+        interaction_complete = false;
     }
 
     public override void UpdateModule()
     {
-        
+        if (character.destination_reached && !interaction_complete)
+        {
+            IInteractable closest_interactable = character.FindInteractables();
+            if (closest_interactable != null)
+            {
+                character.UseInteractable(closest_interactable);
+                Debug.Log("Found Something!");
+            }
+            else
+            {
+                Debug.Log("Nothign here");
+            }
+            interaction_complete = true;
+        }
+    }
+    void GotoAnchor()
+    {
+        Vector2 dir = (behavior_controller.anchor_position - character.GetPosition()).normalized;
+        Vector2 projection_pos = character.GetPosition() + dir * (character.hitbox_radius + 0.05f);
+        character.SetMovePos(behavior_controller.anchor_position);        
     }
 }

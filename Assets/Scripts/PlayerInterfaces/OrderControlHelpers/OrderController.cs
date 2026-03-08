@@ -48,7 +48,7 @@ public class OrderController
                 float da = ((Vector2)a.transform.position - look_pos).sqrMagnitude;
                 float db = ((Vector2)b.transform.position - look_pos).sqrMagnitude;
                 return da.CompareTo(db);
-            });            
+            });
         }
     }
 
@@ -80,6 +80,7 @@ public class OrderController
     {
         if (interactables_in_range.Count > 0)
         {
+            chosen_op.op_behavior_controller.anchor_position = player_controller.look_pos;
             chosen_op.SetCommandBehavior(CommandMode.Interact);
         }
         else if ((look_pos - player_controller.active_character.GetPosition()).sqrMagnitude <= 9)
