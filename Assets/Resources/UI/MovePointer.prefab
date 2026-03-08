@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7034001544728281181}
   - component: {fileID: 3973798202881661688}
   - component: {fileID: 6634865976602669636}
+  - component: {fileID: 3254950077845882081}
   m_Layer: 0
   m_Name: MovePointer
   m_TagString: Untagged
@@ -193,3 +194,15 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &3254950077845882081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7271516834146689524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25e2596df0735b4abc8b69a0082ee12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
