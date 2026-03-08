@@ -4,6 +4,150 @@ using UnityEngine;
 
 public abstract class BehaviorModule
 {
-    public abstract bool UpdateModule();
+    protected Character character;
+    protected BehaviorController behavior_controller;
+    public BehaviorModule(Character character, BehaviorController behavior_controller)
+    {
+        this.character = character;
+        this.behavior_controller = behavior_controller;
+    }
+    public abstract void StartModule();
+    public abstract void UpdateModule();
+}
 
+public class HoldPositionBM : BehaviorModule
+{
+    float max_anchor_distance = 3;
+    float estimated_travel_time;
+    float curr_travel_time;
+    public HoldPositionBM(Character character, BehaviorController behavior_controller) : base(character, behavior_controller)
+    {
+        
+    }
+
+    public override void StartModule()
+    {
+        GotoAnchor();
+
+        // character couldn't reach path on time. something went wrong
+        estimated_travel_time = character.GetTravelTime();
+        curr_travel_time = 0;
+    }
+
+    public override void UpdateModule()
+    {
+        if (character.destination_reached)
+        {
+            if ((character.GetPosition() - behavior_controller.anchor_position).sqrMagnitude >= max_anchor_distance * max_anchor_distance)
+            {
+                GotoAnchor();
+            }
+            Debug.Log("Holding!");
+        }
+        else
+        {
+            curr_travel_time += Time.fixedDeltaTime;
+            if (curr_travel_time >= estimated_travel_time)
+            {
+                character.StopMove();
+                curr_travel_time = 0;
+
+                // reset and try again
+                StartModule();
+            }
+        }
+    }
+
+    void GotoAnchor()
+    {
+        Vector2 dir = (behavior_controller.anchor_position - character.GetPosition()).normalized;
+        Vector2 projection_pos = character.GetPosition() + dir * (character.hitbox_radius + 0.05f);
+        character.SetMovePos(behavior_controller.anchor_position);        
+    }
+}
+
+public class FollowLeaderBM : BehaviorModule
+{
+    Vector2 leader_position;
+    public float follow_until_dist = 3.5f;
+    float estimated_travel_time;
+    float curr_travel_time;
+    public FollowLeaderBM(Character character, BehaviorController behavior_controller) : base(character, behavior_controller)
+    {
+        
+    }
+
+    public override void StartModule()
+    {
+        
+    }
+
+    public override void UpdateModule()
+    {
+        leader_position = behavior_controller.leader ? behavior_controller.leader.GetPosition() : character.GetPosition();
+
+        // when far away from the leader, get within range of them
+        if ((character.GetPosition() - leader_position).magnitude > follow_until_dist)
+        {
+            Vector2 dir_to_leader = (character.GetPosition() - behavior_controller.leader.GetPosition()).normalized;
+            behavior_controller.anchor_position = dir_to_leader * follow_until_dist + behavior_controller.leader.GetPosition();
+            character.SetMovePos(behavior_controller.anchor_position);
+        }
+        // otherwise, *slightly* get in range pursue targets, and be ready to move when the player does
+        else if (behavior_controller.leader.move_dir != character.move_dir)
+        {
+            character.SetMove(behavior_controller.leader.move_dir);
+        }
+    }
+
+    void Follow()
+    {
+        behavior_controller.anchor_position = (character.GetPosition() - behavior_controller.leader.GetPosition()).normalized * follow_until_dist + behavior_controller.leader.GetPosition();
+        Vector2 obj_pos = behavior_controller.anchor_position + behavior_controller.leader.move_dir * follow_until_dist * 1.1f;
+        Vector2 move_pos = (obj_pos - behavior_controller.anchor_position).normalized * Mathf.Clamp((behavior_controller.anchor_position - obj_pos).magnitude, 2, behavior_controller.base_engage_dist);
+        
+    }
+}
+
+public class EngageEnemyBM : BehaviorModule
+{
+    public EngageEnemyBM(Character character, BehaviorController behavior_controller) : base(character, behavior_controller)
+    {
+        
+    }
+
+    public override void StartModule()
+    {
+        
+    }
+
+    public override void UpdateModule()
+    {
+        Vector2 move_dir = Vector2.zero;
+        if (character.target)
+        {
+            behavior_controller.anchor_position = character.target.GetPosition();
+            
+        }
+        move_dir = (behavior_controller.anchor_position - character.GetPosition()).normalized;
+        character.SetMove(move_dir);
+    }
+}
+
+public class InteractBM : BehaviorModule
+{
+    public InteractBM(Character character, BehaviorController behavior_controller) : base(character, behavior_controller)
+    {
+        
+    }
+
+    public override void StartModule()
+    {
+        
+    }
+
+    public override void UpdateModule()
+    {
+        
+    }
 }

@@ -15,7 +15,7 @@ public class MovementComponent
     public Vector2 move_dir {get; private set;} = Vector2.zero;
     public Vector2 move_pos {get; private set;} = Vector2.zero;
     private Vector2 lerp_move_pos = Vector2.zero;
-    public bool destination_reached {get; private set;} = false;
+    [field: SerializeField] public bool destination_reached {get; private set;} = false;
     public Vector2 last_move_dir {get; private set;} = Vector2.zero;
     public Vector2 force_dir {get; private set;} = Vector2.zero;
     private Rigidbody2D entity_rb;
@@ -112,6 +112,7 @@ public class MovementComponent
     public bool Move(bool current_move_state) 
     {
         bool set_is_moving = current_move_state;
+        // if under the affect of knocknack, dash, etc, input movement only slightly influences movement
         if (force_move_time == 1)
         {
             // move against knockback
@@ -128,6 +129,7 @@ public class MovementComponent
                 entity_rb.velocity = Vector2.zero;
             }
         } 
+        // standard movement. Keep moving if you're too far from your target position (1st conditional), or forcibly stopped (2nd conditional)
         else if ((move_pos - GetPosition()).sqrMagnitude > 0.01f && !destination_reached)
         {
             curr_speed = Accelerate();
@@ -149,6 +151,11 @@ public class MovementComponent
         else if (move_dir != Vector2.zero)
         {
             set_is_moving = false;
+        }
+
+        if (!set_is_moving)
+        {
+            StopMove(false);
         }
         return set_is_moving;
     }

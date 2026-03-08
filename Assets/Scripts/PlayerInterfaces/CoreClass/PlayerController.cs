@@ -313,17 +313,17 @@ public class PlayerController : MonoBehaviour
     void OpDeploy4(InputAction.CallbackContext context) {GetOperator(4);}
     void GetOperator(int deploy_index = 1)
     {
-        // cancel command if it was done twice
-        if (op_select_index == deploy_index) {
-            ResetOrder();
-        } 
-        // otherwise select operator and enable operator commands
-        else {
-            op_select_index = deploy_index;
-            squad.SetSelectedOperator(op_select_index);
-            ToggleCommandInput(true);
-            GameOverseer.THE_OVERSEER.canvas_control.ToggleReticleCommandUI(true);
-        }
+        // // cancel command if it was done twice
+        // if (op_select_index == deploy_index) {
+        //     ResetOrder();
+        // } 
+        // // otherwise select operator and enable operator commands
+        // else {
+        //     op_select_index = deploy_index;
+        //     squad.SetSelectedOperator(op_select_index);
+        //     ToggleCommandInput(true);
+        //     GameOverseer.THE_OVERSEER.canvas_control.ToggleReticleCommandUI(true);
+        // }
         
     }
 

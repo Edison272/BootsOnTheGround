@@ -10,6 +10,7 @@ public class OperatorController : BehaviorController
     public OperatorController(Character c) : base(c)
     {
         squad_manager = GameOverseer.THE_OVERSEER.squad_manager;
+        this.AddBehavior(CommandMode.Hold).AddBehavior(CommandMode.Follow).AddBehavior(CommandMode.Interact);
     }
 
     public override void UpdateAI()
@@ -21,17 +22,17 @@ public class OperatorController : BehaviorController
         }
     }
 
-    protected override void FollowCommand()
-    {
-        // anchor_position = squad_manager.op_formation[squad_index];
-        // Vector2 move_dir = (anchor_position - character.GetPosition()).normalized;
-        // //Debug.Log(anchor_position);
-        // character.SetMove(move_dir);
-        base.FollowCommand();
-    }
+    // protected override void FollowCommand()
+    // {
+    //     // anchor_position = squad_manager.op_formation[squad_index];
+    //     // Vector2 move_dir = (anchor_position - character.GetPosition()).normalized;
+    //     // //Debug.Log(anchor_position);
+    //     // character.SetMove(move_dir);
+    //     base.FollowCommand();
+    // }
 
-    protected override void HoldCommand()
-    {
-        base.HoldCommand();
-    }
+    // protected override void HoldCommand()
+    // {
+    //     base.HoldCommand();
+    // }
 }

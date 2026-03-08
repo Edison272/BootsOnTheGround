@@ -28,13 +28,12 @@ MonoBehaviour:
   holding_capacity: 2
   inventory:
   - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
-  - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
   - {fileID: 11400000, guid: e9fe9862a1e5d644b82b8e848028dcf5, type: 2}
   - {fileID: 11400000, guid: 2d1f52d9f7d9dbf40a235b8fa7414e45, type: 2}
   item_indexes:
-  - {x: 0, y: 1}
+  - {x: 0, y: -1}
+  - {x: 1, y: -1}
   - {x: 2, y: -1}
-  - {x: 3, y: -1}
   op_class: 0
   redeployment_time: 1000000
   ability: {fileID: 11400000, guid: 3eebcadb3f811d342bae6dae6cf1391c, type: 2}

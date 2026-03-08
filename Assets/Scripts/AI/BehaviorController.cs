@@ -17,8 +17,7 @@ Prioritize Self Preservation
 */
 public class BehaviorController
 {
-    protected Dictionary<string, BehaviorModule> movement_behaviors; 
-    protected Dictionary<string, BehaviorModule> action_behaviors; 
+    protected Dictionary<CommandMode, BehaviorModule> behavior_modules = new Dictionary<CommandMode, BehaviorModule>();
 
     protected Queue<Action> movement_queue = new Queue<Action>();
     protected float move_wait_time = 1;
@@ -26,7 +25,6 @@ public class BehaviorController
     protected float estimated_travel_time = 0; // time expected to be taken to complete a move
     protected float curr_travel_time = 0;
     protected int movement_priority = 1;
-    protected Queue<Action> action_queue = new Queue<Action>();
     protected float action_wait_time = 0;
     protected float curr_action_time = 0;
 
@@ -34,13 +32,14 @@ public class BehaviorController
     public TargetType favorite_target = TargetType.Closest;
     
     [SerializeField] protected Character character;
-    [SerializeField] protected Character leader; // who they follow/ base their strategies around
+    [SerializeField] public Character leader {get; private set;} // who they follow/ base their strategies around
 
     [Header("Actions")]
     protected float aggro_time = 1; // do an attack or something
     protected float rest_time = 0f; // don't attack
     protected float curr_time; // time buffer
     protected bool is_acting = true;
+    BehaviorModule current_module;
 
     [Header("Positioning")]
     public float base_engage_dist = 6f;
@@ -49,22 +48,47 @@ public class BehaviorController
     private Vector2Int prev_tile_pos;
     private float avoidance_range = 1;
 
-    // Move Command
-    protected Action MovementType;
 
+#region Initializers
     public BehaviorController(Character c)
     {
         character = c;
-        SetCommand(CommandMode.Hold);
         anchor_position = c.GetPosition();
+        AddBehavior(CommandMode.Hold).AddBehavior(CommandMode.Follow);
+        SetCommand(CommandMode.Hold);
     }
     public void SetLeader(Character new_leader)
     {
         leader = new_leader;
     }
+    public BehaviorController AddBehavior(CommandMode new_command)
+    {
+        switch(new_command)
+        {
+            case CommandMode.Hold:
+                behavior_modules[new_command] = new HoldPositionBM(character, this);
+                break;
+            case CommandMode.Follow:
+                behavior_modules[new_command] = new FollowLeaderBM(character, this);
+                break;
+            case CommandMode.Disperse:
+                behavior_modules[new_command] = new HoldPositionBM(character, this);
+                break;
+            case CommandMode.Interact:
+                behavior_modules[new_command] = new HoldPositionBM(character, this);
+                break;
+            case CommandMode.Engage:
+                behavior_modules[new_command] = new EngageEnemyBM(character, this);
+                break;
+        }
+        return this;
+    }
+#endregion
 #region Update
     public virtual void UpdateAI()
     {   
+        current_module.UpdateModule();
+        
         // some tempo controllers
         if (curr_time > 0)
         {
@@ -137,87 +161,17 @@ public class BehaviorController
             estimated_travel_time = 0;
             curr_travel_time = 0;
         } 
-        else
-        {
-            // character couldn't reach path on time. something went wrong
-            curr_travel_time += Time.fixedDeltaTime;
-            if (curr_travel_time >= estimated_travel_time * 1f)
-            {
-                character.StopMove();
-                movement_queue.Clear();
-                curr_travel_time = 0;
-                SetCommand(CommandMode.Follow);
-            }
-        }
     }
     #endregion
     #region Commands
     public void SetCommand(CommandMode command)
     {
-        //Debug.Log(character.name + " will " + command);
+        Debug.Log(character.name + " will " + command);
         this.command = command;
-        switch (command)
-        {
-            case CommandMode.Follow:
-                MovementType = FollowCommand;
-                break;
-            case CommandMode.Disperse:
-                MovementType = DisperseCommand;
-                break;
-            case CommandMode.Engage:
-                MovementType = EngageCommand;
-                break;
-            case CommandMode.Hold:
-                MovementType = HoldCommand;
-                break;
-        }
-        movement_queue.Clear();
-        character.StopMove();
-        MovementType();
+        current_module = behavior_modules[command];
+        current_module.StartModule();
         estimated_travel_time = character.GetTravelTime();
         curr_travel_time = 0;
-    }
-    protected virtual void FollowCommand()
-    {        
-        Vector2 leader_position = leader? leader.GetPosition() : character.GetPosition();
-        if ((character.GetPosition() - leader_position).magnitude > 3.5f)
-        {
-            anchor_position = (character.GetPosition() - leader.GetPosition()).normalized * 3.5f + leader.GetPosition();
-            //Debug.Log("Following");
-            Vector2 obj_pos = anchor_position + leader.move_dir * 3;
-            if (character.target)
-            {
-                obj_pos = character.target.GetPosition();
-
-            }
-            Vector2 move_pos = (obj_pos - anchor_position).normalized * Mathf.Clamp((anchor_position - obj_pos).magnitude, 2, base_engage_dist);
-
-            Debug.DrawLine(character.GetPosition(), move_pos);
-            character.SetMovePos(anchor_position + move_pos);
-        }
-        // constantly follow that player
-        movement_queue.Enqueue(FollowCommand);
-    }
-    protected virtual void DisperseCommand()
-    {
-        Vector2 move_dir = Vector2.zero;
-    }
-    protected virtual void EngageCommand() // prioritize finding enemies and taking them down
-    {
-        Vector2 move_dir = Vector2.zero;
-        if (character.target)
-        {
-            anchor_position = character.target.GetPosition();
-            
-        }
-        move_dir = (anchor_position - character.GetPosition()).normalized;
-        character.SetMove(move_dir);
-    }
-    protected virtual void HoldCommand()
-    {
-        Vector2 dir = (anchor_position - character.GetPosition()).normalized;
-        Vector2 projection_pos = character.GetPosition() + dir * (character.hitbox_radius + 0.05f);
-        character.SetMovePos(anchor_position);
     }
     #endregion
     #region Helper Vector Weight Functions

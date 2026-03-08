@@ -80,15 +80,16 @@ public class OrderController
     {
         if (interactables_in_range.Count > 0)
         {
-            Debug.Log("Interact with that, " + chosen_op.character_name);
+            chosen_op.SetCommandBehavior(CommandMode.Interact);
         }
         else if ((look_pos - player_controller.active_character.GetPosition()).sqrMagnitude <= 9)
         {
-            Debug.Log("Follow Player, " + chosen_op.character_name);
+            chosen_op.SetCommandBehavior(CommandMode.Follow);
         }
         else
         {
-            Debug.Log("Hold position, " + chosen_op.character_name);
+            chosen_op.op_behavior_controller.anchor_position = player_controller.look_pos;
+            chosen_op.SetCommandBehavior(CommandMode.Hold);
         }
         
 
