@@ -224,14 +224,21 @@ public class MapManager : MonoBehaviour
 #endregion
 
 #region Set/Get Loc Info
-    public Vector2Int GetWorldToTileSpace(Vector2 world_pos)
+    private static Vector2Int GetWorldToTileSpace(Vector2 world_pos)
     {
         return new Vector2Int(
             (int)Mathf.Round(world_pos.x),
             (int)Mathf.Round(world_pos.y)
         );
     }
-    public Vector2Int GetTileToChunkSpace(Vector2Int tile_pos)
+    public static Vector2 GetWorldToTileSpaceCenter(Vector2 world_pos)
+    {
+        return new Vector2Int(
+            (int)Mathf.Round(world_pos.x),
+            (int)Mathf.Round(world_pos.y)
+        ) + new Vector2(0.5f, 0.5f);
+    }
+    public static Vector2Int GetTileToChunkSpace(Vector2Int tile_pos)
     {
         return new Vector2Int(
             Mathf.FloorToInt((float)tile_pos.x/chunk_size),

@@ -137,8 +137,8 @@ public class CanvasController : MonoBehaviour
             op_statuses[i].ConstructUI(squad_members[i], i);
 
             // get a movement indicator
-            movement_indicators[i] = Instantiate(Resources.Load<GameObject>("UI/MovePointer"));
-            movement_indicators[i].SetActive(false);
+            // movement_indicators[i] = Instantiate(Resources.Load<GameObject>("UI/MovePointer"));
+            // movement_indicators[i].SetActive(false);
         }
         character_buffer = new Character[squad_members.Length];
     }

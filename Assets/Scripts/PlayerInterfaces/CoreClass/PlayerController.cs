@@ -12,7 +12,9 @@ public class PlayerController : MonoBehaviour
     bool main_continuous; // checked on update to see if the main action should be called
     public bool main_hold_input = false;  // if true, mouse will main action function will constantly be called
     InputAction order_action;
-    bool alt_continuous; // checked on update to see if the alt action should be called
+    bool hold_order = false; // checked on update to see if the alt action should be called
+    float curr_hold_order_time;
+    [SerializeField] float max_hold_order_time = 0.75f; // when maximum time is reached, call all operators back to the player
     public bool alt_hold_input = false;  // if true, mouse will alt action function will constantly be called
     
     [Header("Player Cams & Screen")]
@@ -20,7 +22,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera main_cam; // used to get the FULL area around the player and render that for player view
     [SerializeField] private Camera play_cam; // the area the player sees and interacts with
     [SerializeField] RawImage player_screen; // a canvas raw image the player uses to see the world
-    
     [SerializeField] Vector2 input_dir;
     private Vector2 pointer_delta;
     public Vector3 viewport_pos => player_view_controller.viewport_pos;
@@ -173,7 +174,10 @@ public class PlayerController : MonoBehaviour
         player_view_controller.UpdateLookPos();
         if (active_character)
         {
+            // hold inputs
             if (main_continuous) {MainAction();}
+            if (hold_order) {HoldOrderIput();}
+            
             // set look pos
             player_view_controller.UpdateView(pointer_delta*0.75f, active_character.GetPosition());
             pointer_delta = Vector2.zero;
@@ -228,12 +232,12 @@ public class PlayerController : MonoBehaviour
     void MainAction() {active_character.UseMainItem();}
     // void AltStart(InputAction.CallbackContext context) {
     //     active_character.UseAltItem();
-    //     alt_continuous = alt_hold_input;
+    //     hold_order = true; = alt_hold_input;
          
     // }
     // void AltStop(InputAction.CallbackContext context) {
     //     active_character.StopAltItem();
-    //     alt_continuous = false;
+    //     hold_order = true; = false;
     // }
     void OrderAction() {active_character.UseAltItem();}
     void ResetItem(InputAction.CallbackContext context) {active_character.ResetItems();}
@@ -299,10 +303,32 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Operator Order
-    void GiveOrder(InputAction.CallbackContext context)
+    void HoldOrderIput()
     {
-        order_controller.GiveOrder();   
+        curr_hold_order_time += Time.deltaTime;
+        // have all operators return to player when order button is held
+        if (curr_hold_order_time >= max_hold_order_time)
+        {
+            order_controller.ReturnToLeader();
+            hold_order = false;
+            curr_hold_order_time = 0;
+        }
     }
+    void StartOrderInput(InputAction.CallbackContext context)
+    {
+        hold_order = true;
+        curr_hold_order_time = 0;
+    }
+
+    void StopOrderInput(InputAction.CallbackContext context)
+    {
+        if (curr_hold_order_time < max_hold_order_time)
+        {
+            order_controller.GiveOrder();
+        }
+        hold_order = false;
+    }
+
 
     #endregion
 
@@ -381,7 +407,7 @@ public class PlayerController : MonoBehaviour
 
             // make sure the player doesn't leak an attack after commanding
             main_continuous = false;
-            alt_continuous = false;
+            hold_order = false;
         }
     }
     void SetMainAction(bool enable) // set main action. set parameter false to turn off main actions
@@ -408,24 +434,26 @@ public class PlayerController : MonoBehaviour
         
         if(enable)
         {
-            order_action.started += GiveOrder;
+            order_action.started += StartOrderInput;
+            order_action.canceled += StopOrderInput;
         }
         else
         {
-            order_action.started -= GiveOrder;
+            order_action.started -= StartOrderInput;
+            order_action.canceled += StopOrderInput;
         }
         // if (enable)
         // {
         //     // order_action.started += GiveOrder;
         //     // order_action.canceled += AltStop;
         //     alt_hold_input = active_character.alt_item.IsHoldInput(); // only set alt_hold_input if an order_action exists
-        //     alt_continuous = order_action.IsPressed() && alt_hold_input;
+        //     hold_order = true; = order_action.IsPressed() && alt_hold_input;
         // }
         // else
         // {
         //     // order_action.started -= GiveOrder;
         //     // order_action.canceled -= AltStop;   
-        //     alt_continuous = false; // stop any ongoing attacks
+        //     hold_order = true; = false; // stop any ongoing attacks
         // }
     }
     #endregion

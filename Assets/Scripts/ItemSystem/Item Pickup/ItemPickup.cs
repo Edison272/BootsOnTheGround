@@ -10,6 +10,10 @@ public class ItemPickup : MonoBehaviour, IInteractable
     public Item used_item;
     [SerializeField] SpriteRenderer this_sprite;
 
+    public void Start()
+    {
+        this_sprite.sprite = new_item.ui_image;
+    }
     public void Interact(Character character)
     {        
         Item item_pickup = used_item ? used_item : character.GetItemSO(new_item);

@@ -5185,6 +5185,7 @@ MonoBehaviour:
   back: {fileID: 4954260517961003373}
   body: {fileID: 8481389507695080430}
   body_sprite: {fileID: 2449594436584508145}
+  body_outline: {fileID: 913956272305426366}
   main_hand: {fileID: 1413471862373244730}
   alt_hand: {fileID: 967626683832254148}
   head: {fileID: 8868127414608551963}
@@ -5448,7 +5449,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: -4864586392625904324, guid: 8dd3b905e6004904b8c27d3ec50643a1,
     type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

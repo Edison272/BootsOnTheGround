@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class FollowPlayerZoneUI : MonoBehaviour
@@ -19,6 +20,14 @@ public class FollowPlayerZoneUI : MonoBehaviour
 
     public void SetUIAlpha(float alpha)
     {
-        
+        foreach(SpriteRenderer set_alpha in color_components)
+        {
+            Color sa_c = set_alpha.color;
+            set_alpha.color = new Color(sa_c.r, sa_c.b, sa_c.g, alpha);
+        }
+    }
+    public float GetAlpha()
+    {
+        return color_components[0].color.a;
     }
 }

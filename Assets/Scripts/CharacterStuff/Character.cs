@@ -612,7 +612,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         return inventory[current_indexes.Item1].GetRange();
     }
 
-    #region Body
+    #region VFX Body
     public virtual Transform GetBodyPart(CharacterBodyPart body_part_type) {
         Transform body_part = main_body.transform;
         switch(body_part_type)
@@ -661,6 +661,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
         head.transform.localPosition = new Vector3(0, base_head_height * curr_sprite_height/base_sprite_height, 0);
     }
 
+    public void SetOutlineAlpha(float alpha)
+    {
+        Color o_c = body_outline.GetComponent<SpriteRenderer>().color;
+        body_outline.GetComponent<SpriteRenderer>().color = new Color(o_c.r, o_c.b, o_c.g, alpha);
+    }
     #endregion
 
     #region Stats & Status Changes
