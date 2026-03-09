@@ -17,3 +17,4 @@ MonoBehaviour:
   PathTiles:
   - {fileID: 11400000, guid: 3a3a31c88c296804fadfc49492278722, type: 2}
   SpawnableObjects: []
+  MinorPOIs: []

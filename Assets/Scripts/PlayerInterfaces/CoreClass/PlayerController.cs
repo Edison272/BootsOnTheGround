@@ -13,8 +13,8 @@ public class PlayerController : MonoBehaviour
     public bool main_hold_input = false;  // if true, mouse will main action function will constantly be called
     InputAction order_action;
     bool hold_order = false; // checked on update to see if the alt action should be called
-    float curr_hold_order_time;
-    [SerializeField] float max_hold_order_time = 0.75f; // when maximum time is reached, call all operators back to the player
+    public float curr_hold_order_time {get; private set;}
+    public float max_hold_order_time {get; private set;} = 0.5f; // when maximum time is reached, call all operators back to the player
     public bool alt_hold_input = false;  // if true, mouse will alt action function will constantly be called
     
     [Header("Player Cams & Screen")]
@@ -66,6 +66,8 @@ public class PlayerController : MonoBehaviour
     [Header("Character UI")]
     public ItemUIController item_ui_control;
     public HealthUIController health_ui_control;
+    [Header("Order UI")]
+    public OrderUIController order_ui_control;
 
     [Header("Settings")]
     [Range(0.1f, 3)] public float sensitivity = 2f;
@@ -116,6 +118,7 @@ public class PlayerController : MonoBehaviour
         EnableControl();
         item_ui_control.SetActiveCharacter(active_character);
         health_ui_control.SetActiveCharacter(active_character);
+        order_ui_control.SetOrderController(this);
     }
 
     public void FreeCursor()
@@ -309,7 +312,7 @@ public class PlayerController : MonoBehaviour
         // have all operators return to player when order button is held
         if (curr_hold_order_time >= max_hold_order_time)
         {
-            order_controller.ReturnToLeader();
+            order_controller.RecallAll();
             hold_order = false;
             curr_hold_order_time = 0;
         }
@@ -326,6 +329,7 @@ public class PlayerController : MonoBehaviour
         {
             order_controller.GiveOrder();
         }
+        curr_hold_order_time = 0;
         hold_order = false;
     }
 

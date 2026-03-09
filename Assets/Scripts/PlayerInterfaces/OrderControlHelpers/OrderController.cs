@@ -9,7 +9,8 @@ public class OrderController
 {
     PlayerController player_controller;
     Vector2 look_pos;
-    public Operator chosen_op;  
+    [field: SerializeField] public Operator chosen_op;  
+    public Operator prev_select_op {get; private set;}  
     public List<Operator> operators;
     public List<Collider2D> interactables_in_range = new List<Collider2D>();
     SquadManager squad_manager;
@@ -25,7 +26,7 @@ public class OrderController
     [SerializeField] TargetSelectorUI target_selector_ui;
 
     [Header("Give Order")]
-    [SerializeField] CommandMode current_command = CommandMode.Hold;
+    public CommandMode current_command {get; private set;} = CommandMode.Hold;
     public OrderController(PlayerController player_controller, SquadManager squad_manager)
     {
         this.player_controller = player_controller;
@@ -42,7 +43,7 @@ public class OrderController
     #region Update
 
     public void UpdateOrderControl(Vector2 look_pos)
-    {
+    {        
         this.look_pos = look_pos;
         if (chosen_op)
         {
@@ -71,7 +72,14 @@ public class OrderController
                 return da.CompareTo(db);
             });
 
-            GetOperatorPrompt(GetOperatorAtPointer());
+            Operator nearest_op  = GetOperatorAtPointer();
+            if (nearest_op)
+            {
+                prev_select_op?.SetOutlineAlpha(0);
+                prev_select_op?.ToggleSelectionIndicator(false);
+                prev_select_op = nearest_op;
+            }
+            GetOperatorPrompt(nearest_op);
         }
 
         if (chosen_op)
@@ -79,6 +87,7 @@ public class OrderController
             GetOperatorPrompt(null);
             SetCommandMode();
             UpdateOrderUI();
+            prev_select_op = chosen_op;
         }
         else if (UI_is_active)
         {
@@ -149,17 +158,26 @@ public class OrderController
         chosen_op = null;
     }
 
+    public void RecallAll()
+    {
+        StopUI();
+        if (chosen_op)
+        {
+            chosen_op = null;
+        }
+        else
+        {
+            foreach(Operator get_op in operators)
+            {
+                get_op.SetCommandBehavior(CommandMode.Follow);
+            }            
+        }
+
+    }
+
     #endregion
 
     #region Helper Commands
-
-    public void ReturnToLeader()
-    {
-        foreach(Operator get_op in operators)
-        {
-            get_op.SetCommandBehavior(CommandMode.Follow);
-        }
-    }
 
     #endregion
 
@@ -168,19 +186,26 @@ public class OrderController
     {
         if (closest_op != null && closest_op.is_alive)
         {
-            target_selector_ui.SetUIAlpha(1);
+            target_selector_ui.SetUIAlpha(0.5f);
             target_selector_ui.SetPosition(closest_op.GetPosition());
             target_selector_ui.SetText("command this guy");
 
             follow_player_ui.transform.position = closest_op.GetPosition();
             float look_to_closest_dist = (look_pos - closest_op.GetPosition()).magnitude;
-            float follow_ui_alpha = Mathf.Clamp01(((character_get_dist * 2) - look_to_closest_dist));
+            float follow_ui_alpha = Mathf.Clamp01(character_get_dist - look_to_closest_dist);
             follow_player_ui.SetUIAlpha(follow_ui_alpha * 0.5f);
+
+            bool is_in_range = follow_ui_alpha * 100 > 1;
+            prev_select_op.SetOutlineAlpha(is_in_range ? 1 : 0);
+            //prev_select_op.ToggleSelectionIndicator(is_in_range);
         }
         else if (closest_op == null)
         {
             target_selector_ui.SetUIAlpha(0);
             follow_player_ui.SetUIAlpha(0);
+
+            prev_select_op?.SetOutlineAlpha(0);
+            prev_select_op?.ToggleSelectionIndicator(false);
         }
     }
     public void StopUI()
@@ -190,6 +215,7 @@ public class OrderController
         hold_position_ui.SetUIAlpha(0);
         target_selector_ui.SetUIAlpha(0);
         UI_is_active = false;
+        chosen_op?.SetOutlineAlpha(0);
     }
 
     public void UpdateOrderUI()
@@ -203,21 +229,25 @@ public class OrderController
 
         hold_position_ui.SetPositions(chosen_op.GetPosition(), MapManager.GetWorldToTileSpaceCenter(player_controller.look_pos));
         float hold_ui_alpha = 0;
-        if (follow_ui_alpha < 0.5)
+        if (follow_ui_alpha < 0.5f)
         {
             hold_ui_alpha = 1 - follow_ui_alpha;
         }
         hold_ui_alpha *= 0.5f;
         hold_position_ui.SetUIAlpha(hold_ui_alpha);
 
-        target_selector_ui.SetUIAlpha(1);
+        target_selector_ui.SetUIAlpha(0.5f);
+
+        chosen_op.SetOutlineAlpha(1);
         switch(current_command)
         {
             case CommandMode.Follow:
                 follow_player_ui.SetUIAlpha(1);
+                hold_position_ui.SetUIAlpha(0.35f);
+                hold_position_ui.SetPositions(chosen_op.GetPosition(), player_controller.active_character.GetPosition());
                 target_selector_ui.SetPosition(player_controller.active_character.GetPosition());
                 target_selector_ui.SetScale(player_controller.active_character.transform.localScale.x + 0.1f);
-                target_selector_ui.SetText("follow this guy");
+                target_selector_ui.SetText("follow me");
                 break;
             case CommandMode.Hold:
                 hold_position_ui.SetUIAlpha(1);

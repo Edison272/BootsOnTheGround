@@ -39,7 +39,7 @@ public class TargetSelectorUI : MonoBehaviour
             set_alpha.color = new Color(sa_c.r, sa_c.b, sa_c.g, alpha);
         }
         Color pt_c = prompt_text.color;
-        prompt_text.color = new Color(pt_c.r, pt_c.b, pt_c.g, alpha);
+        prompt_text.color = new Color(pt_c.r, pt_c.b, pt_c.g, alpha > 0.01f ? 1: 0);
     }
 
     public void SetText(string new_prompt)

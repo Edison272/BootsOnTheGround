@@ -33,6 +33,7 @@ public class MapManager : MonoBehaviour
     public Vector2Int final_chunk; // chunk with the main objective
     public Vector2 map_center; // duh
     public MajorObjective[] critical_locs = new MajorObjective[0]; // start & final + POI
+    public Dictionary<Vector2Int, MinorPOI> minor_locs = new Dictionary<Vector2Int, MinorPOI>();
     public Dictionary<Character, int> chars_in_poi = new Dictionary<Character, int>();
     private List<Character> removal_buffer = new List<Character>();
 
@@ -120,6 +121,12 @@ public class MapManager : MonoBehaviour
         Floor.ClearAllTiles();
         Wall.ClearAllTiles();
 
+        foreach(MinorPOI minor_poi in minor_locs.Values)
+        {
+            minor_poi.Destroy();
+        }
+        minor_locs.Clear();
+
         foreach(MajorObjective major_objective in critical_locs)
         {
             draw_ground.Clear();
@@ -127,6 +134,15 @@ public class MapManager : MonoBehaviour
             draw_path.Clear();
             
             MapBiomePreset rand_biome = map_biome_pool[Random.Range(0, map_biome_pool.Length)];
+
+            foreach (Vector2Int minor_poi in major_objective.minor_poi)
+            {
+                MinorPOI new_minor_poi = rand_biome.SetMinorPOI(minor_poi);
+                if (new_minor_poi)
+                {
+                    minor_locs[minor_poi] = new_minor_poi;
+                }
+            }
 
             foreach(MapChunk chunk in major_objective.territory_chunks)
             {
@@ -245,6 +261,12 @@ public class MapManager : MonoBehaviour
             Mathf.FloorToInt((float)tile_pos.y/chunk_size)
         );
     }
+    public static Vector2 GetChunkWorldCenter(Vector2Int chunk_index_pos)
+    {
+        Vector2 center = chunk_index_pos + new Vector2(0.5f, 0.5f);
+        center *= MapManager.chunk_size;
+        return center;
+    }
     public void SetNewPosition(Character character)
     {
         Vector2Int tile_pos = GetWorldToTileSpace(character.GetPosition());
@@ -264,10 +286,6 @@ public class MapManager : MonoBehaviour
             }
         }
     }
-
-#endregion
-
-#region Tools 
     public Vector2 GetChunkWorldPos(Vector2Int chunk)
     {
         Vector2 pos = Vector2.zero;
@@ -278,6 +296,9 @@ public class MapManager : MonoBehaviour
         return pos;
     }
 
+#endregion
+
+#region Tools 
     private void DrawTile(Vector2Int pos, Color line_color)
     {
         Debug.DrawLine(

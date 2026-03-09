@@ -36,7 +36,7 @@ public class MajorObjective
             this.prev = this;
         }
 
-        GameObject objective_resource = Resources.Load<GameObject>("MapObjects/Objective");
+        GameObject objective_resource = Resources.Load<GameObject>("MapObjects/Areas/Objective");
         objective_point = MonoBehaviour.Instantiate(
             objective_resource, 
             main_chunk.center_position * MapManager.chunk_size, 

@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class Operator : Character, IInteractable
 {
     [Header("ID")]
-    private OperatorSO base_op_data;
+    [field: SerializeField] public OperatorSO base_op_data {get; private set;}
     public OpClass op_class => this.base_op_data.op_class;
     public string id_number {get; private set;}
     [SerializeField] TextMeshPro nametag;
