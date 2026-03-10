@@ -105660,6 +105660,8 @@ MonoBehaviour:
       zoom_factor: 0
       player_range: 0
       max_recoil_drift_distance: 0
+      max_recovery_speed: 0
+      min_recovery_speed: 0
       player_view_controller:
         curr_view_enum: 0
         main_camera_controller:
@@ -105668,6 +105670,8 @@ MonoBehaviour:
           zoom_factor: 0
           player_range: 0
           max_recoil_drift_distance: 0
+          max_recovery_speed: 0
+          min_recovery_speed: 0
           player_view_controller:
             curr_view_enum: 0
             main_camera_controller:
@@ -105676,6 +105680,8 @@ MonoBehaviour:
               zoom_factor: 0
               player_range: 0
               max_recoil_drift_distance: 0
+              max_recovery_speed: 0
+              min_recovery_speed: 0
               player_view_controller:
                 curr_view_enum: 0
                 main_camera_controller:
@@ -105684,6 +105690,8 @@ MonoBehaviour:
                   zoom_factor: 0
                   player_range: 0
                   max_recoil_drift_distance: 0
+                  max_recovery_speed: 0
+                  min_recovery_speed: 0
                   player_view_controller:
                     curr_view_enum: 0
                     main_camera_controller:
@@ -105692,6 +105700,8 @@ MonoBehaviour:
                       zoom_factor: 0
                       player_range: 0
                       max_recoil_drift_distance: 0
+                      max_recovery_speed: 0
+                      min_recovery_speed: 0
                       player_view_controller:
                         curr_view_enum: 0
   main_cam_controller:
@@ -105700,6 +105710,8 @@ MonoBehaviour:
     zoom_factor: 0
     player_range: 0
     max_recoil_drift_distance: 0
+    max_recovery_speed: 0
+    min_recovery_speed: 0
     player_view_controller:
       curr_view_enum: 0
       main_camera_controller:
@@ -105708,6 +105720,8 @@ MonoBehaviour:
         zoom_factor: 0
         player_range: 0
         max_recoil_drift_distance: 0
+        max_recovery_speed: 0
+        min_recovery_speed: 0
         player_view_controller:
           curr_view_enum: 0
           main_camera_controller:
@@ -105716,6 +105730,8 @@ MonoBehaviour:
             zoom_factor: 0
             player_range: 0
             max_recoil_drift_distance: 0
+            max_recovery_speed: 0
+            min_recovery_speed: 0
             player_view_controller:
               curr_view_enum: 0
               main_camera_controller:
@@ -105724,6 +105740,8 @@ MonoBehaviour:
                 zoom_factor: 0
                 player_range: 0
                 max_recoil_drift_distance: 0
+                max_recovery_speed: 0
+                min_recovery_speed: 0
                 player_view_controller:
                   curr_view_enum: 0
                   main_camera_controller:
@@ -105732,6 +105750,8 @@ MonoBehaviour:
                     zoom_factor: 0
                     player_range: 0
                     max_recoil_drift_distance: 0
+                    max_recovery_speed: 0
+                    min_recovery_speed: 0
                     player_view_controller:
                       curr_view_enum: 0
                       main_camera_controller:
@@ -105740,6 +105760,8 @@ MonoBehaviour:
                         zoom_factor: 0
                         player_range: 0
                         max_recoil_drift_distance: 0
+                        max_recovery_speed: 0
+                        min_recovery_speed: 0
   player_action_controller: {fileID: 0}
   player_targetting_controller:
     alignment: 0

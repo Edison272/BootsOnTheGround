@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 989c4355df8ccbc47abe518623378798, type: 3}
-  m_Name: Baston 2
+  m_Name: Flamethrower
   m_EditorClassIdentifier: 
-  item_prefab: {fileID: 3117911291600889211, guid: ae6f1b93bf4987d4ab1c010cdc748815,
+  item_prefab: {fileID: 34156259537408985, guid: 6d5c1b6c02c058445a65fb91cd5adc12,
     type: 3}
-  ui_image: {fileID: -7263692644043572507, guid: 4385cab06ae89354087c269ec5424415,
-    type: 3}
+  ui_image: {fileID: 21300000, guid: b4db7df2702edb24580a68c880b649da, type: 3}
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
-  rot_scale: 1
-  bonus_range_scalar: 2
+  rot_scale: 0.723
+  bonus_range_scalar: 3
   func_enum: 0
   item_type: 0
   curr_input: 0
@@ -28,41 +27,41 @@ MonoBehaviour:
   serialized_input_stats:
     stat_list:
     - key: reset_speed
-      value: 3
+      value: 2
     - key: use_speed
       value: 0.05
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
-      value: 30
+      value: 300
     - key: recoil_increment
       value: 0.1
     - key: recoil_multiplier
       value: 1
     - key: recoil_max
-      value: 1
+      value: 0.1
     - key: recoil_recovery
       value: 1
   serialized_attacks:
-  - prefab: {fileID: 4077797797690535342, guid: 74d3b6d886a278e47843e7f35df15a53,
+  - prefab: {fileID: 9190098060670739699, guid: 85f111baac3ceed4aa923aeb6d5b04b5,
       type: 3}
     attack_enum: 0
     attack_data:
       damage: 20
-      pierce: 0
-      knockback_amt: 0
-      effect_time: 0
-      slow_amt: 0.01
-      total_dot_damage: 0
-      total_dot_ticks: 0
+      pierce: 10
+      knockback_amt: 2
+      effect_time: 10
+      slow_amt: 1
+      total_dot_damage: 10
+      total_dot_ticks: 10
     attack_stats:
       stat_list:
       - key: projectile_speed
-        value: 25
+        value: 8
       - key: projectile_count
-        value: 1
+        value: 3
       - key: projectile_spread
-        value: 5
+        value: 16
       - key: even_spread
         value: 0
       - key: homing_strength

@@ -18,6 +18,7 @@ public class ProjectileBehavior : MonoBehaviour
     [field: Header("Projectile Data")]
     AttackData atk_data;
     public float speed;
+    public int curr_pierce;
 
     [field: Header("Physics")]
     public Rigidbody2D proj_rb;
@@ -34,7 +35,11 @@ public class ProjectileBehavior : MonoBehaviour
         if (collider.gameObject.tag != object_tag && collider.gameObject.tag != "NoHit")
         {
             atk_data.ApplyData(this.main_body.transform.position, collider.gameObject);
-            ProjectileEffects();
+            curr_pierce--;
+            if (curr_pierce == 0)
+            {
+                ProjectileEffects();
+            }
         }
     }
     // Update is called once per frame
@@ -49,6 +54,7 @@ public class ProjectileBehavior : MonoBehaviour
         curr_travel_time += Time.fixedDeltaTime;
         if (curr_travel_time >= travel_time)
         {
+            curr_pierce = 0;
             EndProjectile();
         }
 
@@ -96,6 +102,8 @@ public class ProjectileBehavior : MonoBehaviour
         // set travel time to know when to terminate the projectile
         float distance = Vector2.Distance(source_pos, target_pos);
         travel_time = distance / speed;
+
+        curr_pierce = atk_data.pierce+1;
     }
 
     public void StartProjectile(Transform target_char) // homing vairant
