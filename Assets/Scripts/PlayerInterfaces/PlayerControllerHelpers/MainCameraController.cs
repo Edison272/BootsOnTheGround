@@ -6,6 +6,7 @@ public class MainCameraController
 {
     [Header("Controlled Objects")]
     private Camera main_cam;
+    private Transform MainCameraHolder;
     private RectTransform player_screen;
 
     [Header("Camera Render Data")]
@@ -23,15 +24,22 @@ public class MainCameraController
     [Header("Camera Positioning")]
     Vector2 source_position;
     Vector2 target_position;
+    [Header("Camera Recoil")]
+    float max_recoil_time = 1;
+    float curr_recoil_time;
+    [SerializeField] float max_recoil_drift_distance = 2;
+    Vector2 recoil_direction;
+    Vector2 curr_recoil_direction;
     Action CamMovement;
     [Header("Classmates")]
     public PlayerViewController player_view_controller;
 
     #region Setup & Reset
-    public MainCameraController(Camera main_cam, RectTransform player_screen)
+    public MainCameraController(Transform CameraHolder, Camera main_cam, RectTransform player_screen)
     {
         this.main_cam = main_cam;
         this.player_screen = player_screen;
+        MainCameraHolder = CameraHolder;
 
         // initialize values
         target_zoom = 1;
@@ -75,6 +83,7 @@ public class MainCameraController
             player_screen.localScale = new Vector3(scale_Val, scale_Val, 0);
         }
         // adjust position with SetCameraBetweenPositions()
+        UpdateCameraRecoil();
         CamMovement();
     }
     #endregion
@@ -88,6 +97,19 @@ public class MainCameraController
         curr_zoom_time = 0;
         target_zoom = base_zoom_level + (c_max_zoom - zoom_scalar) * zoom_factor;
         zoom_diff = target_zoom - player_screen.localScale.x;
+    }
+    public void ApplyCameraRecoil(Vector2 direction, float recoil_amount)
+    {
+        curr_recoil_time += max_recoil_time * recoil_amount;
+        curr_recoil_time = Mathf.Min(curr_recoil_time, max_recoil_time);
+        
+        recoil_direction = (recoil_direction + direction).normalized * max_recoil_drift_distance * curr_recoil_time/max_recoil_time;
+        curr_recoil_direction = recoil_direction;
+    }
+    public void UpdateCameraRecoil()
+    {
+        curr_recoil_time = Mathf.Max(0, curr_recoil_time - Time.deltaTime);
+        curr_recoil_direction = Vector2.Lerp(recoil_direction, Vector2.zero, curr_recoil_time/max_recoil_time);
     }
 
     public void SetCameraBetweenPositions()
@@ -103,7 +125,7 @@ public class MainCameraController
         Vector3 cam_pos = source_position + offset;
         cam_pos.z = -10;
 
-        main_cam.transform.position = cam_pos;
+        main_cam.transform.position = cam_pos + (Vector3)curr_recoil_direction;
     }
 
     public void SetCameraAtPosition()

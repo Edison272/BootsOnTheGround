@@ -17,6 +17,8 @@ public class Item : MonoBehaviour
     public Animator animator;
     public float y_offset {get; private set;} // vfx y offset from the target position
     
+    [field: Header("VFX Body")]
+    public bool apply_recoil = false;
 
     [field: Header("Aiming")]
     static readonly Quaternion ROTATION_OFFSET = Quaternion.Euler(0, 0, 90f); // RotateTowards() is stupid so we need to offset it

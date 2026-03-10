@@ -66,6 +66,11 @@ public class Gun : FuncModule
     {
         attacks[action_index].Attack(item.source_pos, target_pos, item.item_tip.position, new Vector2(0, item.y_offset), item.user);
         ammo -= 1;
+
+        if (item.user == GameOverseer.THE_OVERSEER.player_control.active_character)
+        {
+            GameOverseer.THE_OVERSEER.player_control.ApplyCameraRecoil(item.source_pos - target_pos, 0.2f);
+        }
         
         curr_recoil = Mathf.Min(recoil_max, (recoil_increment + curr_recoil) * recoil_multiplier);
         recoil_dir += Random.insideUnitCircle * curr_recoil;

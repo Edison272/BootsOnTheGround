@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [Header("Player Cams & Screen")]
     // move BOTH cameras to the player positon cuz they're both important. make play cam a child object of main cam tho
     [SerializeField] private Camera main_cam; // used to get the FULL area around the player and render that for player view
+    [SerializeField] private Transform MainCameraHolder; // hold the main camera, so that the main_cam can do animations n shi
     [SerializeField] private Camera play_cam; // the area the player sees and interacts with
     [SerializeField] RawImage player_screen; // a canvas raw image the player uses to see the world
     [SerializeField] Vector2 input_dir;
@@ -92,7 +93,7 @@ public class PlayerController : MonoBehaviour
 
         // set helper classes
         player_view_controller = new PlayerViewController(main_cam, player_screen.rectTransform);
-        main_cam_controller = new MainCameraController(main_cam, player_screen.rectTransform);
+        main_cam_controller = new MainCameraController(MainCameraHolder, main_cam, player_screen.rectTransform);
         player_targetting_controller = new TargettingController(main_line_renderer, vfx_line_renderer);
         player_view_controller.SetMCController(main_cam_controller);
         main_cam_controller.SetPVController(player_view_controller);
@@ -205,6 +206,12 @@ public class PlayerController : MonoBehaviour
         // update controllers
         main_cam_controller.UpdateCamRender();
         
+    }
+    #endregion
+    #region
+    public void ApplyCameraRecoil(Vector2 direction, float recoil_amount)
+    {
+        main_cam_controller.ApplyCameraRecoil(direction, recoil_amount);
     }
     #endregion
 
