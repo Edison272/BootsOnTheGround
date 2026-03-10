@@ -14,6 +14,10 @@ public class MajorObjective
     [Header("Objective Point")]
     public CaptureArea objective_point;
 
+    public MajorObjective(Vector2Int position)
+    {
+        main_chunk = new MapChunk(position);
+    }
     public MajorObjective(Vector2Int position, MajorObjective prev = null, bool is_captured = false)
     {
         main_chunk = new MapChunk(position);

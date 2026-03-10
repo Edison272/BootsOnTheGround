@@ -259,6 +259,7 @@ public class OrderController
                 break;
             case CommandMode.Interact:
                 target_selector_ui.SetUIAlpha(1);
+                hold_position_ui.SetUIAlpha(0.75f);
                 target_selector_ui.SetPosition(interactables_in_range[0].transform.position);
                 target_selector_ui.SetScale(interactables_in_range[0].transform.localScale.x + 0.2f);
                 

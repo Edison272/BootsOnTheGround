@@ -40,6 +40,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     //aim & handling
     [field: Header("Aiming")]
     public Vector2 aim_dir {get; private set;} = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
+    public Vector2 offset_look = Vector2.zero;
     protected Action AimStyle; // single-item or akimbo aiming?
     public  float aim_angle = 0; // angle (deg) the character is looking in
     readonly Vector2 SingleWeaponRestPosition = new Vector2(1, -1);
@@ -297,7 +298,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
         main_item?.Aim(aim_dir);
         alt_item?.Aim(aim_dir);
     }
-
     void SetAimStyle(bool is_akimbo) // set the position of main & alt hands for akimbo or non-akimbo weaponry whenever weapon switch
     {
         if (is_akimbo)
@@ -319,7 +319,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
             AimStyle = SingleAim;
         }
     }
-
     void AkimboAim() // aim two weapons from two sides of body
     {
         // check if direction state has changed
@@ -351,7 +350,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
             animator.SetBool("FaceFront", direction_state.Item2); // face front
         }
     }
-
     void SingleAim() // aim one weapon from center of mass
     {   
         if(direction_state.Item2 != aim_dir.y <= 0) {

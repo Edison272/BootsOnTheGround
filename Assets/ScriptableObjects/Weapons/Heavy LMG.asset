@@ -22,6 +22,7 @@ MonoBehaviour:
   rot_scale: 0.466
   bonus_range_scalar: 5
   func_enum: 0
+  item_type: 0
   curr_input: 0
   curr_func: 0
   serialized_input_stats:
@@ -33,9 +34,15 @@ MonoBehaviour:
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
-      value: 300
-    - key: recoil_scalar
+      value: 30
+    - key: recoil_increment
       value: 0.1
+    - key: recoil_multiplier
+      value: 1
+    - key: recoil_max
+      value: 1
+    - key: recoil_recovery
+      value: 1
   serialized_attacks:
   - prefab: {fileID: 4077797797690535342, guid: 74d3b6d886a278e47843e7f35df15a53,
       type: 3}

@@ -33,7 +33,7 @@ public class MapManager : MonoBehaviour
     public Vector2Int final_chunk; // chunk with the main objective
     public Vector2 map_center; // duh
     public MajorObjective[] critical_locs = new MajorObjective[0]; // start & final + POI
-    public Dictionary<Vector2Int, MinorPOI> minor_locs = new Dictionary<Vector2Int, MinorPOI>();
+    public List<MinorPOI> minor_locs = new List<MinorPOI>();
     public Dictionary<Character, int> chars_in_poi = new Dictionary<Character, int>();
     private List<Character> removal_buffer = new List<Character>();
 
@@ -56,6 +56,10 @@ public class MapManager : MonoBehaviour
 
     public void Awake()
     {
+        DestroyMapObjects();
+    }
+    public void DestroyMapObjects()
+    {
         // Destroy POI made by map in editor. When editor destroys, it uses EditorDestroyMapObjects
         foreach(MajorObjective objective in critical_locs)
         {
@@ -64,11 +68,13 @@ public class MapManager : MonoBehaviour
                 Destroy(objective.objective_point.gameObject);
             }   
         }
-        foreach(MinorPOI minor_poi in minor_locs.Values)
+        foreach(MinorPOI minor_poi in minor_locs)
         {
-            minor_poi.Destroy();
+            if (minor_poi)
+            {
+                Destroy(minor_poi.gameObject);
+            }
         }
-        minor_locs.Clear();
     }
     public void GenerateMap()
     {
@@ -99,6 +105,7 @@ public class MapManager : MonoBehaviour
         border_chunks.Clear();
         path_chunks.Clear();
         critical_locs = new MajorObjective[1 + gen_preset.objectives];
+        minor_locs.Clear();
 
         map_center = map_maker.GenerateMap(all_chunks, border_chunks, path_chunks, critical_locs, gen_preset);
         spawn_chunk = critical_locs[0].main_chunk.position;
@@ -126,12 +133,6 @@ public class MapManager : MonoBehaviour
         Floor.ClearAllTiles();
         Wall.ClearAllTiles();
 
-        foreach(MinorPOI minor_poi in minor_locs.Values)
-        {
-            minor_poi.Destroy();
-        }
-        minor_locs.Clear();
-
         foreach(MajorObjective major_objective in critical_locs)
         {
             draw_ground.Clear();
@@ -143,11 +144,15 @@ public class MapManager : MonoBehaviour
             foreach (Vector2Int minor_poi in major_objective.minor_poi)
             {
                 MinorPOI new_minor_poi = rand_biome.SetMinorPOI(minor_poi);
+                string added = "added";
                 if (new_minor_poi)
                 {
-                    minor_locs[minor_poi] = new_minor_poi;
+                    minor_locs.Add(new_minor_poi);
+                    added += " to the list";
                 }
+                Debug.Log(added);
             }
+            
 
             foreach(MapChunk chunk in major_objective.territory_chunks)
             {
@@ -416,11 +421,21 @@ public class MapManager : MonoBehaviour
             }
             
         }
-        foreach(MinorPOI minor_poi in minor_locs.Values)
+        Debug.Log(minor_locs.Count);
+        foreach(MinorPOI minor_poi in minor_locs)
         {
-            minor_poi?.Destroy();
+            if (minor_poi)
+            {
+                DestroyImmediate(minor_poi.gameObject);
+                Debug.Log("DELETE");
+            }
+            else
+            {
+                Debug.Log("Missing");
+            }
         }
         minor_locs.Clear();
+        Debug.Log(minor_locs.Count);
     }
     #endregion
 #region Gizmos Drawer
@@ -448,18 +463,17 @@ public class MapManager : MonoBehaviour
             for (int i = 0; i < critical_locs.Length; i++)
             {
                 MapChunk chunk = critical_locs[i].main_chunk;
-                if (chunk.position != spawn_chunk && chunk.position != final_chunk)
+                //if (chunk.position != spawn_chunk && chunk.position != final_chunk){}
+                DrawChunk(chunk.position, Color.yellow);
+                if (show_minor_poi)
                 {
-                    DrawChunk(chunk.position, Color.yellow);
-                    if (show_minor_poi)
+                    foreach(Vector2Int minor_poi in critical_locs[i].minor_poi)
                     {
-                        foreach(Vector2Int minor_poi in critical_locs[i].minor_poi)
-                        {
-                            Debug.DrawLine((Vector2)chunk.position * chunk_size, (Vector2)minor_poi * chunk_size);
-                            DrawChunk(minor_poi, Color.cyan);
-                        }
+                        Debug.DrawLine((Vector2)chunk.position * chunk_size, (Vector2)minor_poi * chunk_size);
+                        DrawChunk(minor_poi, Color.cyan);
                     }
                 }
+                
                 if (i < critical_locs.Length-1)
                 {
                     Debug.DrawLine((Vector2)chunk.position * chunk_size, (Vector2)critical_locs[i+1].main_chunk.position * chunk_size);
@@ -475,7 +489,7 @@ public class MapManager : MonoBehaviour
             foreach (MapChunk chunk in all_chunks.Values)
             {
                 DrawChunk(chunk.position,Color.blue, false);
-                //Handles.Label(chunk.world_center_position + new Vector2(0, chunk_size*0.2f), "from start: "+chunk.dist_from_start);
+                Handles.Label(chunk.world_center_position + new Vector2(0, chunk_size*0.2f), "from start: "+chunk.dist_from_start);
             }
         }
         if (show_path_dist_heatmap)
@@ -483,7 +497,7 @@ public class MapManager : MonoBehaviour
             foreach (MapChunk chunk in all_chunks.Values)
             {
                 DrawChunk(chunk.position,Color.clear, false);
-                //Handles.Label(chunk.world_center_position + new Vector2(0, -chunk_size*0.2f), "from path: "+chunk.path_relevancy);
+                Handles.Label(chunk.world_center_position + new Vector2(0, -chunk_size*0.2f), "from path: "+chunk.path_relevancy);
             }
         }
         if (show_poi_territories)

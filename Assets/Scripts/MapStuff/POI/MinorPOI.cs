@@ -21,7 +21,7 @@ public class MinorPOI : MonoBehaviour
         
     }
 
-    public void Destroy()
+    public virtual void Destroy()
     {
         Destroy(this.gameObject);
     }

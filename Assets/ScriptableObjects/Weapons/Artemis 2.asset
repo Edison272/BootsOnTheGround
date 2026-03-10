@@ -10,17 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 989c4355df8ccbc47abe518623378798, type: 3}
-  m_Name: Throw
+  m_Name: Artemis 2
   m_EditorClassIdentifier: 
-  item_prefab: {fileID: 8566480217387272590, guid: e2d4d559e111dd14987a89dab06a2c5a,
-    type: 3}
-  ui_image: {fileID: -7263692644043572507, guid: 4385cab06ae89354087c269ec5424415,
-    type: 3}
+  item_prefab: {fileID: 0}
+  ui_image: {fileID: 0}
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
   rot_scale: 1
-  bonus_range_scalar: 0
+  bonus_range_scalar: 1
   func_enum: 0
   item_type: 0
   curr_input: 0
@@ -28,7 +26,7 @@ MonoBehaviour:
   serialized_input_stats:
     stat_list:
     - key: reset_speed
-      value: 2
+      value: 0.1
     - key: use_speed
       value: 0.1
   serialized_functionality_stats:
@@ -43,27 +41,4 @@ MonoBehaviour:
       value: 1
     - key: recoil_recovery
       value: 1
-  serialized_attacks:
-  - prefab: {fileID: 3163801247859444956, guid: e51354d65a941514187dedb9e09495c6,
-      type: 3}
-    attack_enum: 0
-    attack_data:
-      damage: 4
-      pierce: 0
-      knockback_amt: 0
-      effect_time: 0
-      slow_amt: 0.01
-      total_dot_damage: 0
-      total_dot_ticks: 0
-    attack_stats:
-      stat_list:
-      - key: projectile_speed
-        value: 20
-      - key: projectile_count
-        value: 1
-      - key: projectile_spread
-        value: 15
-      - key: even_spread
-        value: 0
-      - key: homing_strength
-        value: 0
+  serialized_attacks: []
