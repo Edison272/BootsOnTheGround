@@ -19,4 +19,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ddce312ded78aab4caff323301731b18, type: 2}
   SpawnableObjects: []
   MinorPOIs:
-  - {fileID: 9988861998040373, guid: 544e8344a85f9c44cb2901ab8e6a9e87, type: 3}
+  - {fileID: 6657903718686304680, guid: 544e8344a85f9c44cb2901ab8e6a9e87, type: 3}

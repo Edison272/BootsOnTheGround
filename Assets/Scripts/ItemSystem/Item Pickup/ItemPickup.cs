@@ -8,6 +8,8 @@ public class ItemPickup : MonoBehaviour, IInteractable
     [field: SerializeField] public GameObject interact_prompt {get; set;}
     public ItemSO new_item;
     public Item used_item;
+    [Header("Interaction Prompt")]
+    public GameObject InteractionUI;
     [SerializeField] SpriteRenderer this_sprite;
 
     public void Start()
@@ -30,5 +32,15 @@ public class ItemPickup : MonoBehaviour, IInteractable
             this_sprite.enabled = true;
             this_sprite.sprite = used_item.base_data.ui_image;
         }
+    }
+
+    public void ToggleInteractPrompt(bool enable)
+    {
+        throw new NotImplementedException();
+    }
+
+    public string GetPromptText()
+    {
+        return "pick up item";
     }
 }

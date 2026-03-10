@@ -64,6 +64,11 @@ public class MapManager : MonoBehaviour
                 Destroy(objective.objective_point.gameObject);
             }   
         }
+        foreach(MinorPOI minor_poi in minor_locs.Values)
+        {
+            minor_poi.Destroy();
+        }
+        minor_locs.Clear();
     }
     public void GenerateMap()
     {
@@ -398,7 +403,8 @@ public class MapManager : MonoBehaviour
             Debug.DrawLine(point * chunk_size, point * chunk_size + dir * chunk_size/4, line_color, duration);
         }
     }
-
+    #endregion
+    #region Editor Tools
     // Destroy 
     public void EditorDestroyMapObjects()
     {
@@ -410,6 +416,11 @@ public class MapManager : MonoBehaviour
             }
             
         }
+        foreach(MinorPOI minor_poi in minor_locs.Values)
+        {
+            minor_poi?.Destroy();
+        }
+        minor_locs.Clear();
     }
     #endregion
 #region Gizmos Drawer

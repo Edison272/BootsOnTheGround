@@ -5,7 +5,7 @@ using UnityEngine;
 
 using Random = UnityEngine.Random;
 
-public enum CommandMode {Follow, Disperse, Engage, Hold, Interact, Count}
+public enum CommandMode {Idle, Follow, Disperse, Engage, Hold, Interact, Count}
 /*
 - Follow the player around closely, move when they move
 - Disperse take cover and maintain distance from threats. Move further away from the player if necessary

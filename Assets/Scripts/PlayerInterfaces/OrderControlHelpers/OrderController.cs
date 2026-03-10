@@ -155,6 +155,8 @@ public class OrderController
                 break;
         }
         chosen_op.SetCommandBehavior(current_command);
+        current_command = CommandMode.Idle;
+        target_selector_ui.SetScale(1);
         chosen_op = null;
     }
 
@@ -256,9 +258,12 @@ public class OrderController
                 target_selector_ui.SetText("hold this position");   
                 break;
             case CommandMode.Interact:
+                target_selector_ui.SetUIAlpha(1);
                 target_selector_ui.SetPosition(interactables_in_range[0].transform.position);
-                target_selector_ui.SetScale(interactables_in_range[0].transform.localScale.x + 0.1f);
-                target_selector_ui.SetText("pickup this thing");
+                target_selector_ui.SetScale(interactables_in_range[0].transform.localScale.x + 0.2f);
+                
+                IInteractable target_interact = interactables_in_range[0].GetComponent<IInteractable>();
+                target_selector_ui.SetText(target_interact.GetPromptText());
                 break;
         }
     }

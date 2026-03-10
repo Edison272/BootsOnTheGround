@@ -167,8 +167,18 @@ public class Operator : Character, IInteractable
     }
     #endregion
 
-    #region Interaction
+    #region Interaction Interface
     public void Interact(Character character)
+    {
+        return;
+    }
+
+    public void ToggleInteractPrompt(bool enable)
+    {
+        selection_indicator.SetActive(enable);
+    }
+
+    public string GetPromptText()
     {
         throw new NotImplementedException();
     }

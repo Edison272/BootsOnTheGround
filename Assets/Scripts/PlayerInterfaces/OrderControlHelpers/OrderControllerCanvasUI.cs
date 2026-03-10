@@ -26,24 +26,24 @@ public class OrderUIController : MonoBehaviour
 
     public void Update()
     {        
-        string update_command_text = "";
-        if (player_controller.curr_hold_order_time > 0)
-        {
-            if (order_controller.chosen_op != null)
-            {
-                update_command_text += "cancelling operator command...";
-            }
-            else
-            {
-                update_command_text += "recalling all operators...";
-            }
+        // string update_command_text = "";
+        // if (player_controller.curr_hold_order_time > 0)
+        // {
+        //     if (order_controller.chosen_op != null)
+        //     {
+        //         update_command_text += "cancelling operator command...";
+        //     }
+        //     else
+        //     {
+        //         update_command_text += "recalling all operators...";
+        //     }
             
-        }
+        // }
         
         
-        CommandMode curr_order_command = order_controller.current_command;
+        // CommandMode curr_order_command = order_controller.current_command;
 
 
-        command_text.text = update_command_text;
+        // command_text.text = update_command_text;
     }
 }
