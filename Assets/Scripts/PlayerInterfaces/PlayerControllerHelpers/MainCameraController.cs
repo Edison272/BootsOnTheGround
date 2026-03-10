@@ -27,7 +27,10 @@ public class MainCameraController
     [Header("Camera Recoil")]
     float max_recoil_time = 1;
     float curr_recoil_time;
-    [SerializeField] float max_recoil_drift_distance = 2;
+    [SerializeField] float max_recoil_drift_distance = 0.5f;
+    [SerializeField] float max_recovery_speed = 5;
+    [SerializeField] float min_recovery_speed = 0.5f;
+    float curr_recovery_speed = 2;
     Vector2 recoil_direction;
     Vector2 curr_recoil_direction;
     Action CamMovement;
@@ -102,14 +105,16 @@ public class MainCameraController
     {
         curr_recoil_time += max_recoil_time * recoil_amount;
         curr_recoil_time = Mathf.Min(curr_recoil_time, max_recoil_time);
+
         
         recoil_direction = (recoil_direction + direction).normalized * max_recoil_drift_distance * curr_recoil_time/max_recoil_time;
         curr_recoil_direction = recoil_direction;
     }
     public void UpdateCameraRecoil()
     {
-        curr_recoil_time = Mathf.Max(0, curr_recoil_time - Time.deltaTime);
-        curr_recoil_direction = Vector2.Lerp(recoil_direction, Vector2.zero, curr_recoil_time/max_recoil_time);
+        curr_recoil_time = Mathf.Max(0, curr_recoil_time - Time.deltaTime * curr_recovery_speed);
+        curr_recoil_direction = Vector2.Lerp(Vector2.zero, recoil_direction, curr_recoil_time/max_recoil_time);
+        curr_recovery_speed = Mathf.Lerp(min_recovery_speed, max_recovery_speed, curr_recoil_time/max_recoil_time);
     }
 
     public void SetCameraBetweenPositions()
