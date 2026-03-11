@@ -517,6 +517,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         ContactFilter2D interactable_filter = new ContactFilter2D();
         interactable_filter.SetLayerMask(GameOverseer.find_interactable_mask);
         interactable_filter.useLayerMask = true; // Actively use the mask
+        interactable_filter.useTriggers = true;
         Physics2D.OverlapCircle(GetPosition(), hitbox_radius + interaction_range, interactable_filter, interactables_in_range);
         IInteractable closest_interactable = null;
         if (interactables_in_range.Count > 0)

@@ -350,6 +350,9 @@ public class PlayerController : MonoBehaviour
     void OpDeploy4(InputAction.CallbackContext context) {GetOperator(4);}
     void GetOperator(int deploy_index = 1)
     {
+        squad.SetSelectedOperator(deploy_index);
+        squad.UseOpAbility(look_pos);
+        squad.SetSelectedOperator(-1);
         // // cancel command if it was done twice
         // if (op_select_index == deploy_index) {
         //     ResetOrder();

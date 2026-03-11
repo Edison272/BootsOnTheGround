@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 989c4355df8ccbc47abe518623378798, type: 3}
   m_Name: Artemis 2
   m_EditorClassIdentifier: 
-  item_prefab: {fileID: 0}
+  item_prefab: {fileID: 764744361160584554, guid: c606d78aa421fba46aa30b630ae78444,
+    type: 3}
   ui_image: {fileID: 0}
+  item_name: Chainsaw
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1

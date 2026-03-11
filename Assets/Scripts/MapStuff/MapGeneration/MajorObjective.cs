@@ -9,15 +9,11 @@ public class MajorObjective
     public MajorObjective prev = null;
     public MajorObjective next_poi = null;
     public Vector2Int[] minor_poi = new Vector2Int[0];
-    public List<MapChunk> territory_chunks = new List<MapChunk>();
+    public HashSet<Vector2Int> territory_chunks = new HashSet<Vector2Int>();
 
     [Header("Objective Point")]
     public CaptureArea objective_point;
 
-    public MajorObjective(Vector2Int position)
-    {
-        main_chunk = new MapChunk(position);
-    }
     public MajorObjective(Vector2Int position, MajorObjective prev = null, bool is_captured = false)
     {
         main_chunk = new MapChunk(position);

@@ -10,6 +10,7 @@ public class ItemSO : ScriptableObject
     [SerializeField] GameObject item_prefab;
     [field: Header("Interface")]
     public Sprite ui_image;
+    public string item_name = "";
     // Classify Input Type
     [field: Header("Input")]
     [SerializeField] InputEnum input_enum = InputEnum.Normal;
@@ -107,6 +108,11 @@ public class ItemSO : ScriptableObject
     }
     public void OnValidate()
     {
+        if (item_name == "")
+        {
+            item_name = item_prefab.name;
+        }
+        
         // input type
         if (curr_input != input_enum || ValidateDictionary(serialized_input_stats))
         {

@@ -154,8 +154,9 @@ public class MapManager : MonoBehaviour
             }
             
 
-            foreach(MapChunk chunk in major_objective.territory_chunks)
+            foreach(Vector2Int chunk_key in major_objective.territory_chunks)
             {
+                MapChunk chunk = all_chunks[chunk_key];
                 Vector2Int pos = chunk.position;
                 Vector2Int chunk_vec =  pos * chunk_size;
                 for (int x = 0; x < chunk_size; x++)
@@ -248,6 +249,12 @@ public class MapManager : MonoBehaviour
 
 
 #endregion
+#region External Get Helpers
+    public MapChunk GetMapChunk(Vector2Int chunk_key)
+    {
+        return all_chunks[chunk_key];
+    }
+#endregion
 
 #region Set/Get Loc Info
     private static Vector2Int GetWorldToTileSpace(Vector2 world_pos)
@@ -263,6 +270,10 @@ public class MapManager : MonoBehaviour
             (int)Mathf.Round(world_pos.x),
             (int)Mathf.Round(world_pos.y)
         ) + new Vector2(0.5f, 0.5f);
+    }
+    public static Vector2Int GetWorldToChunkSpace(Vector2 world_pos)
+    {
+        return GetTileToChunkSpace(GetWorldToChunkSpace(world_pos));
     }
     public static Vector2Int GetTileToChunkSpace(Vector2Int tile_pos)
     {
@@ -505,9 +516,9 @@ public class MapManager : MonoBehaviour
             for (int i = 0; i < critical_locs.Length; i++)
             {
                 Color color = i % 2 == 0 ? Color.black : Color.white;
-                foreach(MapChunk chunk in critical_locs[i].territory_chunks)
+                foreach(Vector2Int chunk_key in critical_locs[i].territory_chunks)
                 {
-                    DrawChunk(chunk.position,color);
+                    DrawChunk(all_chunks[chunk_key].position,color);
                 }
             }
         }

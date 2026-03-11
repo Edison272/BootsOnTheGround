@@ -15,6 +15,7 @@ public class ItemPickup : MonoBehaviour, IInteractable
     public void Start()
     {
         this_sprite.sprite = new_item.ui_image;
+        interact_prompt.SetActive(false);
     }
     public void Interact(Character character)
     {        

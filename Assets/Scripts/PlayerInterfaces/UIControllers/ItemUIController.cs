@@ -27,7 +27,7 @@ public class ItemUIController : MonoBehaviour
         if (active_character)
         {
             // change how ui looks when weapons are switched
-            if (curr_items != active_character.current_indexes)
+            if (curr_items != active_character.current_indexes || ui_item != active_character.main_item)
             {
                 SetUI();
                 curr_items = active_character.current_indexes;

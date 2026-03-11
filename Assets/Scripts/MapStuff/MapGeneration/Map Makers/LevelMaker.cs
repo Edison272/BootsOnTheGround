@@ -195,7 +195,7 @@ public class LevelMaker : MapMaker
                 }
             }
             chunk.domain_center_chunk = closest_poi.main_chunk.position;
-            closest_poi.territory_chunks.Add(chunk);
+            closest_poi.territory_chunks.Add(chunk_pos);
 
             // get chunk & path distance from the starting pos
             foreach (Vector2Int dir in Directions2D.eight_directions)
