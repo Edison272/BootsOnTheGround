@@ -90,6 +90,9 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
             squad_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.spawn_chunk);
             enemy_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.final_chunk);
         }
+        // prepare objectives after map generation
+        objective_manager.PrepareObjectives();
+
         // let everyone get to know eachother
         squad_manager.player = player_control;
         squad_manager.squad_ui_control = squad_ui_control;
@@ -109,6 +112,8 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
 
         // setup an AI manager after base data has been created
         ai_manager = new AIManager(this, map_manager.Wall, map_manager.Floor);
+
+        
     }
 
     void Update()

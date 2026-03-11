@@ -16,7 +16,8 @@ public class ObjectiveManager
     [Header("Contain Player")]
     const float c_max_out_of_bounds_time = 1f;
     private float curr_out_of_bounds_time = 0f;
-
+    [Header("Fog of War")]
+    public List<GameObject> FogObjects = new List<GameObject>();
     
     public MajorObjective current_mo;
 
@@ -28,6 +29,12 @@ public class ObjectiveManager
         frontier_objective = 0;
         this.total_objectives = total_objectives;
         current_mo = map_manager.critical_locs[frontier_objective];
+    }
+
+    public void PrepareObjectives()
+    {
+        current_mo = map_manager.critical_locs[frontier_objective];
+        SetFogOfWar();
     }
 
     public void UpdateMapManager()
@@ -51,10 +58,56 @@ public class ObjectiveManager
             if (current_mo.territory_chunks.Contains(player_curr_chunk))
             {
                 game_overseer.player_control.active_character.StopMove();
+                game_overseer.player_control.active_character.ForceMove(current_mo.main_chunk.world_center_position - player_pos, 10);
                 curr_out_of_bounds_time = 0;
             }
         }
     }
+
+    #region Fog of War
+    public void SetFogOfWar()
+    {
+        ClearFogOfWar(); // remove fog over previous territory
+        if (!objectives_complete)
+        {
+            GenerateFogOfWar(); // only clear fog of war if there are objectives left
+        }
+        
+    }
+    private void GenerateFogOfWar()
+    {
+        MajorObjective next_mo = map_manager.critical_locs[frontier_objective + 1];
+        Debug.Log( next_mo.territory_chunks.Count + ", needed chunks: " + FogObjects.Count);
+        if (FogObjects.Count < next_mo.territory_chunks.Count)
+        {
+            int current_fog_chunks = FogObjects.Count;
+            for (int i = 0; i < next_mo.territory_chunks.Count - current_fog_chunks; i++)
+            {
+                GameObject new_fog_object = GameObject.Instantiate(Resources.Load<GameObject>("MapObjects/ZoneFog"));
+                FogObjects.Add(new_fog_object);
+                new_fog_object.SetActive(false);
+            }
+        }
+
+        int f = 0;
+        Debug.Log( next_mo.territory_chunks.Count + ", created chunks: " + FogObjects.Count);
+        foreach(Vector2Int chunk in next_mo.territory_chunks)
+        {
+            GameObject place_fog = FogObjects[f];
+            place_fog.transform.position = map_manager.all_chunks[chunk].world_center_position;
+            place_fog.SetActive(true);
+            f++;
+        }
+    }
+
+    private void ClearFogOfWar()
+    {
+        foreach(GameObject fog_object in FogObjects)
+        {
+            fog_object.SetActive(true);
+        }
+    }
+    #endregion
 
     public MajorObjective GetFrontierMajorObjective()
     {
@@ -64,6 +117,7 @@ public class ObjectiveManager
     {
         Debug.Log("CAP");
         frontier_objective++;
+        SetFogOfWar();
         current_mo = map_manager.critical_locs[frontier_objective];
         if (!objectives_complete && maj_poi.next_poi != null)
         {
