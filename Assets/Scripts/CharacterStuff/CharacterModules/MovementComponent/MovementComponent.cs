@@ -11,7 +11,7 @@ public class MovementComponent
     public readonly float base_move_speed;
     public readonly float base_accel_time;
     [field: Header("Movement")]
-    public float move_speed {get; private set;} = 1; // maximum speed an operator can move at
+    [field: SerializeField] public float move_speed {get; private set;} = 1; // maximum speed an operator can move at
     public Vector2 move_dir {get; private set;} = Vector2.zero;
     public Vector2 move_pos {get; private set;} = Vector2.zero;
     private Vector2 lerp_move_pos = Vector2.zero;

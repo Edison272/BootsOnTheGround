@@ -273,7 +273,7 @@ public class MapManager : MonoBehaviour
     }
     public static Vector2Int GetWorldToChunkSpace(Vector2 world_pos)
     {
-        return GetTileToChunkSpace(GetWorldToChunkSpace(world_pos));
+        return GetTileToChunkSpace(GetWorldToTileSpace(world_pos));
     }
     public static Vector2Int GetTileToChunkSpace(Vector2Int tile_pos)
     {

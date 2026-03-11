@@ -118,6 +118,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
             THE_OVERSEER.GameWin();
             
         }
+        objective_manager.UpdateMapManager();
         //Debug.Log(THE_OVERSEER.objective_manager.frontier_objective + ", " + THE_OVERSEER.objective_manager.total_objectives);
     }
     #endregion
