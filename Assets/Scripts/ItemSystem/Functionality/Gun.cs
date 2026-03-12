@@ -12,7 +12,6 @@ public class Gun : FuncModule
     // base data
     public int ammo {get; private set;} // how much ammo the gun uses before reloading
     public int max_ammo {get; private set;}// how much the weapon starts/reloads with
-    private bool was_used_this_frame = false;
 
     [Header("Recoil Base Stats")]
     float recoil_increment; // how much the aimed position is offset with each shot
@@ -22,7 +21,7 @@ public class Gun : FuncModule
     [Header("Recoil Current Stats")]
     public float curr_recoil {get; private set;}
     Vector2 target_pos;
-    Vector2 recoil_dir;
+    Vector2 recoil_dir = Vector2.zero;
     public Gun(Item item, 
         float max_ammo, 
         float recoil_increment, 
@@ -58,17 +57,11 @@ public class Gun : FuncModule
     public override void UpdateModule(Vector2 targ_pos)
     {
         target_pos = targ_pos + recoil_dir;
-
-        if (was_used_this_frame)
+        Debug.Log(recoil_dir);
+        if (item.get_input_ready > 0.75)
         {
-            was_used_this_frame = false;
-        }
-        else
-        {
-            if (item.get_input_ready > 0.75)
-            {
-                curr_recoil = Mathf.Max(0, curr_recoil -  (Time.deltaTime/recoil_recovery)); 
-            }
+            recoil_dir *= 1 - (Time.deltaTime/recoil_recovery);
+            curr_recoil = Mathf.Max(0, curr_recoil -  (Time.deltaTime/recoil_recovery)); 
         }
 
     }
@@ -86,6 +79,5 @@ public class Gun : FuncModule
         {
             GameOverseer.THE_OVERSEER.player_control.ApplyCameraRecoil(item.source_pos - target_pos, Math.Max(recoil_increment, curr_recoil));
         }
-        was_used_this_frame = true;
     }
 }

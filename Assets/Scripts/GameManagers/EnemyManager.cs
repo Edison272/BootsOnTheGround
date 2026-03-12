@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
@@ -15,8 +16,6 @@ public class EnemyManager : MonoBehaviour
     public float curr_time = 0;
 
     [Header("Wave Spawning")]
-
-    [Header("Wave Spawning")]
     public float wave_time = 3;
     public float wave_radius = 3;
     public float spawn_dist = 14;
@@ -24,6 +23,10 @@ public class EnemyManager : MonoBehaviour
     public int max_wave_size;
     public int min_wave_iterations;
     public int max_wave_iterations;
+
+    [Header("Wave Spawning UI")]
+    public Transform WaveBar;
+    public TextMeshProUGUI enemies_remaining;
 
     public void CreateEnemy(int index, Vector3 position)
     {
@@ -40,6 +43,8 @@ public class EnemyManager : MonoBehaviour
         new_enemy.SetCommandBehavior(CommandMode.Hold);
         new_enemy.behavior_controller.SetActionTime(1, 2);
         enemies.Add(new_enemy);
+
+        SetEnemyUI();
     }
 
     public void Update()
@@ -94,5 +99,26 @@ public class EnemyManager : MonoBehaviour
     public void EnemyLost(Character character)
     {
         enemies.Remove(character);
+        Debug.Log("I died " + enemies.Count);
+        SetEnemyUI();
+        if (enemies.Count == 0)
+        {
+            GameOverseer.ObjectiveSecured();
+            SetEnemyUI("Area Clear!");
+        }
     }
+
+    #region UI Stuff
+
+    private void SetEnemyUI(string force_message = "")
+    {
+        string message = "Cryptids Remaining: " + enemies.Count;
+        if (force_message != "")
+        {
+            message = force_message;
+        }
+        enemies_remaining.text = message;
+    }
+
+    #endregion
 }

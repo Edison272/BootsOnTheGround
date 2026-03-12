@@ -11,7 +11,7 @@ public class MainCameraController
 
     [Header("Camera Render Data")]
     [SerializeField] float camera_zoom_time = 0.5f;
-    [SerializeField] float base_zoom_level = 1; // MUST BE ATLEAST 1!!!!
+    [SerializeField] float base_zoom_level = 1.5f; // MUST BE ATLEAST 1!!!!
     [SerializeField] float zoom_factor = 0.25f;
     float lerp_amount = 1;
     float zoom_diff; // set current zoom
@@ -25,6 +25,7 @@ public class MainCameraController
     Vector2 source_position;
     Vector2 target_position;
     [Header("Camera Recoil")]
+    readonly Vector2 player_screen_pos;
     float max_recoil_time = 1;
     float curr_recoil_time;
     [SerializeField] float max_recoil_drift_distance = 0.6f; // basically the recoil intensity
@@ -49,6 +50,8 @@ public class MainCameraController
         curr_zoom = (int)target_zoom;
         zoom_diff = 0;
         target_zoom = base_zoom_level;
+
+        player_screen_pos = player_screen.gameObject.transform.position;
 
         CamMovement = SetCameraBetweenPositions;
     }
@@ -115,6 +118,8 @@ public class MainCameraController
         curr_recoil_time = Mathf.Max(0, curr_recoil_time - Time.deltaTime * curr_recovery_speed);
         curr_recoil_direction = Vector2.Lerp(Vector2.zero, recoil_direction, curr_recoil_time/max_recoil_time);
         curr_recovery_speed = Mathf.Lerp(min_recovery_speed, max_recovery_speed, curr_recoil_time/max_recoil_time);
+
+        player_screen.gameObject.transform.position = player_screen_pos + curr_recoil_direction;
     }
 
     public void SetCameraBetweenPositions()
@@ -130,7 +135,7 @@ public class MainCameraController
         Vector3 cam_pos = source_position + offset;
         cam_pos.z = -10;
 
-        main_cam.transform.position = cam_pos + (Vector3)curr_recoil_direction;
+        main_cam.transform.position = cam_pos;
     }
 
     public void SetCameraAtPosition()

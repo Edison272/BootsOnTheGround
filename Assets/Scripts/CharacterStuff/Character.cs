@@ -189,7 +189,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
     public void ConnectToEventBus(Action<Character> death)
     {
-        OnDeath = death;
+        OnDeath += death;
     }
 
     // Initialize op if it's a prefab that's placed on the scene, and has 
@@ -267,6 +267,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
     {
         if (!is_alive)
         {
+            OnDeath(this);
             Destroy(this.gameObject);
         }
     }

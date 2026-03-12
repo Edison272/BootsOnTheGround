@@ -116,10 +116,6 @@ public class ObjectiveManager
     }
     public void ObjectiveCaptured(MajorObjective maj_poi)
     {
-        Debug.Log("CAP");
-        frontier_objective++;
-        SetFogOfWar();
-        current_mo = map_manager.critical_locs[frontier_objective];
         if (!objectives_complete && maj_poi.next_poi != null)
         {
             game_overseer.enemy_manager.SummonEnemyGroup(maj_poi.next_poi.main_chunk.world_position);
@@ -136,7 +132,9 @@ public class ObjectiveManager
     // when all enemies are defeated, the objective is secured. call map to open up the frontier
     public void ObjectiveSecured()
     {
-        
+        frontier_objective++;
+        SetFogOfWar();
+        current_mo = map_manager.critical_locs[frontier_objective];
     }
     #endregion
 }

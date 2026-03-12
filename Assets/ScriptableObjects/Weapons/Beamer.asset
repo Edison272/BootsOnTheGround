@@ -41,7 +41,7 @@ MonoBehaviour:
     - key: recoil_multiplier
       value: 1
     - key: recoil_max_dist_ratio
-      value: 1
+      value: 0.5
     - key: recoil_recovery
       value: 1
   serialized_attacks:

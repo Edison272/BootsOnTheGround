@@ -37,9 +37,9 @@ MonoBehaviour:
     - key: max_ammo
       value: 50
     - key: recoil_increment
-      value: 1
+      value: 0.1
     - key: recoil_multiplier
-      value: 1.1
+      value: 1
     - key: recoil_max_dist_ratio
       value: 0.2
     - key: recoil_recovery
