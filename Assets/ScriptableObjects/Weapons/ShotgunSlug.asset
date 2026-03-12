@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 989c4355df8ccbc47abe518623378798, type: 3}
-  m_Name: Baston 4
+  m_Name: ShotgunSlug
   m_EditorClassIdentifier: 
   item_prefab: {fileID: 3117911291600889211, guid: ae6f1b93bf4987d4ab1c010cdc748815,
     type: 3}
-  ui_image: {fileID: -7263692644043572507, guid: 4385cab06ae89354087c269ec5424415,
+  ui_image: {fileID: 8124512129372133153, guid: 09dae1df29e11834dbc1d87375abcc9d,
     type: 3}
+  item_name: Bastion
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
@@ -28,41 +29,41 @@ MonoBehaviour:
   serialized_input_stats:
     stat_list:
     - key: reset_speed
-      value: 3
+      value: 2
     - key: use_speed
-      value: 0.05
+      value: 0.4
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
       value: 30
     - key: recoil_increment
-      value: 0.1
+      value: 2
     - key: recoil_multiplier
-      value: 1
-    - key: recoil_max
-      value: 1
+      value: 0.4
+    - key: recoil_max_dist_ratio
+      value: 0.5
     - key: recoil_recovery
-      value: 1
+      value: 0.1
   serialized_attacks:
   - prefab: {fileID: 4077797797690535342, guid: 74d3b6d886a278e47843e7f35df15a53,
       type: 3}
     attack_enum: 0
     attack_data:
-      damage: 20
+      damage: 10
       pierce: 0
-      knockback_amt: 0
-      effect_time: 0
-      slow_amt: 0.01
+      knockback_amt: 10
+      effect_time: 1
+      slow_amt: 0.1
       total_dot_damage: 0
       total_dot_ticks: 0
     attack_stats:
       stat_list:
       - key: projectile_speed
-        value: 25
+        value: 30
       - key: projectile_count
-        value: 1
+        value: 10
       - key: projectile_spread
-        value: 5
+        value: 45
       - key: even_spread
         value: 0
       - key: homing_strength

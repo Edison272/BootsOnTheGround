@@ -29,7 +29,7 @@ MonoBehaviour:
   serialized_input_stats:
     stat_list:
     - key: reset_speed
-      value: 0.5
+      value: 1
     - key: use_speed
       value: 0.1
   serialized_functionality_stats:
@@ -37,19 +37,19 @@ MonoBehaviour:
     - key: max_ammo
       value: 30
     - key: recoil_increment
-      value: 0.5
+      value: 0.1
     - key: recoil_multiplier
-      value: 1.5
-    - key: recoil_max
-      value: 20
+      value: 1
+    - key: recoil_max_dist_ratio
+      value: 0.3
     - key: recoil_recovery
-      value: 2
+      value: 1
   serialized_attacks:
-  - prefab: {fileID: 8164560864404493835, guid: 6601101be4d62984c84e8d67a8efe3e9,
+  - prefab: {fileID: 8164560864404493835, guid: 71219e3cbc2d7804781064ba8581e854,
       type: 3}
     attack_enum: 1
     attack_data:
-      damage: 10
+      damage: 50
       pierce: 0
       knockback_amt: 0
       effect_time: 3

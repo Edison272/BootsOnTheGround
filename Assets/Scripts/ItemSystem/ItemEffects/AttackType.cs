@@ -37,6 +37,7 @@ public class Projectile : AttackType
     {
         // declare info that doesn't need to be in a loop
         float target_dist = (target_pos - source_pos).magnitude;
+        float og_speed = projectile_speed;
         Vector2 target_dir = (target_pos - source_pos).normalized;
         float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
         for (int i = 0; i < projectile_count; i++)
@@ -57,10 +58,14 @@ public class Projectile : AttackType
             }
             else
             {
+                Vector2 og_targ_pos = target_pos;
                 target_pos += Random.insideUnitCircle * target_dist * projectile_spread/360;
+                
+                projectile_speed *= Mathf.Clamp(1 - (target_pos - og_targ_pos).magnitude / target_dist, 0.5f, 1);
             }
             // new projectile! 
             projectile_data.StartProjectile(this, source_pos, target_pos, output_pos, vfx_target_offset, sender);
+            projectile_speed = og_speed;
         }
     }
 

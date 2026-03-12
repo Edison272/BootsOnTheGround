@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LinecastBehavior : MonoBehaviour
@@ -14,6 +15,7 @@ public class LinecastBehavior : MonoBehaviour
     public LineRenderer main_line_render; // show where the actual linecast is going
     float main_lr_alpha; // used when setting the alpha color in FixedUpdate()
     public LineRenderer vfx_line_render; // show where the vfx linecast is going
+    public ImpactEffect impact_effect;
     float render_duration;
     float curr_duration;
 
@@ -43,11 +45,12 @@ public class LinecastBehavior : MonoBehaviour
             if (contact.transform.gameObject.tag != object_tag && contact.transform.gameObject.tag != "NoHit")
             {
                 atk_data.ApplyData(source_pos, contact.transform.gameObject);
-                end_pos = contact.point;
+                LinecastEffects(contact.point);
                 curr_pierce--;
             }
             if (curr_pierce == 0)
             {
+                end_pos = contact.point;
                 break;
             }
         }
@@ -79,6 +82,7 @@ public class LinecastBehavior : MonoBehaviour
         SetLRPositions(1, end_pos, render_pos);
         if (curr_duration <= 0)
         {
+            if (end_pos == target_pos) {LinecastEffects(target_pos);}
             EndLinecast();
         } 
     }
@@ -113,9 +117,9 @@ public class LinecastBehavior : MonoBehaviour
         this.target_char = target_char;
     }
 
-    private void LinecastEffects()
+    private void LinecastEffects(Vector2 effect_position)
     {
-        EndLinecast();
+        ImpactEffect.StartImpact(impact_effect, effect_position, vfx_target_offset, target_pos - source_pos, vfx_line_render.widthMultiplier * 4);
     }
 
     private void EndLinecast()

@@ -144,13 +144,10 @@ public class MapManager : MonoBehaviour
             foreach (Vector2Int minor_poi in major_objective.minor_poi)
             {
                 MinorPOI new_minor_poi = rand_biome.SetMinorPOI(minor_poi);
-                string added = "added";
                 if (new_minor_poi)
                 {
                     minor_locs.Add(new_minor_poi);
-                    added += " to the list";
                 }
-                Debug.Log(added);
             }
             
 

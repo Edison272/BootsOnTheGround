@@ -16,6 +16,7 @@ MonoBehaviour:
     type: 3}
   ui_image: {fileID: -2364898982482507018, guid: 5db43a79db810324ea675df7ed816da8,
     type: 3}
+  item_name: Chainsaw
   input_enum: 2
   is_full_auto: 1
   dynamic_aim: 1
@@ -41,7 +42,7 @@ MonoBehaviour:
       value: 0.1
     - key: recoil_multiplier
       value: 1
-    - key: recoil_max
+    - key: recoil_max_dist_ratio
       value: 1
     - key: recoil_recovery
       value: 1

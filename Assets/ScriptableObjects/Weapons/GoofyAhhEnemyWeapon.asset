@@ -16,6 +16,7 @@ MonoBehaviour:
     type: 3}
   ui_image: {fileID: -7263692644043572507, guid: 4385cab06ae89354087c269ec5424415,
     type: 3}
+  item_name: Bastion
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
@@ -39,7 +40,7 @@ MonoBehaviour:
       value: 0.1
     - key: recoil_multiplier
       value: 1
-    - key: recoil_max
+    - key: recoil_max_dist_ratio
       value: 1
     - key: recoil_recovery
       value: 1

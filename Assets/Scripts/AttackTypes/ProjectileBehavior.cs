@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 public class ProjectileBehavior : MonoBehaviour
@@ -12,6 +13,7 @@ public class ProjectileBehavior : MonoBehaviour
     [field: Header("VFX")]
     public GameObject main_body;
     public Transform vfx_body;
+    public ImpactEffect impact_effect;
 
     float stick_duration; // stick to a target for a set duration
 
@@ -36,10 +38,7 @@ public class ProjectileBehavior : MonoBehaviour
         {
             atk_data.ApplyData(this.main_body.transform.position, collider.gameObject);
             curr_pierce--;
-            if (curr_pierce == 0)
-            {
-                ProjectileEffects();
-            }
+            ProjectileEffects(collider.ClosestPoint(transform.position));
         }
     }
     // Update is called once per frame
@@ -55,7 +54,7 @@ public class ProjectileBehavior : MonoBehaviour
         if (curr_travel_time >= travel_time)
         {
             curr_pierce = 0;
-            EndProjectile();
+            ProjectileEffects(transform.position);
         }
 
         // set vfx
@@ -111,9 +110,13 @@ public class ProjectileBehavior : MonoBehaviour
         this.target_char = target_char;
     }
 
-    private void ProjectileEffects()
+    private void ProjectileEffects(Vector2 effect_position)
     {
-        EndProjectile();
+        ImpactEffect.StartImpact(impact_effect, effect_position, vfx_target_offset, target_pos - source_pos, main_body.transform.localScale.x);
+        if (curr_pierce == 0)
+        {
+            EndProjectile();
+        }
     }
 
     private void EndProjectile()

@@ -15,6 +15,7 @@ MonoBehaviour:
   item_prefab: {fileID: 34156259537408985, guid: 6d5c1b6c02c058445a65fb91cd5adc12,
     type: 3}
   ui_image: {fileID: 21300000, guid: b4db7df2702edb24580a68c880b649da, type: 3}
+  item_name: Flamethrower Variant
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
@@ -33,12 +34,12 @@ MonoBehaviour:
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
-      value: 300
+      value: 30
     - key: recoil_increment
       value: 0.1
     - key: recoil_multiplier
       value: 1
-    - key: recoil_max
+    - key: recoil_max_dist_ratio
       value: 0.1
     - key: recoil_recovery
       value: 1

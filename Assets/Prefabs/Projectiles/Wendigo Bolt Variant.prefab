@@ -8,6 +8,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4857281296658957558, guid: 6601101be4d62984c84e8d67a8efe3e9,
+        type: 3}
+      propertyPath: impact_effect
+      value: 
+      objectReference: {fileID: 1792689033826711125, guid: be49825044f598247915e6b679854eec,
+        type: 3}
     - target: {fileID: 5054623279886211826, guid: 6601101be4d62984c84e8d67a8efe3e9,
         type: 3}
       propertyPath: m_Parameters.colorGradient.atime1

@@ -39,7 +39,7 @@ MonoBehaviour:
       value: 0.1
     - key: recoil_multiplier
       value: 1
-    - key: recoil_max
+    - key: recoil_max_dist_ratio
       value: 1
     - key: recoil_recovery
       value: 1

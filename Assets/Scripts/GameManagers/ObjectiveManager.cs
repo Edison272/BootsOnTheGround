@@ -109,6 +109,7 @@ public class ObjectiveManager
     }
     #endregion
 
+    #region Objective Events
     public MajorObjective GetFrontierMajorObjective()
     {
         return game_overseer.map_manager.critical_locs[frontier_objective];
@@ -137,4 +138,5 @@ public class ObjectiveManager
     {
         
     }
+    #endregion
 }

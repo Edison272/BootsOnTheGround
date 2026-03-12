@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 989c4355df8ccbc47abe518623378798, type: 3}
-  m_Name: Shotgun
+  m_Name: ShotgunBirdshot
   m_EditorClassIdentifier: 
   item_prefab: {fileID: 3117911291600889211, guid: ae6f1b93bf4987d4ab1c010cdc748815,
     type: 3}
-  ui_image: {fileID: 21300000, guid: f85965d5552b2ca428d8e3f6ff93a77d, type: 3}
+  ui_image: {fileID: 8124512129372133153, guid: 09dae1df29e11834dbc1d87375abcc9d,
+    type: 3}
+  item_name: Bastion
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
@@ -27,42 +29,40 @@ MonoBehaviour:
   serialized_input_stats:
     stat_list:
     - key: reset_speed
-      value: 2
+      value: 3
     - key: use_speed
-      value: 0.2
+      value: 0.5
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
       value: 30
     - key: recoil_increment
-      value: 10
+      value: 1
     - key: recoil_multiplier
       value: 1
-    - key: recoil_max
-      value: 1
+    - key: recoil_max_dist_ratio
+      value: 0.5
     - key: recoil_recovery
-      value: 0
+      value: 0.1
   serialized_attacks:
-  - prefab: {fileID: 4077797797690535342, guid: 74d3b6d886a278e47843e7f35df15a53,
+  - prefab: {fileID: 8164560864404493835, guid: 71219e3cbc2d7804781064ba8581e854,
       type: 3}
-    attack_enum: 0
+    attack_enum: 1
     attack_data:
-      damage: 10
+      damage: 45
       pierce: 0
-      knockback_amt: 10
-      effect_time: 1
-      slow_amt: 0.1
+      knockback_amt: 20
+      effect_time: 0
+      slow_amt: 1
       total_dot_damage: 0
       total_dot_ticks: 0
     attack_stats:
       stat_list:
-      - key: projectile_speed
-        value: 25
-      - key: projectile_count
-        value: 10
-      - key: projectile_spread
-        value: 45
+      - key: linecast_duration
+        value: 0.1
+      - key: linecast_count
+        value: 5
+      - key: linecast_spread
+        value: 30
       - key: even_spread
-        value: 0
-      - key: homing_strength
         value: 0

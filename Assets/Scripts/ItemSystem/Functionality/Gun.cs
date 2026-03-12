@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
+
+using Random = UnityEngine.Random;
 
 [System.Serializable]
 public class Gun : FuncModule
@@ -66,14 +69,15 @@ public class Gun : FuncModule
     {
         attacks[action_index].Attack(item.source_pos, target_pos, item.item_tip.position, new Vector2(0, item.y_offset), item.user);
         ammo -= 1;
+        
+        float target_dist = (target_pos - item.source_pos).magnitude;
+        curr_recoil = Mathf.Min(target_dist * recoil_max, (recoil_increment + curr_recoil) * recoil_multiplier);
+        recoil_dir += Random.insideUnitCircle * curr_recoil;
 
         // for player recoil
         if (item.user == GameOverseer.THE_OVERSEER.player_control.active_character)
         {
-            GameOverseer.THE_OVERSEER.player_control.ApplyCameraRecoil(item.source_pos - target_pos, recoil_increment);
+            GameOverseer.THE_OVERSEER.player_control.ApplyCameraRecoil(item.source_pos - target_pos, Math.Max(recoil_increment, curr_recoil));
         }
-        
-        curr_recoil = Mathf.Min(recoil_max, (recoil_increment + curr_recoil) * recoil_multiplier);
-        recoil_dir += Random.insideUnitCircle * curr_recoil;
     }
 }

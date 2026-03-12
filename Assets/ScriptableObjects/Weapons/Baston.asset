@@ -16,6 +16,7 @@ MonoBehaviour:
     type: 3}
   ui_image: {fileID: -7263692644043572507, guid: 4385cab06ae89354087c269ec5424415,
     type: 3}
+  item_name: Bastion
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
@@ -34,15 +35,15 @@ MonoBehaviour:
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
-      value: 160
+      value: 60
     - key: recoil_increment
-      value: 0.3
+      value: 0.05
     - key: recoil_multiplier
       value: 0.9
-    - key: recoil_max
-      value: 50
+    - key: recoil_max_dist_ratio
+      value: 0.25
     - key: recoil_recovery
-      value: 5
+      value: 1
   serialized_attacks:
   - prefab: {fileID: 4077797797690535342, guid: 74d3b6d886a278e47843e7f35df15a53,
       type: 3}

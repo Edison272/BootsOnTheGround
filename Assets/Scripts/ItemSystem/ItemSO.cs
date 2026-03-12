@@ -89,7 +89,7 @@ public class ItemSO : ScriptableObject
         FuncModule func_module = null;
         switch (func_enum) {
             case FuncEnum.Gun:
-                func_module = new Gun(new_item, item_stats["max_ammo"], item_stats["recoil_increment"], item_stats["recoil_multiplier"], item_stats["recoil_max"], item_stats["recoil_recovery"]);
+                func_module = new Gun(new_item, item_stats["max_ammo"], item_stats["recoil_increment"], item_stats["recoil_multiplier"], item_stats["recoil_max_dist_ratio"], item_stats["recoil_recovery"]);
                 break;
             case FuncEnum.Melee:
                 func_module = new Melee(new_item); 
@@ -157,7 +157,7 @@ public class ItemSO : ScriptableObject
                     serialized_functionality_stats.Add("max_ammo", 30f);
                     serialized_functionality_stats.Add("recoil_increment", 0.1f);
                     serialized_functionality_stats.Add("recoil_multiplier", 1f);
-                    serialized_functionality_stats.Add("recoil_max", 1f);
+                    serialized_functionality_stats.Add("recoil_max_dist_ratio", 1f);
                     serialized_functionality_stats.Add("recoil_recovery", 1f);
                     break;
                 case FuncEnum.Melee:
