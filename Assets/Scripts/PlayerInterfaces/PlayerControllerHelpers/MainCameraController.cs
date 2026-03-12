@@ -27,7 +27,7 @@ public class MainCameraController
     [Header("Camera Recoil")]
     float max_recoil_time = 1;
     float curr_recoil_time;
-    [SerializeField] float max_recoil_drift_distance = 0.5f;
+    [SerializeField] float max_recoil_drift_distance = 0.6f; // basically the recoil intensity
     [SerializeField] float max_recovery_speed = 5;
     [SerializeField] float min_recovery_speed = 0.5f;
     float curr_recovery_speed = 2;

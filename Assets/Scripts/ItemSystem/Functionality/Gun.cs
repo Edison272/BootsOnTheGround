@@ -12,6 +12,7 @@ public class Gun : FuncModule
     // base data
     public int ammo {get; private set;} // how much ammo the gun uses before reloading
     public int max_ammo {get; private set;}// how much the weapon starts/reloads with
+    private bool was_used_this_frame = false;
 
     [Header("Recoil Base Stats")]
     float recoil_increment; // how much the aimed position is offset with each shot
@@ -19,8 +20,7 @@ public class Gun : FuncModule
     float recoil_max;
     float recoil_recovery;
     [Header("Recoil Current Stats")]
-    float curr_recoil;
-    float recoil_decrement;
+    public float curr_recoil {get; private set;}
     Vector2 target_pos;
     Vector2 recoil_dir;
     public Gun(Item item, 
@@ -37,8 +37,6 @@ public class Gun : FuncModule
         this.recoil_multiplier = recoil_multiplier;
         this.recoil_max = recoil_max;
         this.recoil_recovery = recoil_recovery;
-
-        recoil_decrement = recoil_max / recoil_recovery;
     }
 
     public override bool CanFunction()
@@ -61,8 +59,18 @@ public class Gun : FuncModule
     {
         target_pos = targ_pos + recoil_dir;
 
-        curr_recoil = Mathf.Max(0, curr_recoil - recoil_decrement * Time.deltaTime);
-        recoil_dir *= 1-Time.deltaTime;
+        if (was_used_this_frame)
+        {
+            was_used_this_frame = false;
+        }
+        else
+        {
+            if (item.get_input_ready > 0.75)
+            {
+                curr_recoil = Mathf.Max(0, curr_recoil -  (Time.deltaTime/recoil_recovery)); 
+            }
+        }
+
     }
 
     public override void UseFunction(int action_index)
@@ -71,13 +79,13 @@ public class Gun : FuncModule
         ammo -= 1;
         
         float target_dist = (target_pos - item.source_pos).magnitude;
-        curr_recoil = Mathf.Min(target_dist * recoil_max, (recoil_increment + curr_recoil) * recoil_multiplier);
-        recoil_dir += Random.insideUnitCircle * curr_recoil;
-
+        curr_recoil = Mathf.Min(recoil_max, (curr_recoil  + recoil_increment) * recoil_multiplier);
+        recoil_dir = Random.insideUnitCircle * curr_recoil * target_dist;
         // for player recoil
         if (item.user == GameOverseer.THE_OVERSEER.player_control.active_character)
         {
             GameOverseer.THE_OVERSEER.player_control.ApplyCameraRecoil(item.source_pos - target_pos, Math.Max(recoil_increment, curr_recoil));
         }
+        was_used_this_frame = true;
     }
 }

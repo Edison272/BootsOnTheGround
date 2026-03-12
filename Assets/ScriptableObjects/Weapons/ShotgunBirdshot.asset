@@ -37,9 +37,9 @@ MonoBehaviour:
     - key: max_ammo
       value: 30
     - key: recoil_increment
-      value: 1
+      value: 2
     - key: recoil_multiplier
-      value: 1
+      value: 0
     - key: recoil_max_dist_ratio
       value: 0.5
     - key: recoil_recovery
@@ -61,8 +61,8 @@ MonoBehaviour:
       - key: linecast_duration
         value: 0.1
       - key: linecast_count
-        value: 5
+        value: 10
       - key: linecast_spread
-        value: 30
+        value: 45
       - key: even_spread
         value: 0

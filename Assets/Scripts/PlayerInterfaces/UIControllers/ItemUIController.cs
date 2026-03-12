@@ -9,6 +9,10 @@ public class ItemUIController : MonoBehaviour
     public Image item_sprite;
     public TMP_Text item_counter;
     public RectTransform reset_bar;
+    [Header("UI - Recoil Circle")]
+    [SerializeField] int circle_step = 100;
+
+    public LineRenderer recoil_circle;
 
     [Header("Character")]
     public Character active_character = null;
@@ -75,6 +79,41 @@ public class ItemUIController : MonoBehaviour
         {
             item_counter.text = string.Format("{0} / {1}", gun_module.ammo, gun_module.max_ammo);
             reset_bar.localScale = new Vector3(ui_item.GetFunctionCompletion(), 1, 1);
+        }
+
+        Vector2 look_pos = active_character.GetPosition() + active_character.aim_dir + new Vector2(0, ui_item.y_offset);
+        float item_dist_mag = (ui_item.source_pos - ui_item.target_pos).magnitude;
+        float recoil_radius = gun_module.curr_recoil * item_dist_mag;
+        float innacuracy_radius = ui_item.GetInnacuracy()/180 * item_dist_mag;
+        DrawRecoilCircle(look_pos, recoil_radius + innacuracy_radius);
+        // if (gun_module.CanFunction() && gun_module.curr_recoil > 0)
+        // {
+        //     DrawRecoilCircle(look_pos, gun_module.curr_recoil);
+        // } else
+        // {
+        //     DrawRecoilCircle(look_pos, 0);
+        // }
+        
+    }
+
+    public void DrawRecoilCircle(Vector3 circle_pos, float radius)
+    {
+        recoil_circle.positionCount = circle_step;
+ 
+        for(int s = 0; s < circle_step; s++)
+        {
+            float circ_progress = (float)s/(circle_step-1);
+            float circ_rad = circ_progress * 2 * Mathf.PI;
+            
+            float xScaled = Mathf.Cos(circ_rad);
+            float yScaled = Mathf.Sin(circ_rad);
+ 
+            float x = radius * xScaled;
+            float y = radius * yScaled;
+            float z = 0;
+            Vector3 currentPosition = circle_pos + new Vector3(x,y,z);
+ 
+            recoil_circle.SetPosition(s, currentPosition);
         }
     }
 

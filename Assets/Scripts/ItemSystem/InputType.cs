@@ -17,6 +17,7 @@ public abstract class InputType
     public abstract void Stop();
     public abstract void Reset();
     public abstract float GetStatus(); // return a 0-1 float value for readiness
+    public abstract int PredictActionIndex();
     public abstract void ChangeUseSpeed(float scalar); // multiple something by the scalar to increase/slowdown an item's use speed
 }
 
@@ -49,6 +50,10 @@ public class NormalInput : InputType // standard input. Use() = Output
     public override float GetStatus() // return a float reflecting when the next attack will be ready. 0 = ready, 1 = not ready
     {
         return Mathf.Min(1, 1f - ((next_use - Time.time) / use_cd));
+    }
+    public override int PredictActionIndex()
+    {
+        return 0;
     }
 
     public override void ChangeUseSpeed(float scalar) // generate cooldown reduction
@@ -95,6 +100,11 @@ public class ChargeInput : InputType // Use() to charge up overtime, output chan
     {
         curr_charge *= scalar;
         max_charge *= scalar;
+    }
+
+    public override int PredictActionIndex()
+    {
+        throw new NotImplementedException();
     }
 }
 [System.Serializable]
@@ -143,5 +153,10 @@ public class IncrementInput : InputType // Output changes depending on extended 
         use_cd *= scalar;
         curr_inc *= scalar;
         max_inc *= scalar;
+    }
+
+    public override int PredictActionIndex()
+    {
+        throw new NotImplementedException();
     }
 }

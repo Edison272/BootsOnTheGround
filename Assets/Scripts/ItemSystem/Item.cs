@@ -9,6 +9,7 @@ public class Item : MonoBehaviour
     [field: SerializeField] public ItemSO base_data {get; private set;} // SO contains important base data
     // Input Instance
     InputType input_type;
+    public float get_input_ready => input_type.GetStatus();
 
     [field: Header("VFX Body")]
     public GameObject item_object;
@@ -26,7 +27,7 @@ public class Item : MonoBehaviour
     Quaternion curr_rot; // save the current quaternion rotation
     public Vector2 aim_pos; // where the item is supposed to be aimed towards;
     public Vector2 source_pos;
-    public Vector2 target_pos; // where the item is actually aimed towards (based on rot_scale)
+    public Vector2 target_pos {get; private set;} // where the item is actually aimed towards (based on rot_scale)
     bool freeze_aiming = false;     // stop this thing from aiming and updating target position
     public Action AimVFX;
 
@@ -235,6 +236,12 @@ public class Item : MonoBehaviour
     public int GetRange()
     {
         return base_data.bonus_range_scalar;
+    }
+
+    public float GetInnacuracy()
+    {
+        AttackType predicted_atk_type = attacks[input_type.PredictActionIndex()];
+        return predicted_atk_type.GetAtkSpread();
     }
 
     public float GetResetCompletion()

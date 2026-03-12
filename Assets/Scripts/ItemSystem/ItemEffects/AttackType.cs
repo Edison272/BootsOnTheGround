@@ -14,6 +14,7 @@ public abstract class AttackType
     {
         this.instance = instance;
     }
+    public abstract float GetAtkSpread();
 }
 public class Projectile : AttackType
 {
@@ -30,7 +31,8 @@ public class Projectile : AttackType
         projectile_speed = prj_spd;
         projectile_count = (int)prj_count;
         projectile_spread = prj_sprd;
-        even_spread = even_sprd > 0 ? true : false;
+        if (projectile_count == 1) {even_spread = false;}
+        else {even_spread = even_sprd > 0 ? true : false;}
     }
 
     public override void Attack(Vector2 source_pos, Vector2 target_pos, Vector2 output_pos, Vector2 vfx_target_offset, Character sender = null)
@@ -48,7 +50,7 @@ public class Projectile : AttackType
             // add the inherent inaccuracy value of projectile
             if (even_spread)
             {
-                float angle_inc = projectile_spread / (projectile_count - 1);
+                float angle_inc = projectile_spread / projectile_count;
                 float offset_ang = (-projectile_spread / 2f) + (angle_inc * i);
                 float final_ang = target_ang + offset_ang;
 
@@ -69,6 +71,7 @@ public class Projectile : AttackType
         }
     }
 
+    public override float GetAtkSpread() {return projectile_spread;}
 }
 public class Linecast : AttackType
 {
@@ -83,7 +86,8 @@ public class Linecast : AttackType
         line_duration = lin_dur;
         line_count = (int)lin_count;
         line_spread = lin_sprd;
-        even_spread = even_sprd > 0 ? true : false;
+        if (line_count == 1) {even_spread = false;}
+        else {even_spread = even_sprd > 0 ? true : false;}
     }
 
     public override void Attack(Vector2 source_pos, Vector2 target_pos, Vector2 output_pos, Vector2 vfx_target_offset, Character sender)
@@ -100,7 +104,7 @@ public class Linecast : AttackType
             // add the inherent inaccuracy value of projectile
             if (even_spread)
             {
-                float angle_inc = line_spread / (line_spread - 1);
+                float angle_inc = line_spread / line_count;
                 float offset_ang = (-line_spread / 2f) + (angle_inc * i);
                 float final_ang = target_ang + offset_ang;
 
@@ -116,10 +120,12 @@ public class Linecast : AttackType
             linecast_data.StartLinecast(this, source_pos, target_pos, output_pos, vfx_target_offset, sender);
         }
     }
+
+    public override float GetAtkSpread() {return line_spread;}
 }
 
 
-
+#region Melee Attack
 public class MeleeAttack : AttackType
 {
     public AttackData atk_data;
@@ -170,4 +176,7 @@ public class MeleeAttack : AttackType
             melee_data.StartMelee(this, source_pos, target_pos, output_pos, vfx_target_offset, sender);
         }
     }
+
+    public override float GetAtkSpread() {return melee_spread;}
 }
+#endregion

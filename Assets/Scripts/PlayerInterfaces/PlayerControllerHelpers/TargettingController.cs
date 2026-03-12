@@ -12,6 +12,8 @@ public class TargettingController
     LineRenderer vfx_line_render;
     bool target_allies;
     public float alignment = 1;
+
+    public RectTransform canvas_cursor;
     public TargettingController(LineRenderer main_line_render, LineRenderer vfx_line_render)
     {
         this.main_line_render = main_line_render;
@@ -60,7 +62,7 @@ public class TargettingController
             }
         }
         
-        Vector2 offset_y = new Vector3(0, active_character.base_sprite_height * 0.2f);
+        Vector2 offset_y = new Vector3(0, active_character.main_item.y_offset);
         SetLRPositions(0, source_pos + offset_y, source_pos + offset_y);
         SetLRPositions(1, target_pos + offset_y, target_pos + offset_y);
         SetVFXLRColor(start_color, end_color, vfx_line_render.startColor.a, alpha);

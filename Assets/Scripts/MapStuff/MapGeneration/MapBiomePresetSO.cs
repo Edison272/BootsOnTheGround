@@ -9,7 +9,7 @@ public class MapBiomePreset : ScriptableObject
     public TileBase[] BiomeTiles;
     public TileBase[] PathTiles;
     public GameObject[] SpawnableObjects;
-    public MinorPOI[] MinorPOIs;
+    public MinorPOI[] MinorPOIs = new MinorPOI[0];
 
     public MinorPOI SetMinorPOI(Vector2Int chunk)
     {

@@ -85,7 +85,7 @@ public class CanvasController : MonoBehaviour
         // Vector2 viewport_pos = GameOverseer.THE_OVERSEER.player_control.player_view_controller.viewport_pos;
         // Rect canvas_rect = canvas.GetComponent<RectTransform>().rect;
         // action_selector.anchoredPosition = new Vector2((viewport_pos.x-0.5f)*canvas_rect.width*2, (viewport_pos.y-0.5f)*canvas_rect.height*2);
-        canvas_cursor.anchoredPosition = player_controller.player_view_controller.screen_pos*player_screen.GetComponent<RectTransform>().localScale.x;
+        //canvas_cursor.anchoredPosition = player_controller.player_view_controller.screen_pos*player_screen.GetComponent<RectTransform>().localScale.x;
         if (action_selector.gameObject.activeSelf)
         {
             Vector3 canvas_pos = player_controller.player_view_controller.screen_pos*player_screen.GetComponent<RectTransform>().localScale.x;
