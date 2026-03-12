@@ -29,42 +29,40 @@ MonoBehaviour:
   serialized_input_stats:
     stat_list:
     - key: reset_speed
-      value: 5
+      value: 4
     - key: use_speed
-      value: 0.05
+      value: 0.3
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
-      value: 30
+      value: 50
     - key: recoil_increment
-      value: 0.1
+      value: 0.05
     - key: recoil_multiplier
-      value: 1
+      value: 1.1
     - key: recoil_max_dist_ratio
-      value: 0.4
+      value: 0.2
     - key: recoil_recovery
       value: 1
   serialized_attacks:
-  - prefab: {fileID: 4077797797690535342, guid: 74d3b6d886a278e47843e7f35df15a53,
+  - prefab: {fileID: 8164560864404493835, guid: 71219e3cbc2d7804781064ba8581e854,
       type: 3}
-    attack_enum: 0
+    attack_enum: 1
     attack_data:
-      damage: 30
-      pierce: 2
-      knockback_amt: 1
-      effect_time: 0
-      slow_amt: 0.01
+      damage: 150
+      pierce: 10
+      knockback_amt: 20
+      effect_time: 1
+      slow_amt: 0.5
       total_dot_damage: 0
       total_dot_ticks: 0
     attack_stats:
       stat_list:
-      - key: projectile_speed
-        value: 25
-      - key: projectile_count
-        value: 3
-      - key: projectile_spread
-        value: 15
+      - key: linecast_duration
+        value: 0.1
+      - key: linecast_count
+        value: 1
+      - key: linecast_spread
+        value: 2
       - key: even_spread
-        value: 0
-      - key: homing_strength
         value: 0

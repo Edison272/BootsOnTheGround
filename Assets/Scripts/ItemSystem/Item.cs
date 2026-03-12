@@ -130,6 +130,8 @@ public class Item : MonoBehaviour
     public void UnequipItem()
     {
         animator.SetBool("IsEquipped", false);
+        animator.SetBool("Resetting", false);
+        reset_timer = 0;
     }
 
     public void SetEquipped(int int_is_equipped) // 
