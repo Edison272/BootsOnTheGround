@@ -51,7 +51,7 @@ public class SquadManager : MonoBehaviour
         DeployOperator(c_player_char_index, transform.position);
         player_character.ToggleAI(false);
 
-        SetSquadLeader();
+        SetPlayerSquad();
         SetSquadUI();
 
         // set explore formation
@@ -60,9 +60,10 @@ public class SquadManager : MonoBehaviour
         
     }
 
-    public void SetSquadLeader() // set squad leader to player characte
+    public void SetPlayerSquad() // set squad leader to player characte
     {
         int i = 0;
+        player_character.SetPosition(Vector2.zero);
         foreach(Character squadmate in squad)
         {
             squadmate.behavior_controller.SetLeader(player_character);

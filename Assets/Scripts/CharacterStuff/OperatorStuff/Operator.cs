@@ -18,6 +18,7 @@ public class Operator : Character, IInteractable
 
     [Header("Ability")]
     private Ability ability;
+    public bool can_use_ability => ability.is_usable;
     //public bool ability_in_use => ability.ability_duration
     public float ability_cooldown_progress => ability.GetAbilityCooldownProgress();
 
@@ -145,7 +146,6 @@ public class Operator : Character, IInteractable
         health_component.ChangeHealth(change_amt);
     }
     #endregion
-
     public void UseAbility(Vector2 target_area)
     {
         if (ability.is_usable)

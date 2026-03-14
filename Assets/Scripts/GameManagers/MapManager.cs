@@ -10,7 +10,8 @@ public class MapManager : MonoBehaviour
 {
     public Tilemap Floor;
     public Tilemap Wall;
-    public MapGenPreset gen_preset;
+    public MapGenPresetSO gen_preset_SO;
+    [SerializeField] private MapGenPreset gen_preset;
     [SerializeField] TileBase wall_tile;
     [SerializeField] MapBiomePreset[] map_biome_pool = new MapBiomePreset[0];
     
@@ -58,6 +59,19 @@ public class MapManager : MonoBehaviour
     {
         DestroyMapObjects();
     }
+
+    public void SetMapGenPreset()
+    {
+        gen_preset = gen_preset_SO.CreateNewPreset();
+    }
+    public MapGenPreset GetMapGenPreset()
+    {
+        if (gen_preset == null)
+        {
+            gen_preset = gen_preset_SO.CreateNewPreset();
+        }
+        return gen_preset;
+    }
     public void DestroyMapObjects()
     {
         // Destroy POI made by map in editor. When editor destroys, it uses EditorDestroyMapObjects
@@ -76,8 +90,14 @@ public class MapManager : MonoBehaviour
             }
         }
     }
-    public void GenerateMap()
+    public void GenerateMap(int incrementation = 0)
     {
+        if (incrementation > 0)
+        {
+            gen_preset.IncrementGenPresets(incrementation);
+        }
+        
+        DestroyMapObjects();
         switch(map_maker_type)
         {
             case MapMakerType.Blob:
@@ -116,7 +136,7 @@ public class MapManager : MonoBehaviour
     #region Generate POI
     private void GeneratePOI() // generate potential POI based off of chunks in the map
     {
-        map_maker.GeneratePOI(all_chunks, critical_locs);
+        map_maker.GeneratePOI(all_chunks, critical_locs, gen_preset);
     }
 #endregion
 
@@ -497,7 +517,7 @@ public class MapManager : MonoBehaviour
             foreach (MapChunk chunk in all_chunks.Values)
             {
                 DrawChunk(chunk.position,Color.blue, false);
-                Handles.Label(chunk.world_center_position + new Vector2(0, chunk_size*0.2f), "from start: "+chunk.dist_from_start);
+                //Handles.Label(chunk.world_center_position + new Vector2(0, chunk_size*0.2f), "from start: "+chunk.dist_from_start);
             }
         }
         if (show_path_dist_heatmap)
@@ -505,7 +525,7 @@ public class MapManager : MonoBehaviour
             foreach (MapChunk chunk in all_chunks.Values)
             {
                 DrawChunk(chunk.position,Color.clear, false);
-                Handles.Label(chunk.world_center_position + new Vector2(0, -chunk_size*0.2f), "from path: "+chunk.path_relevancy);
+                //Handles.Label(chunk.world_center_position + new Vector2(0, -chunk_size*0.2f), "from path: "+chunk.path_relevancy);
             }
         }
         if (show_poi_territories)

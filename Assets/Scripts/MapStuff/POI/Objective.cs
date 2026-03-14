@@ -16,7 +16,7 @@ public class CaptureArea : MonoBehaviour
 
     [Header("Capture Data")]
     private float curr_capture_time = 0;
-    private float max_capture_time = 5f;
+    private float max_capture_time = 2f;
     private int owner = -1;
     [SerializeField] private int squad_weight = 0;
     [SerializeField] private int enemy_weight = 0;
@@ -38,13 +38,15 @@ public class CaptureArea : MonoBehaviour
     public void AddOccupier(Character character)
     {
         if (character.faction_tag == GameOverseer.SQUAD_TAG) {squad_weight++;}
-        else {enemy_weight++;}
+        else {//enemy_weight++;
+        }
     }
 
     public void RemoveOccupier(Character character)
     {
         if (character.faction_tag == GameOverseer.SQUAD_TAG) {squad_weight--;}
-        else {enemy_weight--;}
+        else {//enemy_weight--;
+        }
     }
 
 

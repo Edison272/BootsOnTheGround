@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Bits: 0
   holding_capacity: 2
   inventory:
-  - {fileID: 11400000, guid: 70468b497edd99349980626cdbfd65c2, type: 2}
+  - {fileID: 11400000, guid: 272c2cf839d326f4aa7b62bd541a2061, type: 2}
   - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
   - {fileID: 11400000, guid: 3c8b507b2a829974aaa3d76711dbe5d1, type: 2}
   item_indexes:

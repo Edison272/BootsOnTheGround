@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 using Random = UnityEngine.Random;
@@ -57,7 +56,6 @@ public class Gun : FuncModule
     public override void UpdateModule(Vector2 targ_pos)
     {
         target_pos = targ_pos + recoil_dir;
-        Debug.Log(recoil_dir);
         if (item.get_input_ready > 0.75)
         {
             recoil_dir *= 1 - (Time.deltaTime/recoil_recovery);

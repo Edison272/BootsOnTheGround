@@ -4,11 +4,13 @@ using UnityEngine;
 [System.Serializable]
 public class OperatorController : BehaviorController
 {
+    private Operator control_operator;
     [Header("Squad Manager Interaction")]
     private SquadManager squad_manager;
     public int squad_index;
     public OperatorController(Character c) : base(c)
     {
+        control_operator = c.GetComponent<Operator>();
         squad_manager = GameOverseer.THE_OVERSEER.squad_manager;
         this.AddBehavior(CommandMode.Hold).AddBehavior(CommandMode.Follow).AddBehavior(CommandMode.Interact);
     }
@@ -16,10 +18,13 @@ public class OperatorController : BehaviorController
     public override void UpdateAI()
     {
         base.UpdateAI();
-        if ((character.GetPosition() - leader.GetPosition()).sqrMagnitude > 30 * 30)
+
+        if (control_operator.can_use_ability)
         {
-            SetCommand(CommandMode.Follow);
+            control_operator.UseAbility(control_operator.GetPosition() + control_operator.aim_dir);
         }
+
+
     }
 
     // protected override void FollowCommand()

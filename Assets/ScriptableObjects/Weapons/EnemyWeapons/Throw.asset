@@ -59,7 +59,7 @@ MonoBehaviour:
     attack_stats:
       stat_list:
       - key: projectile_speed
-        value: 20
+        value: 10
       - key: projectile_count
         value: 1
       - key: projectile_spread

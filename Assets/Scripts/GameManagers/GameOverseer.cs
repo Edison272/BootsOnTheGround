@@ -52,6 +52,9 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public GameObject game_succeed_screen;
     public Action GameOverBus;
 
+    [Header("Game Over")]
+    public int progression_level {get; private set;} = 1;
+
     // Objective Management
     #region Initialziation
     void Awake()
@@ -70,7 +73,8 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!squad_ui_control) {squad_ui_control = GameObject.Find("Squad UI Controller")?.GetComponent<SquadUIController>();}
         if (!order_ui_control) {order_ui_control = GameObject.Find("Order UI Controller")?.GetComponent<OrderUIController>();}
 
-        objective_manager = new ObjectiveManager(this, map_manager.gen_preset.objectives);
+        map_manager.SetMapGenPreset();
+        objective_manager = new ObjectiveManager(this, map_manager.GetMapGenPreset().objectives);
         game_over_screen.SetActive(false);
 
         SQUAD_COLOR = serialize_squad_color;
@@ -112,18 +116,23 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
 
         // setup an AI manager after base data has been created
         ai_manager = new AIManager(this, map_manager.Wall, map_manager.Floor);
+    }
 
-        
+    public void LevelUp()
+    {
+        progression_level++;
+        map_manager.GenerateMap(progression_level);
+        squad_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.spawn_chunk);
+        enemy_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.final_chunk);
+
+        objective_manager.ResetObjectives(map_manager.GetMapGenPreset().objectives);
+
+        squad_manager.SetPlayerSquad();
     }
 
     void Update()
     {
-        if (THE_OVERSEER.objective_manager.objectives_complete && !game_succeed_screen.activeSelf)
-        {
-            THE_OVERSEER.GameWin();
-            
-        }
-        objective_manager.UpdateMapManager();
+        objective_manager.UpdateObjectiveManager();
         //Debug.Log(THE_OVERSEER.objective_manager.frontier_objective + ", " + THE_OVERSEER.objective_manager.total_objectives);
     }
     #endregion
@@ -168,7 +177,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         THE_OVERSEER.objective_manager.ObjectiveSecured();
         if (THE_OVERSEER.objective_manager.objectives_complete)
         {
-            THE_OVERSEER.GameWin();
+            THE_OVERSEER.LevelUp();
         }
     }
     #endregion

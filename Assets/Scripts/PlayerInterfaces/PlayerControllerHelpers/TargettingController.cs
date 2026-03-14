@@ -1,7 +1,5 @@
 using System;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
-using UnityEngine.Localization.SmartFormat.Utilities;
 
 // handles setting the player target and determining critical hit
 [Serializable]

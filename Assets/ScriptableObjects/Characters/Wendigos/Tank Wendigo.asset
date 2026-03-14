@@ -13,18 +13,19 @@ MonoBehaviour:
   m_Name: Tank Wendigo
   m_EditorClassIdentifier: 
   character_name: Vanguard Operator
-  health: 1200
+  health: 500
   spawn_shield: 100
   speed: 2
   accel_time: 0.5
   range: 8
   close_range: 3
-  char_prefab: {fileID: 7434421586320757455, guid: b551c7355afdf6e419785564f55b28f7,
+  interaction_range: 1
+  char_prefab: {fileID: 7843696300410244231, guid: b551c7355afdf6e419785564f55b28f7,
     type: 3}
   detection_mask:
     serializedVersion: 2
     m_Bits: 0
-  max_space: 5
+  holding_capacity: 2
   inventory:
   - {fileID: 11400000, guid: 830b3f48940dced4e8d7f8d809b6a178, type: 2}
   item_indexes:

@@ -23,7 +23,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 187096342528
-    m_Localized: 'Basic Controls
+    m_Localized: '"Basic Controls
 
 
       - WASD To Move
@@ -36,11 +36,17 @@ MonoBehaviour:
       R to Reload
 
 
+      - F to Pickup Item
+
+
       - SPACE to toggle to WIDE view
 
 
-      - LMB to shoot (when
-      not commanding operators)
+      -
+      LMB to shoot (when not commanding operators)
+
+      `- RMB to shoot secondary
+      (for dual-wielded weapons)"
 
 
       - RMB to shoot secondary (for dual-wielded
@@ -51,27 +57,15 @@ MonoBehaviour:
     m_Localized: 'COMMANDING OPERATORS
 
 
-      1)  1-4 to Select an Operator
+      Right Click an Operator to select
+      them.
 
 
-      2) 
-      Move Cursor to a target location, then Hold LMB to fully open the Operator''s
-      Action Wheel
+      Right Click an area to Command
 
 
-      3)  While Holding LMB, move the mouse to interact with
-      the Action Wheel options.
-
-
-      - Selector must SNAP to the a selected action
-      to select it.
-
-
-
-      4) Release LMB to confirm the action if an action is
-      selected in the action wheel, or cancel the action if nothing is selected
-
-'
+      Hold right Click to Cancel
+      Command'
     m_Metadata:
       m_Items: []
   - m_Id: 1153308794880

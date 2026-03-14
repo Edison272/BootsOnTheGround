@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 989c4355df8ccbc47abe518623378798, type: 3}
+  m_Name: BadPistol
+  m_EditorClassIdentifier: 
+  item_prefab: {fileID: 5030900112294072495, guid: de1b56efdb5d68e42ba50b660552abab,
+    type: 3}
+  ui_image: {fileID: 5005757472056179764, guid: 86d9e3aed432efb448716e3d15f10796,
+    type: 3}
+  item_name: SMG
+  input_enum: 0
+  is_full_auto: 1
+  dynamic_aim: 1
+  rot_scale: 1
+  bonus_range_scalar: 1
+  func_enum: 0
+  item_type: 0
+  curr_input: 0
+  curr_func: 0
+  serialized_input_stats:
+    stat_list:
+    - key: reset_speed
+      value: 2
+    - key: use_speed
+      value: 0.3
+  serialized_functionality_stats:
+    stat_list:
+    - key: max_ammo
+      value: 10
+    - key: recoil_increment
+      value: 0.01
+    - key: recoil_multiplier
+      value: 1.1
+    - key: recoil_max_dist_ratio
+      value: 0.3
+    - key: recoil_recovery
+      value: 2
+  serialized_attacks:
+  - prefab: {fileID: 4077797797690535342, guid: 74d3b6d886a278e47843e7f35df15a53,
+      type: 3}
+    attack_enum: 0
+    attack_data:
+      damage: 25
+      pierce: 0
+      knockback_amt: 0
+      effect_time: 0
+      slow_amt: 0.01
+      total_dot_damage: 0
+      total_dot_ticks: 0
+    attack_stats:
+      stat_list:
+      - key: projectile_speed
+        value: 20
+      - key: projectile_count
+        value: 1
+      - key: projectile_spread
+        value: 4
+      - key: even_spread
+        value: 0
+      - key: homing_strength
+        value: 0

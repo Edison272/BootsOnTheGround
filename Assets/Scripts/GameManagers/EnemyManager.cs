@@ -19,10 +19,11 @@ public class EnemyManager : MonoBehaviour
     public float wave_time = 3;
     public float wave_radius = 3;
     public float spawn_dist = 14;
-    public int min_wave_size;
-    public int max_wave_size;
-    public int min_wave_iterations;
-    public int max_wave_iterations;
+    public float min_wave_size;
+    public float max_wave_size;
+    public float min_wave_iterations;
+    public float max_wave_iterations;
+    public MajorObjective target_objective;
 
     [Header("Wave Spawning UI")]
     public Transform WaveBar;
@@ -53,8 +54,7 @@ public class EnemyManager : MonoBehaviour
         {
             wave_queue.Dequeue();
             Debug.Log("Wave Inc");
-            Vector2 position = (Vector2)transform.position + Random.insideUnitCircle * Random.Range(-wave_radius, wave_radius);
-            SummonEnemyWave(position, wave_radius, min_wave_size, max_wave_size);
+            SummonEnemyWave((int)min_wave_size, (int)max_wave_size);
             curr_time += wave_time;
         }
         else if (wave_queue.Count > 0)
@@ -74,22 +74,30 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    public void SummonEnemyWave(Vector2 position, float radius, int min_enemy_amt, int max_enemy_amt)
+    public void AttackMajorObjective(MajorObjective major_objective)
+    {
+        target_objective = major_objective;
+        SummonEnemyGroup();
+    }
+
+    public void SummonEnemyWave(int min_enemy_amt, int max_enemy_amt)
     {
         int enemy_amt = Random.Range(min_enemy_amt, max_enemy_amt+1);
+        List<Vector2Int> random_chunk_list = target_objective.GetWeightedList();
+        Vector2Int chunk_pos = random_chunk_list[Random.Range(0,random_chunk_list.Count)];
+        Vector2 new_spawn_pos = MapManager.GetChunkWorldCenter(chunk_pos);
+
         for (int i = 0; i < enemy_amt; i++)
         {
-            Vector3 spawn_pos = position + Random.insideUnitCircle * Random.Range(0, radius);
+            Vector3 spawn_pos = new_spawn_pos + Random.insideUnitCircle * Random.Range(0, MapManager.chunk_size/2.5f);
             CreateEnemy(Random.Range(0, enemy_presets.Length), spawn_pos);
         }
     }
 
     // summon an enemy group at target position. Use this for POI
-    public void SummonEnemyGroup(Vector2 group_pos)
+    void SummonEnemyGroup()
     {
-        Debug.Log("ATTACK THE POINT");
-        transform.position = group_pos;
-        int waves = Random.Range(min_wave_iterations, max_wave_iterations+1);
+        int waves = Random.Range((int)min_wave_iterations, (int)max_wave_iterations+1);
         for (int w = 0; w < waves; w++)
         {
             wave_queue.Enqueue(new int[0] {});
@@ -99,12 +107,17 @@ public class EnemyManager : MonoBehaviour
     public void EnemyLost(Character character)
     {
         enemies.Remove(character);
-        Debug.Log("I died " + enemies.Count);
         SetEnemyUI();
-        if (enemies.Count == 0)
+        if (enemies.Count == 0 && wave_queue.Count == 0)
         {
             GameOverseer.ObjectiveSecured();
             SetEnemyUI("Area Clear!");
+
+            // increment gang
+            min_wave_size += 1f * GameOverseer.THE_OVERSEER.progression_level;
+            max_wave_size += 1.5f * GameOverseer.THE_OVERSEER.progression_level;
+            min_wave_iterations += 0.2f;
+            max_wave_iterations += 0.4f;
         }
     }
 

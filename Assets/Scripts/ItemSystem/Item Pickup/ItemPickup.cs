@@ -12,6 +12,13 @@ public class ItemPickup : MonoBehaviour, IInteractable
     public GameObject InteractionUI;
     [SerializeField] SpriteRenderer this_sprite;
 
+    public void SetItem(ItemSO set_new)
+    {
+        new_item = set_new;
+        this_sprite.sprite = new_item.ui_image;
+        interact_prompt.SetActive(false);
+    }
+
     public void Start()
     {
         this_sprite.sprite = new_item.ui_image;

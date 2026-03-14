@@ -43,7 +43,7 @@ MonoBehaviour:
     - key: recoil_max_dist_ratio
       value: 0.25
     - key: recoil_recovery
-      value: 1
+      value: 3
   serialized_attacks:
   - prefab: {fileID: 4077797797690535342, guid: 74d3b6d886a278e47843e7f35df15a53,
       type: 3}

@@ -10,6 +10,7 @@ public class MajorObjective
     public MajorObjective next_poi = null;
     public Vector2Int[] minor_poi = new Vector2Int[0];
     public HashSet<Vector2Int> territory_chunks = new HashSet<Vector2Int>();
+    public List<Vector2Int> weighted_territory_chunks;
 
     [Header("Objective Point")]
     public CaptureArea objective_point;
@@ -26,6 +27,24 @@ public class MajorObjective
         SetupPOI(prev, is_captured);
     }
 
+    public List<Vector2Int> GetWeightedList()
+    {
+        if (weighted_territory_chunks == null)
+        {
+            weighted_territory_chunks = new List<Vector2Int>();
+            foreach(Vector2Int chunk_pos in territory_chunks)
+            {
+                MapChunk chunk = GameOverseer.THE_OVERSEER.map_manager.all_chunks[chunk_pos];
+                int weight = (int)(chunk.path_relevancy * 0.1f);
+                for (int i = 0; i < chunk.path_relevancy; i++)
+                {
+                    weighted_territory_chunks.Add(chunk_pos);
+                }
+            }
+        }
+
+        return weighted_territory_chunks;
+    }
     private void SetupPOI(MajorObjective prev, bool is_captured)
     {
         if (prev != null)
@@ -69,6 +88,16 @@ public class MajorObjective
                 new_pos += new Vector2(splinter_dir.y, -splinter_dir.x).normalized * Random.Range(-lat_scale, lat_scale);
                 minor_poi[i] = new Vector2Int((int)new_pos.x, (int)new_pos.y);
             }
+        }
+    }
+    public void GenerateMinorPOI(int amount)
+    {
+        GetWeightedList();
+        minor_poi = new Vector2Int[amount];
+
+        for(int i = 0; i < amount; i++)
+        {
+            minor_poi[i] = weighted_territory_chunks[Random.Range(0,weighted_territory_chunks.Count)];
         }
     }
 }

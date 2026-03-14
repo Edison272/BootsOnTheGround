@@ -287,9 +287,13 @@ public class LevelMaker : MapMaker
 
     public override void GeneratePOI(
         Dictionary<Vector2Int, MapChunk> all_chunks, 
-        MajorObjective[] critical_locs)
+        MajorObjective[] critical_locs,
+        MapGenPreset gen_preset)
     {
-
+        foreach(MajorObjective mo in critical_locs)
+        {
+            mo.GenerateMinorPOI(gen_preset.minor_poi);
+        }
     }
     
 }

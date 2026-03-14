@@ -45,9 +45,9 @@ MonoBehaviour:
     - key: recoil_recovery
       value: 1
   serialized_attacks:
-  - prefab: {fileID: 1077487282662764395, guid: 8031989c31f8e654595640e46d3af3b7,
+  - prefab: {fileID: 3163801247859444956, guid: e51354d65a941514187dedb9e09495c6,
       type: 3}
-    attack_enum: 1
+    attack_enum: 0
     attack_data:
       damage: 4
       pierce: 0
@@ -58,11 +58,13 @@ MonoBehaviour:
       total_dot_ticks: 0
     attack_stats:
       stat_list:
-      - key: linecast_duration
-        value: 0.1
-      - key: linecast_count
+      - key: projectile_speed
+        value: 20
+      - key: projectile_count
         value: 1
-      - key: linecast_spread
-        value: 3
+      - key: projectile_spread
+        value: 0
       - key: even_spread
+        value: 0
+      - key: homing_strength
         value: 0

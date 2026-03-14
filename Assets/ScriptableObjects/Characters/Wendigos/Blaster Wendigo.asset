@@ -13,18 +13,19 @@ MonoBehaviour:
   m_Name: Blaster Wendigo
   m_EditorClassIdentifier: 
   character_name: Vanguard Operator
-  health: 500
+  health: 200
   spawn_shield: 100
   speed: 2
   accel_time: 0.5
   range: 9
   close_range: 3
-  char_prefab: {fileID: 2589057906099434769, guid: 383be83fe97b3f943a8a055bb860e5dc,
+  interaction_range: 1
+  char_prefab: {fileID: 4729771738463133131, guid: 7e1b5fadc7af0b24b98074781b9b634f,
     type: 3}
   detection_mask:
     serializedVersion: 2
     m_Bits: 0
-  max_space: 5
+  holding_capacity: 2
   inventory:
   - {fileID: 11400000, guid: 15007d21cf7441c4baa6731cd39f976d, type: 2}
   item_indexes:

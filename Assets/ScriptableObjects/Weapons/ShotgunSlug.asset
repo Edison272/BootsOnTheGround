@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 989c4355df8ccbc47abe518623378798, type: 3}
   m_Name: ShotgunSlug
   m_EditorClassIdentifier: 
-  item_prefab: {fileID: 3117911291600889211, guid: ae6f1b93bf4987d4ab1c010cdc748815,
+  item_prefab: {fileID: 3117911291600889211, guid: 87171a19965289141aec352430cbcb8e,
     type: 3}
   ui_image: {fileID: 8124512129372133153, guid: 09dae1df29e11834dbc1d87375abcc9d,
     type: 3}

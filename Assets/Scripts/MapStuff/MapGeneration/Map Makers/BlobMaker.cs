@@ -145,7 +145,7 @@ public class BlobMaker : MapMaker
         return map_center;
     }
 
-    public override void GeneratePOI(Dictionary<Vector2Int, MapChunk> all_chunks, MajorObjective[] critical_locs)
+    public override void GeneratePOI(Dictionary<Vector2Int, MapChunk> all_chunks, MajorObjective[] critical_locs, MapGenPreset gen_preset)
     {
         for (int i = 2; i < critical_locs.Length; i++) // fill in betweens of the list
         {
