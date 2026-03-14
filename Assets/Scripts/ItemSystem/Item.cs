@@ -116,7 +116,7 @@ public class Item : MonoBehaviour
                 animator.SetBool("Resetting", false);
                 func_module.ResetData();
                 reset_timer = 0;
-
+                animator.speed = 1;
             }
         }
         func_module.UpdateModule(target_pos);
@@ -132,6 +132,7 @@ public class Item : MonoBehaviour
     {
         animator.SetBool("IsEquipped", false);
         animator.SetBool("Resetting", false);
+        animator.speed = 1;
         reset_timer = 0;
     }
 
@@ -178,8 +179,10 @@ public class Item : MonoBehaviour
         is_equipped = false; // after item finishes resetting, animator uses the SetEquipped() to set is_equipped back to true
         if (reset_timer == 0)
         {
+            
             animator.SetBool("Resetting", true);
             reset_timer = base_data.item_stats["reset_speed"] * reset_spd_scale;
+            animator.speed = 1/reset_timer;
         }
     }
 

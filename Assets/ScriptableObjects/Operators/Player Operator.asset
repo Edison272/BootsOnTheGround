@@ -28,7 +28,7 @@ MonoBehaviour:
   holding_capacity: 2
   inventory:
   - {fileID: 11400000, guid: 272c2cf839d326f4aa7b62bd541a2061, type: 2}
-  - {fileID: 11400000, guid: 272c2cf839d326f4aa7b62bd541a2061, type: 2}
+  - {fileID: 11400000, guid: 99e1715db4cc2e443acdd51ce19abef4, type: 2}
   item_indexes:
   - {x: 0, y: -1}
   - {x: 1, y: -1}

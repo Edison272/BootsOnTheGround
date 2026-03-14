@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a47c88410c2ae44ca7f468bc04fdc93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  base_data: {fileID: 0}
+  <base_data>k__BackingField: {fileID: 0}
   item_object: {fileID: 3117911291600889211}
   rotator_object: {fileID: 0}
   item_tip: {fileID: 7037610556534379554}
@@ -142,7 +142,6 @@ MonoBehaviour:
   rot_scale: 1
   aim_pos: {x: 0, y: 0}
   source_pos: {x: 0, y: 0}
-  target_pos: {x: 0, y: 0}
   user: {fileID: 0}
   use_spd_scale: 1
   reset_spd_scale: 1
