@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Item Inteaction")]
     IInteractable closest_interactable;
+    IInteractable previous_interactable = null;
 
     [Header("Squad Interactions")]
     public SquadManager squad;
@@ -122,10 +123,19 @@ public class PlayerController : MonoBehaviour
         order_ui_control.SetOrderController(this);
     }
 
-    public void FreeCursor()
+    public void FreeCursor(bool is_free)
     {
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
+        if (is_free)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        
+        
+        Cursor.visible = is_free;
     }
 
     public void SetPlayerCharacter(Character new_character)
@@ -196,6 +206,13 @@ public class PlayerController : MonoBehaviour
 
             // do some ui stuff too
             closest_interactable = active_character.FindInteractables();
+            if (previous_interactable != closest_interactable)
+            {
+                closest_interactable?.ToggleInteractPrompt(true);
+                previous_interactable?.ToggleInteractPrompt(false);
+                previous_interactable = closest_interactable;
+            }
+            
         }
         order_controller.UpdateOrderControl(look_pos);
     }

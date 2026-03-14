@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 public class ItemPickup : MonoBehaviour, IInteractable
 {
-    [field: SerializeField] public GameObject interact_prompt {get; set;}
     public ItemSO new_item;
     public Item used_item;
     [Header("Interaction Prompt")]
@@ -16,13 +15,13 @@ public class ItemPickup : MonoBehaviour, IInteractable
     {
         new_item = set_new;
         this_sprite.sprite = new_item.ui_image;
-        interact_prompt.SetActive(false);
+        InteractionUI.SetActive(false);
     }
 
     public void Start()
     {
         this_sprite.sprite = new_item.ui_image;
-        interact_prompt.SetActive(false);
+        InteractionUI.SetActive(false);
     }
     public void Interact(Character character)
     {        
@@ -42,9 +41,9 @@ public class ItemPickup : MonoBehaviour, IInteractable
         }
     }
 
-    public void ToggleInteractPrompt(bool enable)
+    public void ToggleInteractPrompt(bool is_enabled)
     {
-        throw new NotImplementedException();
+        InteractionUI.SetActive(is_enabled);
     }
 
     public string GetPromptText()

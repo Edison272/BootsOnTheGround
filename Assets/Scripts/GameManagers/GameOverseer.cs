@@ -52,8 +52,10 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public GameObject game_succeed_screen;
     public Action GameOverBus;
 
-    [Header("Game Over")]
+    [Header("Game Progression")]
     public int progression_level {get; private set;} = 1;
+    private GameObject ExtractionPoint;
+    public GameObject UpgradeScreen;
 
     // Objective Management
     #region Initialziation
@@ -76,6 +78,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         map_manager.SetMapGenPreset();
         objective_manager = new ObjectiveManager(this, map_manager.GetMapGenPreset().objectives);
         game_over_screen.SetActive(false);
+        UpgradeScreen.SetActive(false);
 
         SQUAD_COLOR = serialize_squad_color;
         ENEMY_COLOR = serialize_enemy_color;
@@ -118,9 +121,30 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         ai_manager = new AIManager(this, map_manager.Wall, map_manager.Floor);
     }
 
-    public void LevelUp()
+    #region  Next Level
+    // create an extraction zone that allows the player to leave the level
+    public void CreateExtraction()
     {
+        MajorObjective final_mo = map_manager.critical_locs[map_manager.critical_locs.Length - 1];
+        GameObject final_objective_point = final_mo.objective_point.gameObject;
+        final_objective_point.SetActive(false);
+        if (!ExtractionPoint)
+        {
+            ExtractionPoint = GameObject.Instantiate(Resources.Load<GameObject>("MapObjects/Areas/Extraction"), final_objective_point.transform.position, Quaternion.identity);
+        }
+    }
+    // called by the extraction zone script. open ui to give player upgrades
+    public void GetUpgrades()
+    {
+        UpgradeScreen.SetActive(true);
+        player_control.FreeCursor(true);
+    }
+    public void LevelUp() // called when player interacts with extraction
+    {
+        player_control.FreeCursor(true);
+        
         progression_level++;
+        Destroy(ExtractionPoint);
         map_manager.GenerateMap(progression_level);
         squad_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.spawn_chunk);
         enemy_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.final_chunk);
@@ -128,7 +152,9 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         objective_manager.ResetObjectives(map_manager.GetMapGenPreset().objectives);
 
         squad_manager.SetPlayerSquad();
+        UpgradeScreen.SetActive(false);
     }
+    #endregion
 
     void Update()
     {
@@ -143,14 +169,14 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         {
             game_over_screen.SetActive(true);
         }
-        player_control.FreeCursor();
+        player_control.FreeCursor(true);
     }
 
     public void GameWin()
     {
         Debug.Log("win");
         game_succeed_screen.SetActive(true);
-        player_control.FreeCursor();
+        player_control.FreeCursor(true);
     }
 
     public void ReturnToMain()
@@ -160,24 +186,24 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     #endregion
     #region Objective Manager Stuff
     // when an objective is captured, send enemies to recature it
-    public static void ObjectiveCaptured(MajorObjective maj_poi)
+    public void ObjectiveCaptured(MajorObjective maj_poi)
     {
         THE_OVERSEER.objective_manager.ObjectiveCaptured(maj_poi);
     }
 
     // when an objective is lost, enemies will reinforce it again
-    public static void ObjectiveLost(MajorObjective maj_poi)
+    public void ObjectiveLost(MajorObjective maj_poi)
     {
         THE_OVERSEER.objective_manager.ObjectiveLost(maj_poi);
     }
 
     // when all enemies are defeated, the objective is secured
-    public static void ObjectiveSecured()
+    public void ObjectiveSecured()
     {
         THE_OVERSEER.objective_manager.ObjectiveSecured();
         if (THE_OVERSEER.objective_manager.objectives_complete)
         {
-            THE_OVERSEER.LevelUp();
+            CreateExtraction();
         }
     }
     #endregion

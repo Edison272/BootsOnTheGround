@@ -110,7 +110,7 @@ public class EnemyManager : MonoBehaviour
         SetEnemyUI();
         if (enemies.Count == 0 && wave_queue.Count == 0)
         {
-            GameOverseer.ObjectiveSecured();
+            GameOverseer.THE_OVERSEER.ObjectiveSecured();
             SetEnemyUI("Area Clear!");
 
             // increment gang

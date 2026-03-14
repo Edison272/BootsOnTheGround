@@ -82,7 +82,7 @@ public class CaptureArea : MonoBehaviour
             {
                 owner = -1;
                 objective_animator.Play("Lost");
-                GameOverseer.ObjectiveLost(objective_poi);
+                GameOverseer.THE_OVERSEER.ObjectiveLost(objective_poi);
                 curr_capture_time = 0;
                 SetColor(GameOverseer.EMPTY_COLOR);
             }
@@ -92,7 +92,7 @@ public class CaptureArea : MonoBehaviour
             SetColor(GameOverseer.SQUAD_COLOR);
             objective_animator.Play("Captured");
             owner = GameOverseer.SQUAD_TAG;
-            GameOverseer.ObjectiveCaptured(objective_poi);
+            GameOverseer.THE_OVERSEER.ObjectiveCaptured(objective_poi);
         } 
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player Operator
   m_EditorClassIdentifier: 
   character_name: Player
-  health: 1000
+  health: 100
   spawn_shield: 0
   speed: 10
   accel_time: 0.5

@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7621008060040827542}
-  - component: {fileID: 1998025435294168491}
   - component: {fileID: 5891969859425404946}
   - component: {fileID: 748424216590780694}
   - component: {fileID: 7051826288836970004}
@@ -38,18 +37,6 @@ Transform:
   - {fileID: 2669718396150688272}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &1998025435294168491
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2007815197682377515}
-  m_Enabled: 1
-  m_SortingLayerID: 1532253401
-  m_SortingLayer: 1
-  m_SortingOrder: 0
-  m_SortAtRoot: 0
 --- !u!50 &5891969859425404946
 Rigidbody2D:
   serializedVersion: 4
@@ -125,10 +112,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6336dff5f68535d46a2365bfcc1bb0c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <interact_prompt>k__BackingField: {fileID: 5987677175792865344}
   new_item: {fileID: 11400000, guid: cf688422d583beb408b32bc9e89da26c, type: 2}
   used_item: {fileID: 0}
-  InteractionUI: {fileID: 0}
+  InteractionUI: {fileID: 5987677175792865344}
   this_sprite: {fileID: 9220630830858071888}
 --- !u!1 &6699634416809439751
 GameObject:
@@ -204,7 +190,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1532253401
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 04cbe820bab1cc144a96f2d371fcdff2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
