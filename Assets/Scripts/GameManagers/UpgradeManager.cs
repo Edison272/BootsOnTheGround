@@ -4,17 +4,22 @@ public class UpgradeManager : MonoBehaviour
     public GameObject UpgradeScreen;
     public Transform UpgradeLayout;
     public UpgradeUI[] UpgradeUIs;
+    
     public string[] upgrade_text = new string[1] {"new op"};
     public int upgrade_choices;
+
+    public UpgradeSO[] upgrade_pool;
+    private UpgradeSO[] upgrades = new UpgradeSO[3];
+    public int selected_upgrade_index;
     
     public void Awake()
     {
         ToggleUpgradeScreen(false);
-        UpgradeUIs = new UpgradeUI[3];
-        for(int i = 0; i < UpgradeUIs.Length; i++)
-        {
-            UpgradeUIs[i] = Instantiate(Resources.Load<GameObject>("UI/Upgrades/UpgradeOption"), UpgradeLayout).GetComponent<UpgradeUI>();
-        }
+        // UpgradeUIs = new UpgradeUI[3];
+        // for(int i = 0; i < UpgradeUIs.Length; i++)
+        // {
+        //     UpgradeUIs[i] = Instantiate(Resources.Load<GameObject>("UI/Upgrades/UpgradeOption"), UpgradeLayout).GetComponent<UpgradeUI>();
+        // }
     }
 
     public void ToggleUpgradeScreen(bool is_enabled)
@@ -30,18 +35,29 @@ public class UpgradeManager : MonoBehaviour
     {
         ToggleUpgradeScreen(true);
 
-        foreach(UpgradeUI ui in UpgradeUIs)
+        for (int i = 0; i < upgrades.Length; i++)
         {
-            ui.SetUpgradeType(upgrade_text[Random.Range(0, upgrade_text.Length)]);
+            upgrades[i] = upgrade_pool[Random.Range(0, upgrade_pool.Length)];
+        }
+        SelectUpgrade(-1);
+    }
+    public void SelectUpgrade(int index)
+    {
+        for(int i = 0; i < UpgradeUIs.Length; i++)
+        {
+            if (i != index)
+            {
+                UpgradeUIs[i].SetSelected(false);
+            }
+        }
+        if (index > 0 && index < UpgradeUIs.Length)
+        {
+            selected_upgrade_index = index;
         }
     }
-    public void SetUpgrade()
-    {
-        
-    }
 
-    public void ApplyUpgrade()
+    public void ApplySelectUpgrade()
     {
-        
+        upgrades[selected_upgrade_index].ApplyUpgrade();
     }
 }

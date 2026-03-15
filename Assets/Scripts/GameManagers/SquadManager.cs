@@ -74,9 +74,19 @@ public class SquadManager : MonoBehaviour
 
             if (squadmate != player_character)
             {
-                squadmate.SetPosition(player_character.GetPosition() + (Vector2)Directions2D.four_directions[i] * 3);
+
+                float circ_progress = (float)i/(squad.Count-1);
+                float circ_rad = circ_progress * 2 * Mathf.PI;
+                
+                float xScaled = Mathf.Cos(circ_rad);
+                float yScaled = Mathf.Sin(circ_rad);
+    
+                float x = 3 * xScaled;
+                float y = 3 * yScaled;
+                Vector3 currentPosition = player_character.GetPosition() + new Vector2(x,y);
+                squadmate.SetPosition(currentPosition);
+
                 i++;
-                i = Mathf.Clamp(i, 0, 3);
             }
         }
     }
@@ -130,7 +140,7 @@ public class SquadManager : MonoBehaviour
         {
             Operator curr_op = operators[i];
             Vector2 offset_vec = player_character.aim_dir.normalized * 10/((int)curr_op.op_class + 1);
-            combat_formation[i] = center + offset_vec;
+            //combat_formation[i] = center + offset_vec;
         }
     }
 

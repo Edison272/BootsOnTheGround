@@ -253,7 +253,6 @@ public class PlayerController : MonoBehaviour
         input_dir = context.ReadValue<Vector2>();
         if (input_dir.sqrMagnitude > 0.0001f) 
         {
-            Debug.Log(active_character);
             active_character.SetMove(input_dir);
         }
         else 

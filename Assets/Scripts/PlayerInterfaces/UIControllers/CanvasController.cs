@@ -132,7 +132,7 @@ public class CanvasController : MonoBehaviour
     {
         List<Operator> squad_members = GameOverseer.THE_OVERSEER.squad_manager.operators;
         movement_indicators = new GameObject[squad_members.Count];
-        for (int i = 1; i < squad_members.Count; i++) // make UI for every operator EXCEPT the player
+        for (int i = 1; i < Mathf.Min(op_statuses.Length, squad_members.Count); i++) // make UI for every operator EXCEPT the player
         {
             op_statuses[i].gameObject.SetActive(true);
             op_statuses[i].ConstructUI(squad_members[i], i);
