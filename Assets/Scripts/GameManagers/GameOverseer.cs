@@ -150,6 +150,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public void LevelUp() // called when player interacts with extraction
     {
         player_control.FreeCursor(false);
+        upgrade_manager.ApplySelectUpgrade();
         
         progression_level++;
         Destroy(ExtractionPoint);

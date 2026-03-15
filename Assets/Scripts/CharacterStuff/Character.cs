@@ -97,7 +97,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
 
     [field: Header("AI")]
     public int faction_tag = 1;
-    protected bool is_AI_active = false;
+    [SerializeField] protected bool is_AI_active = true;
     public BehaviorController behavior_controller;    
     
     [field: Header("Event Bus")]

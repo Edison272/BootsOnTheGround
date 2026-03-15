@@ -968,9 +968,12 @@ MonoBehaviour:
   base_sprite_height: 0
   base_head_height: 0
   animator: {fileID: 1320355488441388370}
+  offset_look: {x: 0, y: 0}
   aim_angle: 0
   <movement_component>k__BackingField:
+    <move_speed>k__BackingField: 0
     <destination_reached>k__BackingField: 0
+    entity_rb: {fileID: 0}
     current_tile_pos: {x: 0, y: 0}
     max_accel_time: 0
     move_speed_modifiers: []
@@ -992,6 +995,7 @@ MonoBehaviour:
   interaction_range: 1
   target: {fileID: 0}
   faction_tag: 1
+  is_AI_active: 1
   <base_op_data>k__BackingField: {fileID: 0}
   nametag: {fileID: 668327687475740912}
   selection_indicator: {fileID: 8837649333110249411}
@@ -1000,6 +1004,7 @@ MonoBehaviour:
     command: 0
     favorite_target: 0
     character: {fileID: 0}
+    <leader>k__BackingField: {fileID: 0}
     base_engage_dist: 0
     anchor_position: {x: 0, y: 0}
     move_to_pos: {x: 0, y: 0}

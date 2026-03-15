@@ -42,6 +42,11 @@ public class OrderController
     }
     #region Update
 
+    public void SetSquadData()
+    {
+        operators = squad_manager.operators.ToList<Operator>();
+    }
+
     public void UpdateOrderControl(Vector2 look_pos)
     {        
         this.look_pos = look_pos;

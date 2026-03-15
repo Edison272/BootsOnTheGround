@@ -171,6 +171,7 @@ public class PlayerController : MonoBehaviour
 
     void OnDisable()
     {
+        DisableControl();
         //unsubscribe from everything when scene is reset
         movement.performed -= Move;
         looking.performed -= Look;
@@ -183,6 +184,8 @@ public class PlayerController : MonoBehaviour
         controls.GroundActions.OpDeploy3.performed -= OpDeploy3;
         controls.GroundActions.OpDeploy4.performed -= OpDeploy4;
         controls.GroundActions.OpAbility.performed -= GetOperatorAbility;
+        SetMainAction(false);
+        SetOrderAction(false);
     }
 
     public void EnableControl()
@@ -487,7 +490,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             order_action.started -= StartOrderInput;
-            order_action.canceled += StopOrderInput;
+            order_action.canceled -= StopOrderInput;
         }
         // if (enable)
         // {

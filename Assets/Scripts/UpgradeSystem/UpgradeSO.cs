@@ -17,7 +17,8 @@ public class AddOperator : UpgradeSO
     public override void ApplyUpgrade()
     {
         Debug.Log("new operator on the way!");
-        GameOverseer.THE_OVERSEER.squad_manager.CreateOperator(add_operator);
+        GameOverseer.THE_OVERSEER.squad_manager.CreateOperator(add_operator, true);
+        GameOverseer.THE_OVERSEER.player_control.order_controller.SetSquadData();
     }
 }
 

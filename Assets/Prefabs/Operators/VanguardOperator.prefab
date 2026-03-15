@@ -23,6 +23,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: VanguardOperator
       objectReference: {fileID: 0}
+    - target: {fileID: 4802309797167324225, guid: 85548c7683d80254c8fd6c607bc0e7d8,
+        type: 3}
+      propertyPath: is_AI_active
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8180024274873292736, guid: 85548c7683d80254c8fd6c607bc0e7d8,
         type: 3}
       propertyPath: m_LocalPosition.x

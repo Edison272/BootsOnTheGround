@@ -32,7 +32,7 @@ public class BehaviorController
     public TargetType favorite_target = TargetType.Closest;
     
     [SerializeField] protected Character character;
-    [SerializeField] public Character leader {get; private set;} // who they follow/ base their strategies around
+    [field: SerializeField] public Character leader {get; private set;} // who they follow/ base their strategies around
 
     [Header("Actions")]
     protected float aggro_time = 1; // do an attack or something

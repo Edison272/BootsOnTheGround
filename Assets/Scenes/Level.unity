@@ -46046,6 +46046,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ef71d6d7633b6d940b5feb9d0d7cb5e2, type: 2}
   operator_presets:
   - {fileID: 11400000, guid: bc89ca59719ae6e49bd1441fed2f6e77, type: 2}
+  - {fileID: 11400000, guid: 2597eb25d71361045b0784b922ebe888, type: 2}
   operators: []
   player_character: {fileID: 0}
   drop_pos: {x: 0, y: 0, z: 0}
