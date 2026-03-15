@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97cdf939f1c972e4d922640cd38e06b2, type: 3}
   m_Name: Vanguard Knight
   m_EditorClassIdentifier: 
-  character_name: Knight
+  character_name: Vanguard "Rook"
+  character_image: {fileID: -5944703109977052358, guid: cbe2428ba5f98c745b135dfac973c79e,
+    type: 3}
+  description: A frontline soldier armed to the teeth. Equips a machine gun to mow
+    down enemies at fixed intervals.
   health: 1500
   spawn_shield: 0
-  speed: 10
+  speed: 9
   accel_time: 0.5
-  range: 15
+  range: 6
   close_range: 5
   interaction_range: 1
   char_prefab: {fileID: 1617546575173960562, guid: 388e4c59c8e01914595d32397206eb35,
@@ -33,5 +37,5 @@ MonoBehaviour:
   - {x: 0, y: -1}
   - {x: 1, y: -1}
   op_class: 2
-  redeployment_time: 10
-  ability: {fileID: 11400000, guid: 0924986d979fd0d468293f6b61c2c371, type: 2}
+  redeployment_time: 120
+  ability: {fileID: 11400000, guid: 3758e24ca3c9f6a45b404c32b92c79cb, type: 2}

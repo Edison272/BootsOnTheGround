@@ -16,7 +16,7 @@ MonoBehaviour:
     type: 3}
   ui_image: {fileID: 5005757472056179764, guid: 86d9e3aed432efb448716e3d15f10796,
     type: 3}
-  item_name: SMG
+  item_name: Bad Pistol
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1

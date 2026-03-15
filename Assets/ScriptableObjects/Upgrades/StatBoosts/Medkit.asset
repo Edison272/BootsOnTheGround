@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Medkit
+  m_EditorClassIdentifier: Assembly-CSharp::StatIncrease
+  upgrade_name: Medkit
+  upgrade_description: Heal Player by a significant amount
+  upgrade_sprite: {fileID: -3826845409251182802, guid: 346fff7c36d86984791e8a5f2a272c82,
+    type: 3}
+  stat_modifier:
+    max_health_boost: 0
+    health_regen: 80
+    regen_rate: 1
+    shield_boost: 0
+    speed_scale: 1
+    speed_scale_decay: 0
+  affect_entire_team: 0
+  duration: 1

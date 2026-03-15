@@ -8,6 +8,8 @@ public class CharacterSO : ScriptableObject
 {
     //id
     public string character_name = "Entity";
+    public Sprite character_image;
+    public string description = "bleh";
 
     //stats
     public int health = 100;

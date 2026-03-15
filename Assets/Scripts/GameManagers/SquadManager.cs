@@ -112,6 +112,8 @@ public class SquadManager : MonoBehaviour
 
         Vector3 deploy_pos = at_player_pos ? player_character.GetPosition() : transform.position;
         DeployOperator(i, deploy_pos);
+
+        this_op.SetCommandBehavior(CommandMode.Follow);
     }
 
     public void Update()

@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: Firefighter
   m_EditorClassIdentifier: 
   character_name: Firefighter
+  character_image: {fileID: 1756291415134021759, guid: 555efa8fc27588d46b7f306108004936,
+    type: 3}
+  description: An emergency responder ready to bleed for humanity. Gains a shield
+    and movespeed after taking a fixed amount of damage
   health: 2500
   spawn_shield: 0
   speed: 9
   accel_time: 1.08
-  range: 10
+  range: 6
   close_range: 5
   interaction_range: 1
   char_prefab: {fileID: 1482123644643364697, guid: dc940cd1e1642ea43991509f531244bd,
@@ -34,5 +38,5 @@ MonoBehaviour:
   - {x: 0, y: -1}
   - {x: 1, y: 2}
   op_class: 0
-  redeployment_time: 20
+  redeployment_time: 60
   ability: {fileID: 11400000, guid: 8b4b89cc872c1024796f2821ed778d98, type: 2}

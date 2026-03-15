@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Vanguard.Skirmisher
+  m_Name: Trailblazer
   m_EditorClassIdentifier: Assembly-CSharp::AddOperator
-  upgrade_name: Get Knight
-  upgrade_stats: googoogaga
-  upgrade_description: Herg
-  add_operator: {fileID: 11400000, guid: 2597eb25d71361045b0784b922ebe888, type: 2}
+  upgrade_name: 
+  upgrade_stats: 
+  upgrade_description: 
+  add_operator: {fileID: 11400000, guid: 2c3299f16ebd1f54396a4ea05d3f0f69, type: 2}

@@ -6,6 +6,7 @@ public class UpgradeUI : MonoBehaviour
 {
     [Header("UI Core Components")]
     public GameObject UpgradeOption;
+    public Image UpgradeImage;
 
     [Header("UI Text Components")]
     public TextMeshProUGUI Name;
@@ -22,9 +23,14 @@ public class UpgradeUI : MonoBehaviour
     {
         ButtonOutline.SetActive(is_enabled);
     }
-    public void SetUpgradeType(string text)
+    public void SetUpgradeUI(UpgradeSO upgrade_data)
     {
-        Name.text = text;
+        UpgradeImage.sprite = upgrade_data.GetSprite();
+        
+        (string, string, string) text_data = upgrade_data.GetTextData();
+        Name.text = text_data.Item1;
+        Stats.text = text_data.Item2;
+        Description.text = text_data.Item3;
     }
 
     public void SelectUpgrade()

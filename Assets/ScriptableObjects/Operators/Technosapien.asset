@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97cdf939f1c972e4d922640cd38e06b2, type: 3}
-  m_Name: Player Operator
+  m_Name: Technosapien
   m_EditorClassIdentifier: 
-  character_name: Player
-  character_image: {fileID: 7501651884322301389, guid: 5ed00213e0021ae4eb3e1d774729c9db,
+  character_name: Cyclops
+  character_image: {fileID: 4809396141046213086, guid: b48fdc5d8190cb6499a3d459000f31a9,
     type: 3}
-  description: The bleed zone's first line of defense- the Trailblazers
-  health: 100
+  description: A light weight scouting robot. High range, low durability
+  health: 200
   spawn_shield: 0
   speed: 10
   accel_time: 0.5
   range: 10
-  close_range: 5
+  close_range: 3
   interaction_range: 1
-  char_prefab: {fileID: 1617546575173960562, guid: ccbe11c2689227c40b7f9c5a929c95ec,
+  char_prefab: {fileID: 1617546575173960562, guid: 374fac0e19196a54d8cd2b3b5003f3d2,
     type: 3}
   detection_mask:
     serializedVersion: 2
@@ -35,6 +35,6 @@ MonoBehaviour:
   item_indexes:
   - {x: 0, y: -1}
   - {x: 1, y: -1}
-  op_class: 0
-  redeployment_time: 1000000
+  op_class: 2
+  redeployment_time: 30
   ability: {fileID: 11400000, guid: 3758e24ca3c9f6a45b404c32b92c79cb, type: 2}

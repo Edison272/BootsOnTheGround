@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97cdf939f1c972e4d922640cd38e06b2, type: 3}
-  m_Name: Player Operator
+  m_Name: Trailblazer
   m_EditorClassIdentifier: 
-  character_name: Player
+  character_name: Trailblazer
   character_image: {fileID: 7501651884322301389, guid: 5ed00213e0021ae4eb3e1d774729c9db,
     type: 3}
   description: The bleed zone's first line of defense- the Trailblazers
-  health: 100
+  health: 1800
   spawn_shield: 0
-  speed: 10
+  speed: 12
   accel_time: 0.5
-  range: 10
+  range: 7
   close_range: 5
   interaction_range: 1
   char_prefab: {fileID: 1617546575173960562, guid: ccbe11c2689227c40b7f9c5a929c95ec,
@@ -30,11 +30,11 @@ MonoBehaviour:
     m_Bits: 0
   holding_capacity: 2
   inventory:
-  - {fileID: 11400000, guid: 272c2cf839d326f4aa7b62bd541a2061, type: 2}
+  - {fileID: 11400000, guid: e9fe9862a1e5d644b82b8e848028dcf5, type: 2}
   - {fileID: 11400000, guid: 2d1f52d9f7d9dbf40a235b8fa7414e45, type: 2}
   item_indexes:
   - {x: 0, y: -1}
   - {x: 1, y: -1}
   op_class: 0
-  redeployment_time: 1000000
+  redeployment_time: 120
   ability: {fileID: 11400000, guid: 3758e24ca3c9f6a45b404c32b92c79cb, type: 2}

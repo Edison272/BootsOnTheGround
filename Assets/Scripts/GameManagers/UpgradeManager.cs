@@ -38,6 +38,7 @@ public class UpgradeManager : MonoBehaviour
         for (int i = 0; i < upgrades.Length; i++)
         {
             upgrades[i] = upgrade_pool[Random.Range(0, upgrade_pool.Length)];
+            UpgradeUIs[i].SetUpgradeUI(upgrades[i]);
         }
         SelectUpgrade(-1);
     }
