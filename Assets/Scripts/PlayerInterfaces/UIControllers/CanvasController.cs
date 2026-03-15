@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -129,9 +130,9 @@ public class CanvasController : MonoBehaviour
     //  set up UI for all operators after they've been initialized. Called by Game Overseer
     public void SetOperatorProfiles()
     {
-        Character[] squad_members = GameOverseer.THE_OVERSEER.squad_manager.operators;
-        movement_indicators = new GameObject[squad_members.Length];
-        for (int i = 1; i < squad_members.Length; i++) // make UI for every operator EXCEPT the player
+        List<Operator> squad_members = GameOverseer.THE_OVERSEER.squad_manager.operators;
+        movement_indicators = new GameObject[squad_members.Count];
+        for (int i = 1; i < squad_members.Count; i++) // make UI for every operator EXCEPT the player
         {
             op_statuses[i].gameObject.SetActive(true);
             op_statuses[i].ConstructUI(squad_members[i], i);
@@ -140,7 +141,7 @@ public class CanvasController : MonoBehaviour
             // movement_indicators[i] = Instantiate(Resources.Load<GameObject>("UI/MovePointer"));
             // movement_indicators[i].SetActive(false);
         }
-        character_buffer = new Character[squad_members.Length];
+        character_buffer = new Character[squad_members.Count];
     }
 
     public void SetCommandUI(bool is_cmd_mode_on)

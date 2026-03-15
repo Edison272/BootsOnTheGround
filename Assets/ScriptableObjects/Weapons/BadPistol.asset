@@ -37,7 +37,7 @@ MonoBehaviour:
     - key: max_ammo
       value: 10
     - key: recoil_increment
-      value: 0.01
+      value: 0.1
     - key: recoil_multiplier
       value: 1.1
     - key: recoil_max_dist_ratio
@@ -63,7 +63,7 @@ MonoBehaviour:
       - key: projectile_count
         value: 1
       - key: projectile_spread
-        value: 4
+        value: 10
       - key: even_spread
         value: 0
       - key: homing_strength

@@ -18,7 +18,7 @@ public class MovementComponent
     [field: SerializeField] public bool destination_reached {get; private set;} = false;
     public Vector2 last_move_dir {get; private set;} = Vector2.zero;
     public Vector2 force_dir {get; private set;} = Vector2.zero;
-    private Rigidbody2D entity_rb;
+    [SerializeField] private Rigidbody2D entity_rb;
     public float force_move_time {get; private set;}
     public Vector2Int current_tile_pos = Vector2Int.zero;
 

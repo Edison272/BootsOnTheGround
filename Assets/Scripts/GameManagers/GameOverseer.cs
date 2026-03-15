@@ -24,6 +24,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public HealthUIController health_ui_control;
     public SquadUIController squad_ui_control;
     public OrderUIController order_ui_control;
+    public UpgradeManager upgrade_manager;
 
     [Header("Private Managers")]
     [SerializeField] private AIManager ai_manager; // a class containing all the stuff the game ai would need
@@ -55,7 +56,6 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     [Header("Game Progression")]
     public int progression_level {get; private set;} = 1;
     private GameObject ExtractionPoint;
-    public GameObject UpgradeScreen;
 
     // Objective Management
     #region Initialziation
@@ -68,7 +68,9 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         if (!squad_manager) {squad_manager = GameObject.Find("Squad Manager")?.GetComponent<SquadManager>();}
         if (!enemy_manager) {enemy_manager = GameObject.Find("Enemy Manager")?.GetComponent<EnemyManager>();}
         if (!map_manager) {map_manager = GameObject.Find("Map")?.GetComponent<MapManager>();}
-        
+        if (!upgrade_manager) {upgrade_manager = GameObject.Find("Upgrade Manager")?.GetComponent<UpgradeManager>();}
+
+        // ui stuff
         if (!canvas_control) {canvas_control = GameObject.Find("Canvas Controller")?.GetComponent<CanvasController>();}
         if (!item_ui_control) {item_ui_control = GameObject.Find("Item UI Controller")?.GetComponent<ItemUIController>();}
         if (!health_ui_control) {health_ui_control = GameObject.Find("Health UI Controller")?.GetComponent<HealthUIController>();}
@@ -78,10 +80,12 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         map_manager.SetMapGenPreset();
         objective_manager = new ObjectiveManager(this, map_manager.GetMapGenPreset().objectives);
         game_over_screen.SetActive(false);
-        UpgradeScreen.SetActive(false);
 
         SQUAD_COLOR = serialize_squad_color;
         ENEMY_COLOR = serialize_enemy_color;
+
+        // clear static data holders
+        ImpactEffect.ResetPool();
     }
 
     void Start()
@@ -136,23 +140,25 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     // called by the extraction zone script. open ui to give player upgrades
     public void GetUpgrades()
     {
-        UpgradeScreen.SetActive(true);
+        upgrade_manager.GenerateUpgrades();
         player_control.FreeCursor(true);
+
+        // reset player and enemy locations
+        squad_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.spawn_chunk);
+        enemy_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.final_chunk);
     }
     public void LevelUp() // called when player interacts with extraction
     {
-        player_control.FreeCursor(true);
+        player_control.FreeCursor(false);
         
         progression_level++;
         Destroy(ExtractionPoint);
         map_manager.GenerateMap(progression_level);
-        squad_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.spawn_chunk);
-        enemy_manager.transform.position = (Vector2)map_manager.GetChunkWorldPos(map_manager.final_chunk);
 
         objective_manager.ResetObjectives(map_manager.GetMapGenPreset().objectives);
 
         squad_manager.SetPlayerSquad();
-        UpgradeScreen.SetActive(false);
+        upgrade_manager.ToggleUpgradeScreen(false);
     }
     #endregion
 

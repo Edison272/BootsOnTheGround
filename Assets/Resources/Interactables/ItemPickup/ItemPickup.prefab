@@ -304,7 +304,7 @@ PrefabInstance:
     - target: {fileID: 7566547905107517021, guid: 4cca5f962fe06e04287ba43216d037ce,
         type: 3}
       propertyPath: m_text
-      value: 'Pickup Item
+      value: 'Pickup Item (F)
 
 '
       objectReference: {fileID: 0}

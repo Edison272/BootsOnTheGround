@@ -17,10 +17,10 @@ public class Gun : FuncModule
     float recoil_multiplier; // how much the aimed position is offset with each shot
     float recoil_max;
     float recoil_recovery;
+    float recoil_decrement;
     [Header("Recoil Current Stats")]
     public float curr_recoil {get; private set;}
     Vector2 target_pos;
-    Vector2 recoil_dir = Vector2.zero;
     public Gun(Item item, 
         float max_ammo, 
         float recoil_increment, 
@@ -50,32 +50,29 @@ public class Gun : FuncModule
     {
         ammo = max_ammo;
         curr_recoil = 0;
-        recoil_dir = Vector2.zero;
     }
 
     public override void UpdateModule(Vector2 targ_pos)
     {
-        target_pos = targ_pos + recoil_dir;
+        target_pos = targ_pos;
         if (item.get_input_ready > 0.75)
         {
-            recoil_dir *= 1 - (Time.deltaTime/recoil_recovery);
-            curr_recoil = Mathf.Max(0, curr_recoil -  (Time.deltaTime/recoil_recovery)); 
+            curr_recoil = Mathf.Max(0, curr_recoil - (Time.deltaTime/recoil_recovery)); 
         }
-
     }
 
     public override void UseFunction(int action_index)
     {
-        attacks[action_index].Attack(item.source_pos, target_pos, item.item_tip.position, new Vector2(0, item.y_offset), item.user);
+        float target_dist = (target_pos - item.source_pos).magnitude;
+        Vector2 recoil_dir = Random.insideUnitCircle * curr_recoil * target_dist;
+        attacks[action_index].Attack(item.source_pos, target_pos + recoil_dir, item.item_tip.position, new Vector2(0, item.y_offset), item.user);
         ammo -= 1;
         
-        float target_dist = (target_pos - item.source_pos).magnitude;
+        
         curr_recoil = Mathf.Min(recoil_max, (curr_recoil  + recoil_increment) * recoil_multiplier);
-        recoil_dir = Random.insideUnitCircle * curr_recoil * target_dist;
-        // for player recoil
         if (item.user == GameOverseer.THE_OVERSEER.player_control.active_character)
         {
-            GameOverseer.THE_OVERSEER.player_control.ApplyCameraRecoil(item.source_pos - target_pos, Math.Max(recoil_increment, curr_recoil));
+            GameOverseer.THE_OVERSEER.player_control.ApplyCameraRecoil(item.source_pos - target_pos, Math.Min(curr_recoil, curr_recoil/recoil_max));
         }
     }
 }

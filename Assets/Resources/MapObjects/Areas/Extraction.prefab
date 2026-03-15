@@ -260,7 +260,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6996008019461120913}
   serializedVersion: 8
-  lengthInSec: 1
+  lengthInSec: 0.5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -5289,10 +5289,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InteractPrompt: {fileID: 7340272551072592323}
-  UsesBar: {fileID: 0}
-  heal_amount: 0
-  curr_uses: 0
-  total_uses: 0
 --- !u!50 &-7345086506613629983
 Rigidbody2D:
   serializedVersion: 4
@@ -5404,7 +5400,7 @@ PrefabInstance:
     - target: {fileID: 7566547905107517021, guid: 4cca5f962fe06e04287ba43216d037ce,
         type: 3}
       propertyPath: m_text
-      value: Next Area!
+      value: Next Area! (F)
       objectReference: {fileID: 0}
     - target: {fileID: 7566547905107517021, guid: 4cca5f962fe06e04287ba43216d037ce,
         type: 3}

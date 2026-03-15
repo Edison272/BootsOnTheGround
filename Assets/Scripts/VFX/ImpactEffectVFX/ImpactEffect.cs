@@ -48,6 +48,11 @@ public class ImpactEffect : MonoBehaviour
 
     #region Singleton Stuff
     private static Dictionary<ImpactEffect, List<GameObject>> impact_effect_pool = new Dictionary<ImpactEffect, List<GameObject>>();
+    
+    public static void ResetPool()
+    {
+        impact_effect_pool.Clear();
+    }
     public static void AddToPool(ImpactEffect discard_effect)
     {
         discard_effect.main_body.SetActive(false);

@@ -44,7 +44,7 @@ public class CaptureArea : MonoBehaviour
 
     public void RemoveOccupier(Character character)
     {
-        if (character.faction_tag == GameOverseer.SQUAD_TAG) {squad_weight--;}
+        if (character.faction_tag == GameOverseer.SQUAD_TAG) {squad_weight = Mathf.Max(0, squad_weight-1);}
         else {//enemy_weight--;
         }
     }

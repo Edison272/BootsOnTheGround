@@ -169,6 +169,22 @@ public class PlayerController : MonoBehaviour
         GameOverseer.THE_OVERSEER.canvas_control.SetCommandUI(in_command_mode);
     }
 
+    void OnDisable()
+    {
+        //unsubscribe from everything when scene is reset
+        movement.performed -= Move;
+        looking.performed -= Look;
+        controls.GroundActions.ResetItem.performed -= ResetItem;
+        controls.GroundActions.SwitchItem.performed -= SwitchItem;
+        controls.GroundActions.PickupItem.performed -= PickupItem;
+        controls.GroundActions.ToggleCommandMode.performed -= CommandView;
+        controls.GroundActions.OpDeploy1.performed -= OpDeploy1;
+        controls.GroundActions.OpDeploy2.performed -= OpDeploy2;
+        controls.GroundActions.OpDeploy3.performed -= OpDeploy3;
+        controls.GroundActions.OpDeploy4.performed -= OpDeploy4;
+        controls.GroundActions.OpAbility.performed -= GetOperatorAbility;
+    }
+
     public void EnableControl()
     {
         controls.Enable();
@@ -237,6 +253,7 @@ public class PlayerController : MonoBehaviour
         input_dir = context.ReadValue<Vector2>();
         if (input_dir.sqrMagnitude > 0.0001f) 
         {
+            Debug.Log(active_character);
             active_character.SetMove(input_dir);
         }
         else 

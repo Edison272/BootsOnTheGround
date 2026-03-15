@@ -17,7 +17,7 @@ public class SquadManager : MonoBehaviour
     public OperatorSO[] operator_presets;
     public HashSet<Character> squad;
     public HashSet<Character> helpers;
-    public Operator[] operators;
+    public List<Operator> operators;
     
     public static readonly int c_player_char_index = 0; // PLAYER CHARACTER IS FIRST IN SQUAD ARRAY
     public Character player_character;
@@ -39,10 +39,14 @@ public class SquadManager : MonoBehaviour
     {
         squad = new HashSet<Character>();
         helpers = new HashSet<Character>();
-        operators = new Operator[operator_presets.Length];
+        operators = new List<Operator>(operator_presets.Length);
         combat_formation = new Vector2[operator_presets.Length];
 
-        CreateOperators();
+        foreach(OperatorSO op_preset in operator_presets)
+        {
+            CreateOperator(op_preset);
+        }
+        
 
         // reconfigure settings for player character so they don't get taken over by a bot
         player_character = operators[c_player_char_index];
@@ -82,22 +86,22 @@ public class SquadManager : MonoBehaviour
         squad_ui_control.SetSquadManager(this);
     }
 
-    public void CreateOperators()
+    public void CreateOperator(OperatorSO new_op, bool at_player_pos = false)
     {
         // setup all operators. Assign their values but do not set them to active
-        for(int i = 0; i < operators.Length; i++)
-        {
-            operators[i] = operator_presets[i].GenerateOp(Vector2.zero);
-            Operator this_op = operators[i];
-            this_op.faction_tag = GameOverseer.SQUAD_TAG;
-            this_op.behavior_controller.SetLeader(operators[c_player_char_index]);
-            this_op.op_behavior_controller.squad_index = i;
-            this_op.AssignIdString(i);
-            this_op.SetFactionTag(0);
-            squad.Add(operators[i]);
+        operators.Add(new_op.GenerateOp(Vector2.zero));
 
-            DeployOperator(i, transform.position);
-        }
+        int i = operators.Count - 1;
+        Operator this_op = operators[i];
+        this_op.faction_tag = GameOverseer.SQUAD_TAG;
+        this_op.behavior_controller.SetLeader(operators[c_player_char_index]);
+        this_op.op_behavior_controller.squad_index = i;
+        this_op.AssignIdString(i);
+        this_op.SetFactionTag(0);
+        squad.Add(operators[i]);
+
+        Vector3 deploy_pos = at_player_pos ? player_character.GetPosition() : transform.position;
+        DeployOperator(i, deploy_pos);
     }
 
     public void Update()
@@ -122,7 +126,7 @@ public class SquadManager : MonoBehaviour
     public void UpdateFormation()
     {
         Vector2 center = player_character.GetPosition();
-        for(int i = 0; i < operators.Length; i++)
+        for(int i = 0; i < operators.Count; i++)
         {
             Operator curr_op = operators[i];
             Vector2 offset_vec = player_character.aim_dir.normalized * 10/((int)curr_op.op_class + 1);

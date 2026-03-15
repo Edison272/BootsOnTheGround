@@ -20,7 +20,7 @@ public class MainMenu : MonoBehaviour
     public void StartGame()
     {
         SceneManager.LoadScene("Level");
-        SceneManager.LoadScene("CoreLevel", LoadSceneMode.Additive);
+        //SceneManager.LoadScene("CoreLevel", LoadSceneMode.Additive);
 
 
         // SceneController.SCENE_CONTROLLER
