@@ -40,8 +40,8 @@ public class EnemyManager : MonoBehaviour
 
         // set up enemy behaviors
         new_enemy.ToggleAI(true);
-        new_enemy.behavior_controller.anchor_position = GameOverseer.THE_OVERSEER.squad_manager.player_character.GetPosition();
-        new_enemy.SetCommandBehavior(CommandMode.Hold);
+        new_enemy.behavior_controller.anchor_position = GameOverseer.THE_OVERSEER.GetCurrentObjective().main_chunk.world_center_position;
+        new_enemy.SetCommandBehavior(CommandMode.Engage);
         new_enemy.behavior_controller.SetActionTime(1, 2);
         enemies.Add(new_enemy);
 
@@ -97,6 +97,7 @@ public class EnemyManager : MonoBehaviour
     // summon an enemy group at target position. Use this for POI
     void SummonEnemyGroup()
     {
+        SetEnemyUI("! ! !Cryptids Incoming ! ! !");
         int waves = Random.Range((int)min_wave_iterations, (int)max_wave_iterations+1);
         for (int w = 0; w < waves; w++)
         {
@@ -111,7 +112,7 @@ public class EnemyManager : MonoBehaviour
         if (enemies.Count == 0 && wave_queue.Count == 0)
         {
             GameOverseer.THE_OVERSEER.ObjectiveSecured();
-            SetEnemyUI("Area Clear!");
+            SetEnemyUI("=== Area Clear ===");
 
             // increment gang
             min_wave_size += 1f * GameOverseer.THE_OVERSEER.progression_level;

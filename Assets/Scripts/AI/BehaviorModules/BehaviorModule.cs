@@ -15,6 +15,7 @@ public abstract class BehaviorModule
     public abstract void UpdateModule();
 }
 
+#region Hold
 public class HoldPositionBM : BehaviorModule
 {
     float max_anchor_distance = 3;
@@ -64,7 +65,9 @@ public class HoldPositionBM : BehaviorModule
         character.SetMovePos(behavior_controller.anchor_position);        
     }
 }
+#endregion
 
+#region Follow
 public class FollowLeaderBM : BehaviorModule
 {
     Vector2 leader_position;
@@ -96,9 +99,13 @@ public class FollowLeaderBM : BehaviorModule
         }
     }
 }
+#endregion
 
+#region Engage
 public class EngageEnemyBM : BehaviorModule
 {
+    Vector2 target_position;
+    public float follow_until_dist = 3.5f;
     public EngageEnemyBM(Character character, BehaviorController behavior_controller) : base(character, behavior_controller)
     {
         
@@ -106,21 +113,29 @@ public class EngageEnemyBM : BehaviorModule
 
     public override void StartModule()
     {
-        
+        character.SetMovePos(behavior_controller.anchor_position); 
     }
 
     public override void UpdateModule()
     {
-        Vector2 move_dir = Vector2.zero;
         if (character.target)
         {
-            behavior_controller.anchor_position = character.target.GetPosition();
-            
+            target_position = character.target.GetPosition();
+            follow_until_dist = character.curr_range * 0.75f;
+            if ((character.GetPosition() - target_position).magnitude > follow_until_dist)
+            {
+                Vector2 dir_to_target = (character.GetPosition() - target_position).normalized;
+                behavior_controller.anchor_position = dir_to_target * follow_until_dist + target_position;
+                character.SetMovePos(target_position);
+            }
         }
-        move_dir = (behavior_controller.anchor_position - character.GetPosition()).normalized;
-        character.SetMove(move_dir);
+        else if (!character.destination_reached)
+        {
+            character.SetMovePos(behavior_controller.anchor_position);   
+        }
     }
 }
+#endregion
 
 public class InteractBM : BehaviorModule
 {

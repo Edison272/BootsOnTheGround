@@ -31,11 +31,11 @@ MonoBehaviour:
     - key: reset_speed
       value: 2
     - key: use_speed
-      value: 0.3
+      value: 1
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
-      value: 30
+      value: 4
     - key: recoil_increment
       value: 0.1
     - key: recoil_multiplier
@@ -51,7 +51,7 @@ MonoBehaviour:
     attack_data:
       damage: 50
       pierce: 0
-      knockback_amt: 23.1
+      knockback_amt: 100
       effect_time: 0.1
       slow_amt: 0.05
       total_dot_damage: 0

@@ -28,15 +28,15 @@ public class MainCameraController
     readonly Vector2 player_screen_pos;
     float max_recoil_time = 1;
     float curr_recoil_time;
-    [SerializeField] float max_recoil_drift_distance = 0.6f; // basically the recoil intensity
+    [SerializeField] float max_recoil_drift_distance = 1.5f; // basically the recoil intensity
     [SerializeField] float max_recovery_speed = 5;
     [SerializeField] float min_recovery_speed = 0.5f;
     float curr_recovery_speed = 2;
     Vector2 recoil_direction;
     Vector2 curr_recoil_direction;
     Action CamMovement;
-    [Header("Classmates")]
-    public PlayerViewController player_view_controller;
+    //[Header("Classmates")]
+    private PlayerViewController player_view_controller;
 
     #region Setup & Reset
     public MainCameraController(Transform CameraHolder, Camera main_cam, RectTransform player_screen)

@@ -9,10 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 6b42dea75b7993e47b186a92d0462b33, type: 3}
   m_Name: Trailblazer
-  m_EditorClassIdentifier: Assembly-CSharp::AddOperator
-  upgrade_name: 
-  upgrade_stats: 
-  upgrade_description: 
+  m_EditorClassIdentifier: 
   add_operator: {fileID: 11400000, guid: 2c3299f16ebd1f54396a4ea05d3f0f69, type: 2}

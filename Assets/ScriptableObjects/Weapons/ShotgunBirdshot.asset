@@ -37,11 +37,11 @@ MonoBehaviour:
     - key: max_ammo
       value: 30
     - key: recoil_increment
-      value: 2
+      value: 0.3
     - key: recoil_multiplier
-      value: 0
+      value: 1
     - key: recoil_max_dist_ratio
-      value: 0.5
+      value: 0.3
     - key: recoil_recovery
       value: 0.1
   serialized_attacks:

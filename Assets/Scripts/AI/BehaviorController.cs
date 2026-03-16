@@ -54,7 +54,7 @@ public class BehaviorController
     {
         character = c;
         anchor_position = c.GetPosition();
-        AddBehavior(CommandMode.Hold).AddBehavior(CommandMode.Follow);
+        AddBehavior(CommandMode.Hold).AddBehavior(CommandMode.Follow).AddBehavior(CommandMode.Engage);
         SetCommand(CommandMode.Hold);
     }
     public void SetLeader(Character new_leader)
@@ -109,16 +109,17 @@ public class BehaviorController
         if (character.target)
         {
             // reset if target untrackable
-            if (!character.target.IsInAction() || (character.GetPosition() - character.target.GetPosition()).sqrMagnitude > character.curr_range * character.curr_range)
+            Vector2 char_to_targ_vec = character.GetPosition() - character.target.GetPosition();
+            float vec_mag = char_to_targ_vec.magnitude;
+            if (!character.target.IsInAction() || vec_mag > character.curr_range * 3)
             {
                 character.target = null;
                 return;
             }
             
             // only switch targets if the target is in close quarters range
-            Character targ = GameOverseer.GetTargetCharacter(character.faction_tag, character, character.curr_range, TargetType.Closest);
-            float sqr_close_range = character.close_range * character.close_range;
-            if ((character.GetPosition() - targ.GetPosition()).sqrMagnitude <= sqr_close_range)
+            Character targ = GameOverseer.GetTargetCharacter(character.faction_tag, character, character.close_range, TargetType.Closest);
+            if (targ)
             {
                 character.target = targ;
             }
@@ -128,8 +129,12 @@ public class BehaviorController
             if (!contact)
             {
                 character.Look(character.target.GetPosition());
-                character.UseMainItem();
-                Debug.DrawLine(character.GetPosition(), contact.point, Color.white);
+                if (vec_mag <= character.curr_range)
+                {
+                    character.UseMainItem();
+                    Debug.DrawLine(character.GetPosition(), contact.point, Color.white);
+                }
+
             } else
             {
                 Debug.DrawLine(character.GetPosition(), character.target.GetPosition(), Color.grey);
@@ -137,8 +142,8 @@ public class BehaviorController
         } 
         else
         {
-            Character targ = GameOverseer.GetTargetCharacter(character.faction_tag, character, character.curr_range, favorite_target);
-            Debug.DrawLine(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range, Color.black);
+            Character targ = GameOverseer.GetTargetCharacter(character.faction_tag, character, character.curr_range * 3, favorite_target);
+            Debug.DrawLine(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range * 3, Color.black);
             if (targ)
             {
                 character.target = targ;

@@ -174,7 +174,7 @@ public class SquadManager : MonoBehaviour
 
     public void DeployOperator(int op_index, Vector2 deploy_pos)
     {
-        Operator select_op = operators[Mathf.Clamp(op_index, 0, operator_presets.Length-1)];
+        Operator select_op = operators[Mathf.Clamp(op_index, 0, operators.Count-1)];
         select_op.SetPosition(deploy_pos);
         select_op.ToggleOp(true);
         select_op.ToggleAI(true);

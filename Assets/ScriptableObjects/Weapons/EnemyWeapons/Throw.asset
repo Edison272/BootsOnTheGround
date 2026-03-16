@@ -29,13 +29,13 @@ MonoBehaviour:
   serialized_input_stats:
     stat_list:
     - key: reset_speed
-      value: 2
+      value: 4
     - key: use_speed
-      value: 0.1
+      value: 0.3
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
-      value: 30
+      value: 3
     - key: recoil_increment
       value: 0.1
     - key: recoil_multiplier
@@ -49,7 +49,7 @@ MonoBehaviour:
       type: 3}
     attack_enum: 0
     attack_data:
-      damage: 4
+      damage: 5
       pierce: 0
       knockback_amt: 0
       effect_time: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
     attack_stats:
       stat_list:
       - key: projectile_speed
-        value: 10
+        value: 6
       - key: projectile_count
         value: 1
       - key: projectile_spread

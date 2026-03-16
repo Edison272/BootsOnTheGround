@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Fast Wendigo
   m_EditorClassIdentifier: 
   character_name: Fast Wendigo
+  character_image: {fileID: 0}
+  description: bleh
   health: 100
   spawn_shield: 0
   speed: 6
   accel_time: 1.04
-  range: 6
+  range: 3
   close_range: 3
   interaction_range: 1
   char_prefab: {fileID: 9138302510663009399, guid: 44c977dd6e897bc4cb4f1fb44c4a32a4,

@@ -23,7 +23,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 187096342528
-    m_Localized: '"Basic Controls
+    m_Localized: 'Basic Controls
 
 
       - WASD To Move
@@ -36,36 +36,40 @@ MonoBehaviour:
       R to Reload
 
 
-      - F to Pickup Item
+      - F to Pickup Item / Interact
 
 
-      - SPACE to toggle to WIDE view
-
-
-      -
-      LMB to shoot (when not commanding operators)
-
-      `- RMB to shoot secondary
-      (for dual-wielded weapons)"
-
-
-      - RMB to shoot secondary (for dual-wielded
-      weapons)'
+      - LMB to shoot (when
+      not commanding operators)'
     m_Metadata:
       m_Items: []
   - m_Id: 884755898368
-    m_Localized: 'COMMANDING OPERATORS
+    m_Localized: 'Command / Interaction Control
 
 
-      Right Click an Operator to select
-      them.
+      Right Click an Operator to
+      select them.
 
 
-      Right Click an area to Command
+      Right Click a target area or item to Command them
+
+      -
+      When commanded to go to an empty area, the Operator will go to the area and
+      hold the position until commanded otherwise
+
+      - When commanded to go to
+      an item, the Operator will go to the area nad pickup the item
+
+      - When
+      commanded to go to the player, the Operator will follow the player until commanded
+      otherwise
 
 
-      Hold right Click to Cancel
-      Command'
+      Hold right Click to to command all operators to follow you
+
+
+      While
+      commanding an Operator, you can Hold Right Click to exit command mode'
     m_Metadata:
       m_Items: []
   - m_Id: 1153308794880

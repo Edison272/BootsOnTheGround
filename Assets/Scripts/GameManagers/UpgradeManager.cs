@@ -51,7 +51,7 @@ public class UpgradeManager : MonoBehaviour
                 UpgradeUIs[i].SetSelected(false);
             }
         }
-        if (index > 0 && index < UpgradeUIs.Length)
+        if (index >= 0 && index < UpgradeUIs.Length)
         {
             selected_upgrade_index = index;
         }

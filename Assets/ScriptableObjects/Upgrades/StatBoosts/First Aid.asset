@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: d6cb9aec335743545bd9588943de6d1c, type: 3}
   m_Name: First Aid
   m_EditorClassIdentifier: Assembly-CSharp::StatIncrease
   upgrade_name: First Aid
-  upgrade_description: Administer first aid to all operators, healing them a slight
-    amount
+  upgrade_description: Administer first aid to all operators, healing them slightly
   upgrade_sprite: {fileID: 21300000, guid: 1a26a6e0f57cf5645b5427c2e440f1fd, type: 3}
   stat_modifier:
     max_health_boost: 0

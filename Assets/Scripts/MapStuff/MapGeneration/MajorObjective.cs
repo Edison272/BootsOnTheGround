@@ -97,6 +97,7 @@ public class MajorObjective
 
         for(int i = 0; i < amount; i++)
         {
+            Debug.Log(minor_poi.Length + " " + i + " " + weighted_territory_chunks.Count);
             minor_poi[i] = weighted_territory_chunks[Random.Range(0,weighted_territory_chunks.Count)];
         }
     }

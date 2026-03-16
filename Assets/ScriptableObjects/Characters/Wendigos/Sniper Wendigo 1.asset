@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Sniper Wendigo 1
   m_EditorClassIdentifier: 
   character_name: Vanguard Operator
+  character_image: {fileID: 0}
+  description: bleh
   health: 200
   spawn_shield: 0
   speed: 2
   accel_time: 0.5
-  range: 12
+  range: 9
   close_range: 4
   interaction_range: 1
   char_prefab: {fileID: 8455730544072697755, guid: 86dfb2fca96d4a64c982546010c46cff,

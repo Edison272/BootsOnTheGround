@@ -29,7 +29,7 @@ public class PlayerViewController
     private Camera main_cam;
     private RectTransform player_screen;
     [Header("Classmates")]
-    public MainCameraController main_camera_controller;    
+    private MainCameraController main_camera_controller;    
 
     #region Setup & Reset
     public PlayerViewController(Camera main_cam, RectTransform player_screen)

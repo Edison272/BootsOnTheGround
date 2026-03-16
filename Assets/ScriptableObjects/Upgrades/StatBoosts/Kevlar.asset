@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: d6cb9aec335743545bd9588943de6d1c, type: 3}
   m_Name: Kevlar
   m_EditorClassIdentifier: Assembly-CSharp::StatIncrease
-  upgrade_name: Kevlar
-  upgrade_description: Give all operators some minor ballistic protection
+  upgrade_name: Ballistics 1
+  upgrade_description: All operators get light ballistic protection, giving them
+    extra protection
   upgrade_sprite: {fileID: 4391986639151426841, guid: e3653e1a590fc6c4f95a6c0ba36c30bc,
     type: 3}
   stat_modifier:

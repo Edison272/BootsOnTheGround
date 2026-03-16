@@ -203,6 +203,10 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     {
         THE_OVERSEER.objective_manager.ObjectiveLost(maj_poi);
     }
+    public MajorObjective GetCurrentObjective()
+    {
+        return THE_OVERSEER.objective_manager.current_mo;
+    }
 
     // when all enemies are defeated, the objective is secured
     public void ObjectiveSecured()

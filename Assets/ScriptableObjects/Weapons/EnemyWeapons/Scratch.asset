@@ -29,13 +29,13 @@ MonoBehaviour:
   serialized_input_stats:
     stat_list:
     - key: reset_speed
-      value: 1
+      value: 2
     - key: use_speed
-      value: 0.3
+      value: 0.5
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
-      value: 30
+      value: 5
     - key: recoil_increment
       value: 0.1
     - key: recoil_multiplier

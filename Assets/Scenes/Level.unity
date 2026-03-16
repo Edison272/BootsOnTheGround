@@ -133,6 +133,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 281357831}
+    - target: {fileID: 241526286874879379, guid: 00e2f775f5a9ee148907ae829307beb8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 250271476992686552, guid: 00e2f775f5a9ee148907ae829307beb8,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3273,20 +3278,17 @@ MonoBehaviour:
   - Idk
   upgrade_choices: 0
   upgrade_pool:
-  - {fileID: 11400000, guid: 8035ffaaa804ffe46ad97d566c5c9b73, type: 2}
-  - {fileID: 11400000, guid: 3b3fe90fffe1293488725b83ab6fc674, type: 2}
-  - {fileID: 11400000, guid: 44a83c9073d933a47abd9c5b701dd06d, type: 2}
-  - {fileID: 11400000, guid: 3af42bd4f94627e4d93c3a03b86190da, type: 2}
+  - {fileID: 11400000, guid: d6422edbb645b71489accc8e057efe6c, type: 2}
+  - {fileID: 11400000, guid: 2a28864b057510344a06dd33bbc89a8a, type: 2}
+  - {fileID: 11400000, guid: 935bc6bce624d174ea34f34d2729b757, type: 2}
+  - {fileID: 11400000, guid: 49823be50ce75e148a46cba461cb6eaf, type: 2}
   - {fileID: 11400000, guid: 663255b4652a77c4bae7f4ac2e87bdc4, type: 2}
-  - {fileID: 11400000, guid: b817c0e25c1f7bd408a6161c7d51ebd0, type: 2}
-  - {fileID: 11400000, guid: b817c0e25c1f7bd408a6161c7d51ebd0, type: 2}
-  - {fileID: 11400000, guid: b817c0e25c1f7bd408a6161c7d51ebd0, type: 2}
-  - {fileID: 11400000, guid: 85e6a610c2c77604d9ca37dc689e788f, type: 2}
-  - {fileID: 11400000, guid: 85e6a610c2c77604d9ca37dc689e788f, type: 2}
-  - {fileID: 11400000, guid: 85e6a610c2c77604d9ca37dc689e788f, type: 2}
-  - {fileID: 11400000, guid: 85e6a610c2c77604d9ca37dc689e788f, type: 2}
+  - {fileID: 11400000, guid: d6422edbb645b71489accc8e057efe6c, type: 2}
   - {fileID: 11400000, guid: b010e584ea5211a4babebafc527b17a4, type: 2}
-  - {fileID: 11400000, guid: b010e584ea5211a4babebafc527b17a4, type: 2}
+  - {fileID: 11400000, guid: b817c0e25c1f7bd408a6161c7d51ebd0, type: 2}
+  - {fileID: 11400000, guid: a096daa0d4b719948be414d4d02a638d, type: 2}
+  - {fileID: 11400000, guid: b817c0e25c1f7bd408a6161c7d51ebd0, type: 2}
+  - {fileID: 11400000, guid: b817c0e25c1f7bd408a6161c7d51ebd0, type: 2}
   - {fileID: 11400000, guid: b010e584ea5211a4babebafc527b17a4, type: 2}
   selected_upgrade_index: 0
 --- !u!1 &284635084
@@ -38326,6 +38328,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 281357831}
+    - target: {fileID: 241526286874879379, guid: 00e2f775f5a9ee148907ae829307beb8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 250271476992686552, guid: 00e2f775f5a9ee148907ae829307beb8,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -43989,9 +43996,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ef71d6d7633b6d940b5feb9d0d7cb5e2, type: 2}
   operator_presets:
   - {fileID: 11400000, guid: bc89ca59719ae6e49bd1441fed2f6e77, type: 2}
-  - {fileID: 11400000, guid: 2c3299f16ebd1f54396a4ea05d3f0f69, type: 2}
-  - {fileID: 11400000, guid: 2e8b2fde514ec1a4880cdf4a83dc8975, type: 2}
-  - {fileID: 11400000, guid: c75f966031cf12a41a91f2d1e6979c0c, type: 2}
   operators: []
   player_character: {fileID: 0}
   drop_pos: {x: 0, y: 0, z: 0}
@@ -130808,56 +130812,6 @@ MonoBehaviour:
   input_dir: {x: 0, y: 0}
   player_view_controller:
     curr_view_enum: 0
-    main_camera_controller:
-      camera_zoom_time: 0
-      base_zoom_level: 0
-      zoom_factor: 0
-      player_range: 0
-      max_recoil_drift_distance: 0
-      max_recovery_speed: 0
-      min_recovery_speed: 0
-      player_view_controller:
-        curr_view_enum: 0
-        main_camera_controller:
-          camera_zoom_time: 0
-          base_zoom_level: 0
-          zoom_factor: 0
-          player_range: 0
-          max_recoil_drift_distance: 0
-          max_recovery_speed: 0
-          min_recovery_speed: 0
-          player_view_controller:
-            curr_view_enum: 0
-            main_camera_controller:
-              camera_zoom_time: 0
-              base_zoom_level: 0
-              zoom_factor: 0
-              player_range: 0
-              max_recoil_drift_distance: 0
-              max_recovery_speed: 0
-              min_recovery_speed: 0
-              player_view_controller:
-                curr_view_enum: 0
-                main_camera_controller:
-                  camera_zoom_time: 0
-                  base_zoom_level: 0
-                  zoom_factor: 0
-                  player_range: 0
-                  max_recoil_drift_distance: 0
-                  max_recovery_speed: 0
-                  min_recovery_speed: 0
-                  player_view_controller:
-                    curr_view_enum: 0
-                    main_camera_controller:
-                      camera_zoom_time: 0
-                      base_zoom_level: 0
-                      zoom_factor: 0
-                      player_range: 0
-                      max_recoil_drift_distance: 0
-                      max_recovery_speed: 0
-                      min_recovery_speed: 0
-                      player_view_controller:
-                        curr_view_enum: 0
   main_cam_controller:
     camera_zoom_time: 0
     base_zoom_level: 0
@@ -130866,56 +130820,6 @@ MonoBehaviour:
     max_recoil_drift_distance: 0
     max_recovery_speed: 0
     min_recovery_speed: 0
-    player_view_controller:
-      curr_view_enum: 0
-      main_camera_controller:
-        camera_zoom_time: 0
-        base_zoom_level: 0
-        zoom_factor: 0
-        player_range: 0
-        max_recoil_drift_distance: 0
-        max_recovery_speed: 0
-        min_recovery_speed: 0
-        player_view_controller:
-          curr_view_enum: 0
-          main_camera_controller:
-            camera_zoom_time: 0
-            base_zoom_level: 0
-            zoom_factor: 0
-            player_range: 0
-            max_recoil_drift_distance: 0
-            max_recovery_speed: 0
-            min_recovery_speed: 0
-            player_view_controller:
-              curr_view_enum: 0
-              main_camera_controller:
-                camera_zoom_time: 0
-                base_zoom_level: 0
-                zoom_factor: 0
-                player_range: 0
-                max_recoil_drift_distance: 0
-                max_recovery_speed: 0
-                min_recovery_speed: 0
-                player_view_controller:
-                  curr_view_enum: 0
-                  main_camera_controller:
-                    camera_zoom_time: 0
-                    base_zoom_level: 0
-                    zoom_factor: 0
-                    player_range: 0
-                    max_recoil_drift_distance: 0
-                    max_recovery_speed: 0
-                    min_recovery_speed: 0
-                    player_view_controller:
-                      curr_view_enum: 0
-                      main_camera_controller:
-                        camera_zoom_time: 0
-                        base_zoom_level: 0
-                        zoom_factor: 0
-                        player_range: 0
-                        max_recoil_drift_distance: 0
-                        max_recovery_speed: 0
-                        min_recovery_speed: 0
   player_action_controller: {fileID: 0}
   player_targetting_controller:
     alignment: 0
