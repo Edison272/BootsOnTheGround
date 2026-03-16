@@ -70,9 +70,6 @@ public class PlayerController : MonoBehaviour
     public HealthUIController health_ui_control;
     [Header("Order UI")]
     public OrderUIController order_ui_control;
-
-    [Header("Settings")]
-    [Range(0.1f, 3)] public float sensitivity = 2f;
     
 #region Initializers
     void Awake() // initialize values before player assumes control
@@ -265,7 +262,7 @@ public class PlayerController : MonoBehaviour
     }
     void StopMove(InputAction.CallbackContext context) {active_character.StopMove();}
     void Look(InputAction.CallbackContext context) {
-        pointer_delta += sensitivity * looking.ReadValue<Vector2>()/main_cam_controller.target_zoom;
+        pointer_delta += GameSettings.sensitivity * looking.ReadValue<Vector2>()/main_cam_controller.target_zoom;
     }
     void MainStart(InputAction.CallbackContext context) {
         active_character.UseMainItem();

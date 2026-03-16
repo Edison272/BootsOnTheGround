@@ -23,8 +23,8 @@ public class MapGenPreset
     public void IncrementGenPresets(int incrementation)
     {
         map_size += 5;
-        map_scale += (int)(incrementation % 4);
-        objectives += (int)(incrementation % 2);
-        minor_poi += (int)(incrementation % 2);
+        map_scale += (int)(incrementation / 5f) > 0 ? 1 : 0;
+        objectives += (int)(incrementation / 2f) > 0 ? 1 : 0;
+        minor_poi += (int)(incrementation / 3f) > 0 ? 1 : 0;
     }
 }

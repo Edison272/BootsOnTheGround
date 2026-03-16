@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StatIncrease
   upgrade_name: Medkit
   upgrade_description: Use the medkit to apply comprehensive healing to yourself
-  upgrade_sprite: {fileID: 0}
+  upgrade_sprite: {fileID: -3826845409251182802, guid: 346fff7c36d86984791e8a5f2a272c82,
+    type: 3}
   stat_modifier:
     max_health_boost: 0
     health_regen: 90

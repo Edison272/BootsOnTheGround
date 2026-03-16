@@ -12,6 +12,9 @@ public class CanvasController : MonoBehaviour
     [SerializeField] private Camera main_cam; // used to get the FULL area around the player and render that for player view
     [SerializeField] private Camera play_cam; // the area the player sees and interacts with
     [SerializeField] private RawImage player_screen;
+    [Header("Screen VFX / Materials")]
+    [SerializeField] Material grayscale_material;
+    [SerializeField] Material normal_material;
 
     [Header("Squad Sidebar")]
     [SerializeField] GameObject squad_sidebar;
@@ -47,6 +50,7 @@ public class CanvasController : MonoBehaviour
     public Vector2 converted_selection_vector = Vector2.zero;
     [SerializeField]private float indicator_range = 0;
     
+    
     // Start is called before the first frame update
     void Awake()
     {
@@ -59,6 +63,8 @@ public class CanvasController : MonoBehaviour
 
         // ui action wheel
         indicator_range = new Vector2(selector_base.rect.width, selector_base.rect.height).magnitude/2;
+
+        player_screen.material = GameSettings.grayscale ? grayscale_material : normal_material;
     }
     
     void Start()

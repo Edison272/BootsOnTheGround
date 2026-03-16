@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 
 
 public enum TargetType {Closest, Furthest, MostHP, LeastHP}
@@ -52,10 +54,12 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public GameObject game_over_screen;
     public GameObject game_succeed_screen;
     public Action GameOverBus;
+    public TextMeshProUGUI ScoreText;
 
     [Header("Game Progression")]
     public int progression_level {get; private set;} = 1;
     private GameObject ExtractionPoint;
+    public int zones_captured = 0;
 
     // Objective Management
     #region Initialziation
@@ -177,6 +181,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
             game_over_screen.SetActive(true);
         }
         player_control.FreeCursor(true);
+        SetHighScore();
     }
 
     public void GameWin()
@@ -184,6 +189,19 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
         Debug.Log("win");
         game_succeed_screen.SetActive(true);
         player_control.FreeCursor(true);
+        SetHighScore();
+    }
+
+    public void SetHighScore()
+    {
+        int curr_high_score = PlayerPrefs.GetInt("Highscore", 0);
+        string score_text = "Zones Captured: " + zones_captured;
+        if (zones_captured > curr_high_score)
+        {
+            PlayerPrefs.SetInt("Highscore", zones_captured);
+            score_text += " NEW BEST";
+        }
+        ScoreText.text = score_text;
     }
 
     public void ReturnToMain()
@@ -212,6 +230,7 @@ public class GameOverseer : MonoBehaviour // this thing starts up everything els
     public void ObjectiveSecured()
     {
         THE_OVERSEER.objective_manager.ObjectiveSecured();
+        zones_captured++;
         if (THE_OVERSEER.objective_manager.objectives_complete)
         {
             CreateExtraction();

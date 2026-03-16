@@ -16,7 +16,7 @@ public class ExtractionPoint : MinorPOI, IInteractable
     public void Interact(Character character)
     {
         GameOverseer.THE_OVERSEER.GetUpgrades();
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive();
     }
 
     public void ToggleInteractPrompt(bool is_enabled)
