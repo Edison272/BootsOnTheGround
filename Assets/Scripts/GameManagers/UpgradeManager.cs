@@ -4,8 +4,6 @@ public class UpgradeManager : MonoBehaviour
     public GameObject UpgradeScreen;
     public Transform UpgradeLayout;
     public UpgradeUI[] UpgradeUIs;
-    
-    public string[] upgrade_text = new string[1] {"new op"};
     public int upgrade_choices;
 
     public UpgradeSO[] upgrade_pool;
