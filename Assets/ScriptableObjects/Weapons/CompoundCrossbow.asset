@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 989c4355df8ccbc47abe518623378798, type: 3}
+  m_Name: CompoundCrossbow
+  m_EditorClassIdentifier: 
+  item_prefab: {fileID: 3117911291600889211, guid: a60dd8e29fa2b094d8e7b6146a278f45,
+    type: 3}
+  ui_image: {fileID: -266484137676524057, guid: 9db3aee8d2f6bcf458c5edfdf87fdb22,
+    type: 3}
+  item_name: Sniper Rifle
+  input_enum: 0
+  is_full_auto: 1
+  dynamic_aim: 1
+  rot_scale: 1
+  bonus_range_scalar: 3
+  func_enum: 0
+  item_type: 0
+  curr_input: 0
+  curr_func: 0
+  serialized_input_stats:
+    stat_list:
+    - key: reset_speed
+      value: 3
+    - key: use_speed
+      value: 1
+  serialized_functionality_stats:
+    stat_list:
+    - key: max_ammo
+      value: 30
+    - key: recoil_increment
+      value: 0.1
+    - key: recoil_multiplier
+      value: 1
+    - key: recoil_max_dist_ratio
+      value: 1
+    - key: recoil_recovery
+      value: 1
+  serialized_attacks:
+  - prefab: {fileID: 8164560864404493835, guid: 71219e3cbc2d7804781064ba8581e854,
+      type: 3}
+    attack_enum: 1
+    attack_data:
+      damage: 100
+      pierce: 1
+      knockback_amt: 0
+      effect_time: 0
+      slow_amt: 0
+      total_dot_damage: 0
+      total_dot_ticks: 0
+    attack_stats:
+      stat_list:
+      - key: linecast_duration
+        value: 0.3
+      - key: linecast_count
+        value: 1
+      - key: linecast_spread
+        value: 0
+      - key: even_spread
+        value: 0

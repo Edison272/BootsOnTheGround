@@ -90,6 +90,7 @@ public class PlayerController : MonoBehaviour
         crit_color = crit_color_serialized;
 
         // set helper classes
+        if (!player_screen) {player_screen = GameObject.Find("Player View Texture").GetComponent<RawImage>();}
         player_view_controller = new PlayerViewController(main_cam, player_screen.rectTransform);
         main_cam_controller = new MainCameraController(MainCameraHolder, main_cam, player_screen.rectTransform);
         player_targetting_controller = new TargettingController(main_line_renderer, vfx_line_renderer);

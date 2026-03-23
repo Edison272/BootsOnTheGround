@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 public enum CharacterBodyPart {None = -1, Hitbox, TrueFront, TrueBack, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
 public class Character : MonoBehaviour, IHealth, IMovement
 {
-    private CharacterSO base_data;
+    [SerializeField] private CharacterSO base_data;
     public string character_name => base_data.character_name;
     [field: Header("Body Parts")]
     public GameObject main_body;//basically the hitbox
@@ -104,6 +104,11 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public Action<Character> OnDeath;
 
     #region initalizers
+    void Awake()
+    {
+        if (base_data) {AssignBaseData(base_data);}
+    }
+
     // get base data from a scriptable object and assign them here. Called once at when this object is created
     public void AssignBaseData(CharacterSO base_data)
     {

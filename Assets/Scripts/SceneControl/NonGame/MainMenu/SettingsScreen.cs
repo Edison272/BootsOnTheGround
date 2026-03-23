@@ -14,7 +14,6 @@ public class SettingsScreen : MonoBehaviour
     public TextMeshProUGUI slider_text;
     public void Start()
     {
-        GameSettings.grayscale = false;
         SetGrayScale();
         slider_text.text = "Sensitivity: " + GameSettings.sensitivity;
     }

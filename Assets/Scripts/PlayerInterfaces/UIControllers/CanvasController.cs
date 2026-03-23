@@ -58,12 +58,12 @@ public class CanvasController : MonoBehaviour
         {
             stat_ui.gameObject.SetActive(false);
             command_reticle.SetActive(false);
-            action_selector.gameObject.SetActive(false);
+            action_selector?.gameObject.SetActive(false);
         }
 
         // ui action wheel
         indicator_range = new Vector2(selector_base.rect.width, selector_base.rect.height).magnitude/2;
-
+        Debug.Log(GameSettings.grayscale);
         player_screen.material = GameSettings.grayscale ? grayscale_material : normal_material;
     }
     

@@ -525,7 +525,7 @@ public class MapManager : MonoBehaviour
             foreach (MapChunk chunk in all_chunks.Values)
             {
                 DrawChunk(chunk.position,Color.clear, false);
-                //Handles.Label(chunk.world_center_position + new Vector2(0, -chunk_size*0.2f), "from path: "+chunk.path_relevancy);
+                Handles.Label(chunk.world_center_position + new Vector2(0, -chunk_size*0.2f), "from path: "+chunk.path_relevancy);
             }
         }
         if (show_poi_territories)

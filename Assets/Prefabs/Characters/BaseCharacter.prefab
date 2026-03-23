@@ -5179,6 +5179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbaea34d402800842842dcf504b277dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  base_data: {fileID: 11400000, guid: aaecaa88835daf840932c8276c714313, type: 2}
   main_body: {fileID: 2589057906099434769}
   vfx_body: {fileID: 3321309398083632423}
   front: {fileID: 3861744065797134465}
@@ -5196,9 +5197,12 @@ MonoBehaviour:
   base_sprite_height: 0
   base_head_height: 0
   animator: {fileID: 234494506826388213}
+  offset_look: {x: 0, y: 0}
   aim_angle: 0
   <movement_component>k__BackingField:
+    <move_speed>k__BackingField: 0
     <destination_reached>k__BackingField: 0
+    entity_rb: {fileID: 0}
     current_tile_pos: {x: 0, y: 0}
     max_accel_time: 0
     move_speed_modifiers: []
@@ -5225,6 +5229,7 @@ MonoBehaviour:
   interaction_range: 1
   target: {fileID: 0}
   faction_tag: 1
+  is_AI_active: 1
 --- !u!95 &234494506826388213
 Animator:
   serializedVersion: 7
