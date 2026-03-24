@@ -126,15 +126,18 @@ public class ItemSO : ScriptableObject
             {
                 case InputEnum.Normal:
                     serialized_input_stats.Add("reset_speed", 0.1f);
+                    serialized_input_stats.Add("equip_speed", 0.1f);
                     serialized_input_stats.Add("use_speed", 0.1f);
                     break;
                 case InputEnum.Charge:
                     serialized_input_stats.Add("reset_speed", 0.1f);
+                    serialized_input_stats.Add("equip_speed", 0.1f);
                     serialized_input_stats.Add("threshold", 1f);
                     serialized_input_stats.Add("max_charge", 1f);
                     break;
                 case InputEnum.Increment:
                     serialized_input_stats.Add("reset_speed", 0.1f);
+                    serialized_input_stats.Add("equip_speed", 0.1f);
                     serialized_input_stats.Add("use_speed", 0.1f);
                     serialized_input_stats.Add("max_increment", 1f);
                     break;

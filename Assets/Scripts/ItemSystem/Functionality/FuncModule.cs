@@ -27,37 +27,12 @@ Gun Platforms
 - Have Recoil that throws off aim
 - weapon accuracy differs between standing & shooting
 */
-public class Melee : FuncModule
+
 /*
 Melee Platforms
 - use combo patterns to do different attacks
 */
-{
-    public Melee(Item item) : base(item)
-    {
-    }
-    public override void UpdateModule(Vector2 target_pos)
-    {
-        throw new System.NotImplementedException();
-    }
 
-    public override void UseFunction(int action_index)
-    {
-        throw new System.NotImplementedException();
-    }
-    public override bool CanFunction()
-    {
-        return false;
-    }
-    public override float FunctionCompletion()
-    {
-        throw new System.NotImplementedException();
-    }
-    public override void ResetData()
-    {
-        throw new System.NotImplementedException();
-    }
-}
 public class Shield : FuncModule
 /*
 Shield Platforms

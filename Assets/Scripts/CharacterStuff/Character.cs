@@ -176,7 +176,6 @@ public class Character : MonoBehaviour, IHealth, IMovement
     public void GetReady()
     {        
         EquipActive(0);
-        SetSwitchItem();
         // equip items
         SetSwitchItem();
         SetAimStyle(alt_item);
@@ -516,7 +515,7 @@ public class Character : MonoBehaviour, IHealth, IMovement
         UnequipActive(); //unequipped item will call the "SetSwitchItem" in animator to set the new active item
         current_indexes = (item_indexes[curr_item_index].x, item_indexes[curr_item_index].y);
         EquipActive(curr_item_index); // set up the new shi
-        curr_switch_cd = switch_cd;
+        curr_switch_cd = switch_cd; // set timer before equipping new weapons
     }
     public IInteractable FindInteractables()
     {
@@ -657,6 +656,12 @@ public class Character : MonoBehaviour, IHealth, IMovement
                 break;
         }
         return body_part;
+    }
+
+    public void PlaceOnBody(CharacterBodyPart body_part_type, Transform place_object)
+    {
+        Transform body_part = GetBodyPart(body_part_type);
+        place_object.transform.SetParent(body_part, true);
     }
 
     public void UpdateBodyVFX()

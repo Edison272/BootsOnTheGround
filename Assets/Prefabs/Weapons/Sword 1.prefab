@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 1532253401
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: cf3a9da618f2c854ea5de1afc7f9d98a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 04cbe820bab1cc144a96f2d371fcdff2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 2911958852767986232}
   - component: {fileID: 8009296238047354377}
   m_Layer: 0
-  m_Name: Sword
+  m_Name: Sword 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -173,7 +173,9 @@ MonoBehaviour:
   aim_pos: {x: 0, y: 0}
   source_pos: {x: 0, y: 0}
   user: {fileID: 0}
+  equip_timer: 0.5
   use_spd_scale: 1
+  equip_spd_scale: 1
   reset_spd_scale: 1
 --- !u!95 &8009296238047354377
 Animator:

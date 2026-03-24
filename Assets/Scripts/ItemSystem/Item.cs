@@ -40,8 +40,11 @@ public class Item : MonoBehaviour
     public bool is_equipped {get; private set;} = false; // can only use an item if it is equipped
     public float reset_timer {get; private set;} // block this weapon's if disabled time > 0
 
+    public float equip_timer = 0.5f;
+
     [field: Header("Modifiers")]
     public float use_spd_scale = 1f;
+    public float equip_spd_scale = 1f;
     public float reset_spd_scale = 1f;
 
     [Header("Interface")]
@@ -90,6 +93,7 @@ public class Item : MonoBehaviour
         Debug.Log("Resetting Item");
         use_spd_scale = 1;
         reset_spd_scale = 1;
+        equip_spd_scale = 1;
 
         // reset animator state
         animator.Rebind();
@@ -107,32 +111,46 @@ public class Item : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        func_module.UpdateModule(target_pos);
+
         if (reset_timer > 0)
         {
             reset_timer -= Time.deltaTime;
             if (reset_timer <= 0)
             {
-                //functionality.
-                animator.SetBool("Resetting", false);
                 func_module.ResetData();
+                is_equipped = true;
                 reset_timer = 0;
                 animator.speed = 1;
             }
         }
-        func_module.UpdateModule(target_pos);
+        if (equip_timer > 0)
+        {
+            equip_timer -= Time.deltaTime;
+            if (equip_timer <= 0)
+            {
+                is_equipped = true;
+                equip_timer = 0;
+                animator.speed = 1;
+            }
+        }
+        
     }
 
     // setup the weapon for the user whenever it's picked up or equipped
     public void EquipItem()
     {
+        equip_timer = base_data.item_stats["equip_speed"] * equip_spd_scale;
+        animator.speed = 1/equip_timer;
         animator.SetBool("IsEquipped", true); // call set equipped function through editor
     }
 
     public void UnequipItem()
     {
         animator.SetBool("IsEquipped", false);
-        animator.SetBool("Resetting", false);
-        animator.speed = 1;
+        animator.ResetTrigger("Resetting");
+        animator.ResetTrigger("Use");
+        animator.speed = 2;
         reset_timer = 0;
     }
 
@@ -179,15 +197,16 @@ public class Item : MonoBehaviour
         is_equipped = false; // after item finishes resetting, animator uses the SetEquipped() to set is_equipped back to true
         if (reset_timer == 0)
         {
-            
-            animator.SetBool("Resetting", true);
             reset_timer = base_data.item_stats["reset_speed"] * reset_spd_scale;
             animator.speed = 1/reset_timer;
+            animator.SetTrigger("Resetting");
+            animator.ResetTrigger("Use");
         }
     }
 
     public void Action(int effect_index)
     {
+        animator.speed = 1/base_data.item_stats["use_speed"] * use_spd_scale;
         animator.SetTrigger("Use");
         func_module.UseFunction(effect_index);
     }
@@ -217,15 +236,14 @@ public class Item : MonoBehaviour
     #endregion
 
     #region VFX Functions
-
-    public void PlaceFront()
+    public void PlaceFront() // place the item on the front of the user at all times
     {
-        
+        user.PlaceOnBody(CharacterBodyPart.Front, gameObject.transform);
     }
 
-    public void PlaceBack()
+    public void PlaceBack() // place the item on the front of the user at all times
     {
-        
+        user.PlaceOnBody(CharacterBodyPart.Back, gameObject.transform);
     }
 
     #endregion
@@ -257,6 +275,7 @@ public class Item : MonoBehaviour
         return func_module.FunctionCompletion();
     }
     #endregion
+    
     #region Debug
     void OnDrawGizmosSelected()
     {

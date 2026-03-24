@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 989c4355df8ccbc47abe518623378798, type: 3}
   m_Name: CompoundCrossbow
   m_EditorClassIdentifier: 
-  item_prefab: {fileID: 3117911291600889211, guid: a60dd8e29fa2b094d8e7b6146a278f45,
+  item_prefab: {fileID: 5764101214850804892, guid: 176e06b89443bce488d56d2894fc671d,
     type: 3}
-  ui_image: {fileID: -266484137676524057, guid: 9db3aee8d2f6bcf458c5edfdf87fdb22,
+  ui_image: {fileID: 5551988997571559228, guid: dfb7e5f38c934564fab025a79b7ea96e,
     type: 3}
-  item_name: Sniper Rifle
+  item_name: Compound Crossbow
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
@@ -29,9 +29,11 @@ MonoBehaviour:
   serialized_input_stats:
     stat_list:
     - key: reset_speed
+      value: 2
+    - key: equip_speed
       value: 3
     - key: use_speed
-      value: 1
+      value: 0.3
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
