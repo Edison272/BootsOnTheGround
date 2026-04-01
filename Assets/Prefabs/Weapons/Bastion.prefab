@@ -143,7 +143,9 @@ MonoBehaviour:
   aim_pos: {x: 0, y: 0}
   source_pos: {x: 0, y: 0}
   user: {fileID: 0}
+  equip_timer: 0.5
   use_spd_scale: 1
+  equip_spd_scale: 1
   reset_spd_scale: 1
 --- !u!95 &8606916593666797745
 Animator:
@@ -155,7 +157,7 @@ Animator:
   m_GameObject: {fileID: 3117911291600889211}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3d6377a297b630a4ca4b700fb9077892, type: 2}
+  m_Controller: {fileID: 22100000, guid: f6b06271ef8960e4c9ba51d684a8bf12, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

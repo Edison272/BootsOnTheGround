@@ -20,18 +20,26 @@ MonoBehaviour:
   input_enum: 0
   is_full_auto: 1
   dynamic_aim: 1
-  rot_scale: 1
+  rotation_scale: 1
   bonus_range_scalar: 2
   func_enum: 0
   item_type: 0
-  curr_input: 0
-  curr_func: 0
+  has_ammo: 1
+  ammo_module:
+    max_ammo: 0
+    reload_speed: 0
+    regen_ammo: 0
+    regen_ammo_delay: 0
+    regen_ammo_amt: 0
+    regen_ammo_spd: 0
   serialized_input_stats:
     stat_list:
     - key: reset_speed
-      value: 3
+      value: 0.1
+    - key: equip_speed
+      value: 0.1
     - key: use_speed
-      value: 0.05
+      value: 0.1
   serialized_functionality_stats:
     stat_list:
     - key: max_ammo
@@ -41,7 +49,7 @@ MonoBehaviour:
     - key: recoil_multiplier
       value: 1
     - key: recoil_max_dist_ratio
-      value: 1
+      value: 0.1
     - key: recoil_recovery
       value: 1
   serialized_attacks:

@@ -6,7 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class AttackTypeInit // used to initialize ONE attack and its data
 {
-    public GameObject prefab;
+    public GameObject prefab = null;
     public AttackEnum attack_enum = AttackEnum.Projectile;
     private AttackEnum curr_atk = AttackEnum.MeleeAttack;
 

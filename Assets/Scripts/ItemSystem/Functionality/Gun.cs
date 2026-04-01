@@ -5,9 +5,23 @@ using UnityEngine;
 
 using Random = UnityEngine.Random;
 
+public class GunStats
+{
+    
+}
+
 [System.Serializable]
 public class Gun : FuncModule
 {
+    
+    public static StatDictItem[] GunFuncStats = new StatDictItem[]
+    {
+        new StatDictItem("max_ammo", 30f),
+        new StatDictItem("recoil_increment", 0.1f),
+        new StatDictItem("recoil_multiplier", 1f),
+        new StatDictItem("recoil_max_dist_ratio", 0.1f),
+        new StatDictItem("recoil_recovery", 1f)
+    };
     // base data
     public int ammo {get; private set;} // how much ammo the gun uses before reloading
     public int max_ammo {get; private set;}// how much the weapon starts/reloads with

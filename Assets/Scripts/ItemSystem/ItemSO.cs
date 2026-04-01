@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEditor;
+using ItemStatModules;
 
 [CreateAssetMenu(fileName = "Items", menuName = "ScriptableObjects/Items", order = 1)]
 public class ItemSO : ScriptableObject
@@ -18,19 +20,34 @@ public class ItemSO : ScriptableObject
 
     [field: Header("Aiming")]
     public bool dynamic_aim = true; // allow dynamic aim for the object to be able to turn to face the target
-    [Range(0.0f, 1.0f)] public float rot_scale = 1f;    // 0 to 1
+    [Range(0.0f, 1.0f)] public float rotation_scale = 1f;    // 0 to 1
     [Range(0, 5)] public int bonus_range_scalar = 1; // how far the user can see with this item DO NOT CHANGE THE RANGE
     [field: Header("Functionality")]
     [SerializeField] FuncEnum func_enum = FuncEnum.Gun;
-    public Dictionary<string, float> item_stats {get; private set;}
+    public Dictionary<string, float> item_stats {get; private set;} = new Dictionary<string, float>();
     public AttackType[] item_attack_types = new AttackType[0];
     public ItemType item_type = ItemType.Weapon;
 
+    [Header("Ammo Module")]
+    public bool has_ammo;
+    [ShowIf("has_ammo")] public AmmoModule ammo_module = new AmmoModule();
+
+    [HideInInspector] public bool has_recoil;
+
+    [HideInInspector] public bool has_end_effect;
+
+    [Header("Input Modules")]
+    public bool has_constant_input = true;
+    [ShowIf("has_constant_input")] public SerializeConstantInput constant_input_module = new SerializeConstantInput();
+    public bool has_final_input = false;
+    [ShowIf("has_final_input")] public SerializeFinalInput final_input_module = new SerializeFinalInput();
+    
+
     [field: Header("Serialization")]
-    [SerializeField] private InputEnum curr_input = InputEnum.Increment; // detect when the input type has changed to update it
-    [SerializeField] private FuncEnum curr_func = FuncEnum.Shield; // detect when the function type has changed to update it
-    [SerializeField] StatDictionary serialized_input_stats;
-    [SerializeField] StatDictionary serialized_functionality_stats;
+    private InputEnum curr_input = InputEnum.Increment; // detect when the input type has changed to update it
+    private FuncEnum curr_func = FuncEnum.Shield; // detect when the function type has changed to update it
+    [SerializeField] StatDictionary serialized_input_stats = new StatDictionary();
+    [SerializeField] StatDictionary serialized_functionality_stats = new StatDictionary();
     [SerializeField] AttackTypeInit[] serialized_attacks;
 
 
@@ -53,11 +70,6 @@ public class ItemSO : ScriptableObject
 
     public void SetupItem(Item new_item) // Setup immutable item stats
     {
-        item_stats = serialized_input_stats.ToDictionary();
-        foreach(var stat in serialized_functionality_stats.ToDictionary())
-        {
-            item_stats[stat.Key] = stat.Value; 
-        }
         // attack types
         item_attack_types = new AttackType[serialized_attacks.Length];
         int i = 0;
@@ -72,18 +84,16 @@ public class ItemSO : ScriptableObject
         }
 
         // setup input type
-        InputType input_type = null;
-        switch (input_enum) {
-            case InputEnum.Normal:
-                input_type = new NormalInput(item_stats["use_speed"], new_item);
-                break;
-            case InputEnum.Charge:
-                input_type = new ChargeInput(item_stats["threshold"], item_stats["max_charge"], item_attack_types.Length, new_item);
-                break;
-            case InputEnum.Increment:
-                input_type = new IncrementInput(item_stats["use_speed"], item_stats["max_increment"], item_attack_types.Length, new_item);
-                break;
+        ItemInputController input_controller = new ItemInputController(new_item);
+        if (has_constant_input)
+        {
+            constant_input_module.AddInputModules(input_controller);
         }
+        if (has_final_input)
+        {
+            final_input_module.AddInputModules(input_controller);
+        }
+
 
         // setup input type
         FuncModule func_module = null;
@@ -98,7 +108,7 @@ public class ItemSO : ScriptableObject
                 func_module = new Shield(new_item);
                 break;
         }
-        new_item.Setup(this, input_type, func_module, item_attack_types);
+        new_item.Setup(this, input_controller, func_module, item_attack_types);
     }
 
     #region Scriptable Object Serialization
@@ -115,12 +125,14 @@ public class ItemSO : ScriptableObject
         
         // input type
         if (curr_input != input_enum || ValidateDictionary(serialized_input_stats))
-        {
-            if (serialized_input_stats == null)
+        {            
+            // save previous data in the item_stats dictionary
+            foreach(StatDictItem stat in serialized_input_stats)
             {
-                serialized_input_stats = new StatDictionary();
+                item_stats[stat.key] = stat.value;
             }
             
+            // regenerate serialization, and load data from stat list when necessary
             serialized_input_stats.Clear();
             switch (input_enum)
             {
@@ -128,6 +140,12 @@ public class ItemSO : ScriptableObject
                     serialized_input_stats.Add("reset_speed", 0.1f);
                     serialized_input_stats.Add("equip_speed", 0.1f);
                     serialized_input_stats.Add("use_speed", 0.1f);
+                    int s = 0;
+                    foreach(StatDictItem stat in Gun.GunFuncStats)
+                    {
+                        serialized_functionality_stats.Add(stat.key, item_stats.ContainsKey(stat.key) ? item_stats[stat.key] : Gun.GunFuncStats[s].value);
+                        s++;
+                    }
                     break;
                 case InputEnum.Charge:
                     serialized_input_stats.Add("reset_speed", 0.1f);
@@ -148,20 +166,23 @@ public class ItemSO : ScriptableObject
         // functionality types
         if (curr_func != func_enum || ValidateDictionary(serialized_functionality_stats))
         {
-            if (serialized_functionality_stats == null)
+            // save previous data in the item_stats dictionary
+            foreach(StatDictItem stat in serialized_functionality_stats)
             {
-                serialized_functionality_stats = new StatDictionary();
+                item_stats[stat.key] = stat.value;
             }
-
+            
+            // regenerate serialization, and load data from stat list when necessary
             serialized_functionality_stats.Clear();
             switch (func_enum)
             {
                 case FuncEnum.Gun:
-                    serialized_functionality_stats.Add("max_ammo", 30f);
-                    serialized_functionality_stats.Add("recoil_increment", 0.1f);
-                    serialized_functionality_stats.Add("recoil_multiplier", 1f);
-                    serialized_functionality_stats.Add("recoil_max_dist_ratio", 1f);
-                    serialized_functionality_stats.Add("recoil_recovery", 1f);
+                    int s = 0;
+                    foreach(StatDictItem stat in Gun.GunFuncStats)
+                    {
+                        serialized_functionality_stats.Add(stat.key, item_stats.ContainsKey(stat.key) ? item_stats[stat.key] : Gun.GunFuncStats[s].value);
+                        s++;
+                    }
                     break;
                 case FuncEnum.Melee:
                     serialized_functionality_stats.Add("combo_length", 0.1f);
@@ -174,6 +195,7 @@ public class ItemSO : ScriptableObject
                     break;
             }
             curr_func = func_enum;
+
         }
 
         // attack types
@@ -190,5 +212,5 @@ public class ItemSO : ScriptableObject
         }
     }
     #endregion
-
 }
+

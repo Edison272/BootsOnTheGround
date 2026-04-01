@@ -8,8 +8,8 @@ public class Item : MonoBehaviour
 {   
     [field: SerializeField] public ItemSO base_data {get; private set;} // SO contains important base data
     // Input Instance
-    InputType input_type;
-    public float get_input_ready => input_type.GetStatus();
+    ItemInputController input_controller;
+    public float get_input_ready => input_controller.GetStatus();
 
     [field: Header("VFX Body")]
     public GameObject item_object;
@@ -51,10 +51,10 @@ public class Item : MonoBehaviour
     public Sprite ui_image => base_data.ui_image;
     #region Initializers
     // Setup immutable item data when this object is made
-    public void Setup(ItemSO base_data, InputType input_type, FuncModule func_module, AttackType[] atk_types)
+    public void Setup(ItemSO base_data, ItemInputController input_controller, FuncModule func_module, AttackType[] atk_types)
     {            
         this.base_data = base_data;
-        this.input_type = input_type;
+        this.input_controller = input_controller;
         this.func_module = func_module;
         attacks = atk_types;
         func_module.attacks = atk_types;
@@ -65,7 +65,7 @@ public class Item : MonoBehaviour
         else {
             AimVFX = StaticAim;
         }
-        rot_scale = base_data.rot_scale;
+        rot_scale = base_data.rotation_scale;
     }
 
     // adjust item everytime theres a new user
@@ -102,7 +102,7 @@ public class Item : MonoBehaviour
         is_equipped = false;
         reset_timer = 0;
 
-        input_type.Reset();
+        input_controller.Reset();
         func_module.ResetData();
     }
 
@@ -177,7 +177,7 @@ public class Item : MonoBehaviour
         {
             if (func_module.CanFunction())
             {
-                input_type.Use();
+                input_controller.Use();
             }
             else
             {
@@ -189,7 +189,7 @@ public class Item : MonoBehaviour
 
     public void Stop()
     {
-        input_type.Stop();
+        input_controller.Stop();
     }
 
     public void Reset()
@@ -261,7 +261,7 @@ public class Item : MonoBehaviour
 
     public float GetInnacuracy()
     {
-        AttackType predicted_atk_type = attacks[input_type.PredictActionIndex()];
+        AttackType predicted_atk_type = attacks[input_controller.PredictActionIndex()];
         return predicted_atk_type.GetAtkSpread();
     }
 
