@@ -91,7 +91,7 @@ public class LinecastBehavior : MonoBehaviour
     {
         // set data
         atk_data = line_data.atk_data;
-        render_duration = line_data.line_duration;
+        render_duration = line_data.type_data.projectile_speed;
         curr_duration = render_duration;
         source_pos = src_pos;
         target_pos = targ_pos;

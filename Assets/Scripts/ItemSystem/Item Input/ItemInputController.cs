@@ -7,6 +7,9 @@ public sealed class ItemInputController
 {    
     private Item item;
     private List<ItemInputModule> inputs = new List<ItemInputModule>();
+    public Action FirstInput;
+    public Action ConstantInput;
+    public Action FinalInput;
     public ItemInputController(Item item)
     {
         this.item = item;

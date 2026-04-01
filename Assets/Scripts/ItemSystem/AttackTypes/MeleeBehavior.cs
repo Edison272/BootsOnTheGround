@@ -62,7 +62,7 @@ public class MeleeBehavior : MonoBehaviour
     {
         // set data
         atk_data = mele_data.atk_data;
-        render_duration = mele_data.melee_duration;
+        render_duration = mele_data.type_data.melee_duration;
         curr_duration = render_duration;
         source_pos = src_pos;
         target_pos = targ_pos;
@@ -75,8 +75,8 @@ public class MeleeBehavior : MonoBehaviour
             faction_tag = owner.faction_tag;
         }
         // adjust size & position based on new size
-        main_body.transform.localScale = main_body.transform.localScale * mele_data.melee_size;
-        main_body.transform.position = source_pos + (target_pos - source_pos).normalized * mele_data.melee_size * 0.1f;
+        main_body.transform.localScale = main_body.transform.localScale * mele_data.type_data.melee_size;
+        main_body.transform.position = source_pos + (target_pos - source_pos).normalized * mele_data.type_data.melee_size * 0.1f;
 
         // adjust vfx height from vfx body
         vfx_body.position = output_pos;

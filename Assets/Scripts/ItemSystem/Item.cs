@@ -35,7 +35,7 @@ public class Item : MonoBehaviour
     public Character user;
 
     [field: Header("Functionality")]
-    public FuncModule func_module;
+    public FunctionalityController functionality_controller;
     public AttackType[] attacks;
     public bool is_equipped {get; private set;} = false; // can only use an item if it is equipped
     public float reset_timer {get; private set;} // block this weapon's if disabled time > 0
@@ -51,13 +51,12 @@ public class Item : MonoBehaviour
     public Sprite ui_image => base_data.ui_image;
     #region Initializers
     // Setup immutable item data when this object is made
-    public void Setup(ItemSO base_data, ItemInputController input_controller, FuncModule func_module, AttackType[] atk_types)
+    public void Setup(ItemSO base_data, ItemInputController input_controller, FunctionalityController functionality_controller, AttackType[] atk_types)
     {            
         this.base_data = base_data;
         this.input_controller = input_controller;
-        this.func_module = func_module;
+        this.functionality_controller = functionality_controller;
         attacks = atk_types;
-        func_module.attacks = atk_types;
         // set aim type
         if (base_data.dynamic_aim) {
             AimVFX = DynamicAim;
@@ -103,22 +102,23 @@ public class Item : MonoBehaviour
         reset_timer = 0;
 
         input_controller.Reset();
-        func_module.ResetData();
+        functionality_controller.ResetData();
     }
 
     #endregion
 
+    #region Update
     // Update is called once per frame
     void Update()
     {
-        func_module.UpdateModule(target_pos);
+        functionality_controller.UpdateModule(target_pos);
 
         if (reset_timer > 0)
         {
             reset_timer -= Time.deltaTime;
             if (reset_timer <= 0)
             {
-                func_module.ResetData();
+                functionality_controller.ResetData();
                 is_equipped = true;
                 reset_timer = 0;
                 animator.speed = 1;
@@ -133,10 +133,22 @@ public class Item : MonoBehaviour
                 equip_timer = 0;
                 animator.speed = 1;
             }
-        }
-        
+        }   
     }
+    // Update the target position of this item and adjust VFX accordingly. Only perform when used by a character
+    public void Aim(Vector2 aim_dir)
+    {
+        aim_pos = aim_dir + user.GetPosition();
+        AimVFX();
+        // the ACTUAL aiming aspect (get target position from aim_dir)
+        Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aim_dir) * ROTATION_OFFSET;
+        curr_rot = Quaternion.Lerp(curr_rot, aim_rot, rot_scale);
+        source_pos = user.GetPosition() + (Vector2)(curr_rot * Vector2.right * (user.hitbox_radius+0.1f));
+        target_pos = user.GetPosition() + (Vector2)(curr_rot * Vector2.right * aim_dir.magnitude);
+    }
+    #endregion
 
+    #region Inventory Management
     // setup the weapon for the user whenever it's picked up or equipped
     public void EquipItem()
     {
@@ -158,24 +170,14 @@ public class Item : MonoBehaviour
     {
         is_equipped = int_is_equipped > 0 ? true : false;
     }
+    #endregion
 
-    // Update the target position of this item and adjust VFX accordingly. Only perform when used by a character
-    public void Aim(Vector2 aim_dir)
-    {
-        aim_pos = aim_dir + user.GetPosition();
-        AimVFX();
-        // the ACTUAL aiming aspect (get target position from aim_dir)
-        Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aim_dir) * ROTATION_OFFSET;
-        curr_rot = Quaternion.Lerp(curr_rot, aim_rot, rot_scale);
-        source_pos = user.GetPosition() + (Vector2)(curr_rot * Vector2.right * (user.hitbox_radius+0.1f));
-        target_pos = user.GetPosition() + (Vector2)(curr_rot * Vector2.right * aim_dir.magnitude);
-    }
-
+    #region Item Events
     public void Use()
     {
         if (is_equipped)
         {
-            if (func_module.CanFunction())
+            if (functionality_controller.CanFunction())
             {
                 input_controller.Use();
             }
@@ -183,7 +185,6 @@ public class Item : MonoBehaviour
             {
                 Reset();
             }
-            
         }
     }
 
@@ -208,8 +209,9 @@ public class Item : MonoBehaviour
     {
         animator.speed = 1/base_data.item_stats["use_speed"] * use_spd_scale;
         animator.SetTrigger("Use");
-        func_module.UseFunction(effect_index);
+        functionality_controller.UseFunction(effect_index);
     }
+    #endregion
 
     #region Aiming FX Types
     void StaticAim()
@@ -272,7 +274,7 @@ public class Item : MonoBehaviour
 
     public float GetFunctionCompletion()
     {
-        return func_module.FunctionCompletion();
+        return functionality_controller.FunctionCompletion();
     }
     #endregion
     

@@ -26,7 +26,7 @@ namespace ItemInputModules{
         float use_cd = 0.1f;  // time between uses
         float tap_use_cd = 0.1f;
         float next_use = 0; // the  point in time this can be used
-        public ConstantInputModule(ItemInputController input_controller, float hold_attack_speed, float tap_attack_speed = -1) : base (input_controller)
+        public ConstantInputModule(ItemInputController input_controller, AttackType attack, float hold_attack_speed, float tap_attack_speed = -1) : base (input_controller)
         {
             this.use_cd = hold_attack_speed;
             this.tap_use_cd = hold_attack_speed;
@@ -34,7 +34,8 @@ namespace ItemInputModules{
             {
                 this.tap_use_cd = tap_attack_speed;
             }
-            
+
+            attack_types = new AttackType[1] {attack};
         }
         public override void Use()
         {

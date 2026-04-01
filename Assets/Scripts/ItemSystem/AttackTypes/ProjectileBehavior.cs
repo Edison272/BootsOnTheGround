@@ -64,7 +64,7 @@ public class ProjectileBehavior : MonoBehaviour
     public void StartProjectile(Projectile proj_data, Vector2 src_pos, Vector2 targ_pos, Vector2 output_pos, Vector2 vfx_targ_offset, Character sender = null) // straight shot variant
     {
         atk_data = proj_data.atk_data;
-        speed = proj_data.projectile_speed;
+        speed = proj_data.type_data.projectile_speed;
         source_pos = src_pos;
         target_pos = targ_pos;
         vfx_target_offset = vfx_targ_offset;

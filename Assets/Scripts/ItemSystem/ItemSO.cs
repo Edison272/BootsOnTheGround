@@ -75,12 +75,8 @@ public class ItemSO : ScriptableObject
         int i = 0;
         foreach(AttackTypeInit atk_type_init in serialized_attacks)
         {
-            atk_type_init.OnValidate();
-            if (atk_type_init.IsDictSetUp())
-            {
-                item_attack_types[i] = atk_type_init.CreateAttackType();
-                i++;
-            }
+            item_attack_types[i] = atk_type_init.CreateAttackType();
+            i++;
         }
 
         // setup input type
@@ -96,19 +92,8 @@ public class ItemSO : ScriptableObject
 
 
         // setup input type
-        FuncModule func_module = null;
-        switch (func_enum) {
-            case FuncEnum.Gun:
-                func_module = new Gun(new_item, item_stats["max_ammo"], item_stats["recoil_increment"], item_stats["recoil_multiplier"], item_stats["recoil_max_dist_ratio"], item_stats["recoil_recovery"]);
-                break;
-            case FuncEnum.Melee:
-                func_module = new Melee(new_item); 
-                break;
-            case FuncEnum.Shield:
-                func_module = new Shield(new_item);
-                break;
-        }
-        new_item.Setup(this, input_controller, func_module, item_attack_types);
+        FunctionalityController function_controller = new FunctionalityController(new_item);
+        new_item.Setup(this, input_controller, function_controller, item_attack_types);
     }
 
     #region Scriptable Object Serialization
@@ -196,19 +181,6 @@ public class ItemSO : ScriptableObject
             }
             curr_func = func_enum;
 
-        }
-
-        // attack types
-        item_attack_types = new AttackType[serialized_attacks.Length];
-        int i = 0;
-        foreach(AttackTypeInit atk_type_init in serialized_attacks)
-        {
-            atk_type_init.OnValidate();
-            if (atk_type_init.IsDictSetUp())
-            {
-                item_attack_types[i] = atk_type_init.CreateAttackType();
-                i++;
-            }
         }
     }
     #endregion

@@ -15,21 +15,20 @@ namespace ItemStatModules
         [Range(0, 10)] public float hold_attack_speed;
         // Semi-Auto - Hold down input to fire at fixed rate, or spam-tap to fire faster
         [ShowIf("is_full_auto", false)] [Range(0, 10)] public float tap_attack_speed = -1f;
-        public AttackTypeInit main_attack_type;
+        public AttackTypeInit main_attack_init;
         public ConstantInputVariantEnum input_variant_enum = ConstantInputVariantEnum.Normal;
         [ShowIf("input_variant_enum", ConstantInputVariantEnum.Increment)] public IncrementingInput incrementing_attacks_module = new IncrementingInput();
         [ShowIf("input_variant_enum", ConstantInputVariantEnum.Sequence)] public SequenceInput sequence_attacks_module;
 
         public void AddInputModules(ItemInputController input_controller)
         {
-            if (main_attack_type != null)
+            if (main_attack_init != null)
             {
-                input_controller.AddInputModule(new ConstantInputModule(input_controller, hold_attack_speed, tap_attack_speed));
+                AttackType main_attack = main_attack_init.CreateAttackType();
+                input_controller.AddInputModule(new ConstantInputModule(input_controller, main_attack, hold_attack_speed, tap_attack_speed));
             }
             switch(input_variant_enum)
             {
-                case ConstantInputVariantEnum.Normal:
-                    break;
                 case ConstantInputVariantEnum.Increment:
                     break;
                 case ConstantInputVariantEnum.Sequence:

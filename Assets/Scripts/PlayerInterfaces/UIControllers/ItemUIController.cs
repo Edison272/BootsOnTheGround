@@ -51,25 +51,25 @@ public class ItemUIController : MonoBehaviour
             item_sprite.sprite = active_character.main_item.ui_image;
             ui_item = active_character.main_item;
         }
-        switch (active_character.main_item.func_module)
-        {
-            case Gun:
-                UpdateUIType = UpdateGunUI;
-                break;
-            case Melee:
-                break;
-            case Shield:
-                break;
-            case Conduit:
-                break;
-        }
+        // switch (active_character.main_item.func_module)
+        // {
+        //     case Gun:
+        //         UpdateUIType = UpdateGunUI;
+        //         break;
+        //     case Melee:
+        //         break;
+        //     case Shield:
+        //         break;
+        //     case Conduit:
+        //         break;
+        // }
     }
 
     #region Gun Update UI
 
     public void UpdateGunUI()
     {
-        Gun gun_module = (Gun)ui_item.func_module;
+        Gun gun_module =  null;//(Gun)ui_item.func_module;
         if (ui_item.reset_timer > 0)
         {
             reset_bar.localScale = new Vector3(1-ui_item.GetResetCompletion(), 1, 0);

@@ -20,12 +20,52 @@ MonoBehaviour:
   input_enum: 2
   is_full_auto: 1
   dynamic_aim: 1
-  rot_scale: 1
+  rotation_scale: 1
   bonus_range_scalar: 0
   func_enum: 0
   item_type: 0
-  curr_input: 2
-  curr_func: 0
+  has_ammo: 0
+  ammo_module:
+    max_ammo: 0
+    reload_speed: 0
+    regen_ammo: 0
+    regen_ammo_modifier:
+      regen_ammo_delay: 1
+      regen_ammo_amt: 1
+      regen_ammo_spd: 0
+    rounds_reload: 0
+    rounds_per_load: 1
+  has_recoil: 0
+  has_end_effect: 0
+  has_constant_input: 1
+  constant_input_module:
+    is_full_auto: 0
+    hold_attack_speed: 0
+    tap_attack_speed: 0
+    main_attack_type:
+      prefab: {fileID: 0}
+      attack_enum: 0
+      attack_data:
+        damage: 0
+        pierce: 0
+        knockback_amt: 0
+        effect_time: 0
+        slow_amt: 0
+        total_dot_damage: 0
+        total_dot_ticks: 0
+      attack_stats:
+        stat_list: []
+    input_variant_enum: 0
+    incrementing_attacks_module:
+      max_increment_time: 0
+      attack_increments: []
+    sequence_attacks_module:
+      max_increment_time: 0
+      attack_sequence: []
+  has_final_input: 0
+  final_input_module:
+    minimum_charge: 0
+    charge_states: []
   serialized_input_stats:
     stat_list:
     - key: reset_speed
