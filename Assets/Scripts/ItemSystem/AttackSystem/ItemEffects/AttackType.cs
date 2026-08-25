@@ -4,7 +4,11 @@ using UnityEngine;
 
 [System.Serializable]
 public enum AttackEnum { Projectile, Linecast, MeleeAttack }
-public abstract class AttackType
+
+/// class used to declare an attack
+/// Weapons, Abilities, and other classes will have an attack instance or several
+/// Uses Attack() to create an instance of the attack
+public interface AttackType
 {
     protected Character user;
     protected GameObject instance;
